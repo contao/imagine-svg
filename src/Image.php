@@ -344,7 +344,7 @@ class Image extends AbstractImage
      */
     private function getPixelValue($size)
     {
-        static $map = [
+        $map = [
             'px' => 1,
             'em' => 16,
             'ex' => 16 / 2,
