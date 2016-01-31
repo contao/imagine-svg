@@ -19,6 +19,8 @@ use Imagine\Exception\RuntimeException;
 
 /**
  * Imagine implementation for SVG images
+ *
+ * @author Martin Auswöger <martin@auswoeger.com>
  */
 class Imagine extends AbstractImagine
 {

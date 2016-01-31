@@ -14,6 +14,8 @@ use Imagine\Image\BoxInterface;
 
 /**
  * Relative Box Interface
+ *
+ * @author Martin Auswöger <martin@auswoeger.com>
  */
 interface RelativeBoxInterface extends BoxInterface
 {

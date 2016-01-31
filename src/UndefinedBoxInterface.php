@@ -14,6 +14,8 @@ use Imagine\Image\BoxInterface;
 
 /**
  * Undefined Box Interface
+ *
+ * @author Martin Auswöger <martin@auswoeger.com>
  */
 interface UndefinedBoxInterface extends BoxInterface
 {

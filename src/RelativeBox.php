@@ -17,6 +17,8 @@ use Imagine\Exception\InvalidArgumentException;
 
 /**
  * Relative Box
+ *
+ * @author Martin Auswöger <martin@auswoeger.com>
  */
 class RelativeBox implements RelativeBoxInterface
 {

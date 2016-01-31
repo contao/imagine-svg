@@ -15,6 +15,8 @@ use Imagine\Image\PointInterface;
 
 /**
  * Undefined Box
+ *
+ * @author Martin Auswöger <martin@auswoeger.com>
  */
 class UndefinedBox implements UndefinedBoxInterface
 {
