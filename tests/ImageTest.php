@@ -30,7 +30,7 @@ class ImageTest extends TestCase
      */
     public function testInstantiation()
     {
-        $this->assertInstanceOf('Contao\\CoreBundle\\ImagineSvg\\Image', new Image(new \DOMDocument, new MetadataBag));
+        $this->assertInstanceOf('Contao\\CoreBundle\\ImagineSvg\\Image', new Image(new \DOMDocument(), new MetadataBag()));
     }
 
     /**
@@ -38,8 +38,8 @@ class ImageTest extends TestCase
      */
     public function testGetDomDocument()
     {
-        $document = new \DOMDocument;
-        $image = new Image($document, new MetadataBag);
+        $document = new \DOMDocument();
+        $image = new Image($document, new MetadataBag());
 
         $this->assertSame($document, $image->getDomDocument());
     }
@@ -49,8 +49,8 @@ class ImageTest extends TestCase
      */
     public function testCopy()
     {
-        $document = new \DOMDocument;
-        $image1 = new Image($document, new MetadataBag);
+        $document = new \DOMDocument();
+        $image1 = new Image($document, new MetadataBag());
         $image2 = $image1->copy();
 
         $this->assertSame($document, $image1->getDomDocument());
@@ -62,8 +62,8 @@ class ImageTest extends TestCase
      */
     public function testClone()
     {
-        $document = new \DOMDocument;
-        $image1 = new Image($document, new MetadataBag);
+        $document = new \DOMDocument();
+        $image1 = new Image($document, new MetadataBag());
         $image2 = clone $image1;
 
         $this->assertSame($document, $image1->getDomDocument());
@@ -75,7 +75,7 @@ class ImageTest extends TestCase
      */
     public function testCrop()
     {
-        $imagine = new Imagine;
+        $imagine = new Imagine();
         $image = $imagine->create(new Box(100, 100));
 
         $this->assertEquals(100, $image->getSize()->getWidth());
@@ -96,7 +96,7 @@ class ImageTest extends TestCase
      */
     public function testResize()
     {
-        $imagine = new Imagine;
+        $imagine = new Imagine();
         $image = $imagine->create(new Box(100, 100));
 
         $this->assertEquals(100, $image->getSize()->getWidth());
@@ -128,13 +128,13 @@ class ImageTest extends TestCase
         if (!is_dir(dirname($path))) {
             mkdir(dirname($path), 0777, true);
         }
-        $imagine = new Imagine;
+        $imagine = new Imagine();
         $image = $imagine->create(new Box(100, 100));
 
         $image->save($path);
 
         $contents = file_get_contents($path);
-        $document = new \DOMDocument;
+        $document = new \DOMDocument();
         $document->loadXML($contents);
 
         $this->assertEquals('svg', $document->documentElement->tagName);
@@ -144,7 +144,7 @@ class ImageTest extends TestCase
         $image->save($path . '.svg');
 
         $contents = file_get_contents($path . '.svg');
-        $document = new \DOMDocument;
+        $document = new \DOMDocument();
         $document->loadXML($contents);
 
         $this->assertEquals('svg', $document->documentElement->tagName);
@@ -154,7 +154,7 @@ class ImageTest extends TestCase
         $image->save($path . '.svgz');
 
         $contents = gzdecode(file_get_contents($path . '.svgz'));
-        $document = new \DOMDocument;
+        $document = new \DOMDocument();
         $document->loadXML($contents);
 
         $this->assertEquals('svg', $document->documentElement->tagName);
@@ -171,17 +171,17 @@ class ImageTest extends TestCase
      */
     public function testGet()
     {
-        $imagine = new Imagine;
+        $imagine = new Imagine();
         $image = $imagine->create(new Box(100, 100));
 
-        $document = new \DOMDocument;
+        $document = new \DOMDocument();
         $document->loadXML($image->get('svg'));
 
         $this->assertEquals('svg', $document->documentElement->tagName);
         $this->assertEquals(100, $document->documentElement->getAttribute('width'));
         $this->assertEquals(100, $document->documentElement->getAttribute('height'));
 
-        $document = new \DOMDocument;
+        $document = new \DOMDocument();
         $document->loadXML(gzdecode($image->get('svgz')));
 
         $this->assertEquals('svg', $document->documentElement->tagName);
@@ -197,10 +197,10 @@ class ImageTest extends TestCase
      */
     public function testToString()
     {
-        $imagine = new Imagine;
+        $imagine = new Imagine();
         $image = $imagine->create(new Box(100, 100));
 
-        $document = new \DOMDocument;
+        $document = new \DOMDocument();
         $document->loadXML((string) $image);
 
         $this->assertEquals('svg', $document->documentElement->tagName);
@@ -213,7 +213,7 @@ class ImageTest extends TestCase
      */
     public function testGetSize()
     {
-        $imagine = new Imagine;
+        $imagine = new Imagine();
         $image = $imagine->create(new Box(100, 100));
         $svg = $image->getDomDocument()->documentElement;
 
@@ -278,7 +278,7 @@ class ImageTest extends TestCase
      */
     public function testGetSizePixelValues($value, $expected)
     {
-        $imagine = new Imagine;
+        $imagine = new Imagine();
         $image = $imagine->create(new Box(100, 100));
         $document = $image->getDomDocument();
 

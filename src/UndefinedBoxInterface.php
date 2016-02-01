@@ -13,7 +13,7 @@ namespace Contao\CoreBundle\ImagineSvg;
 use Imagine\Image\BoxInterface;
 
 /**
- * Undefined Box Interface
+ * Undefined Box Interface.
  *
  * @author Martin Auswöger <martin@auswoeger.com>
  */

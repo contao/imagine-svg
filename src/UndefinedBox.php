@@ -14,7 +14,7 @@ use Imagine\Image\BoxInterface;
 use Imagine\Image\PointInterface;
 
 /**
- * Undefined Box
+ * Undefined Box.
  *
  * @author Martin Auswöger <martin@auswoeger.com>
  */
@@ -91,5 +91,4 @@ class UndefinedBox implements UndefinedBoxInterface
     {
         return $this;
     }
-
 }

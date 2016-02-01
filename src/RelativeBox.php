@@ -16,7 +16,7 @@ use Imagine\Image\PointInterface;
 use Imagine\Exception\InvalidArgumentException;
 
 /**
- * Relative Box
+ * Relative Box.
  *
  * @author Martin Auswöger <martin@auswoeger.com>
  */
@@ -28,10 +28,10 @@ class RelativeBox implements RelativeBoxInterface
     private $box;
 
     /**
-     * Constructs the Size with given width and height
+     * Constructs the Size with given width and height.
      *
-     * @param integer $width
-     * @param integer $height
+     * @param int $width
+     * @param int $height
      *
      * @throws InvalidArgumentException
      */
@@ -62,6 +62,7 @@ class RelativeBox implements RelativeBoxInterface
     public function scale($ratio)
     {
         $box = $this->box->scale($ratio);
+
         return new self($box->getWidth(), $box->getHeight());
     }
 
@@ -71,6 +72,7 @@ class RelativeBox implements RelativeBoxInterface
     public function increase($size)
     {
         $box = $this->box->increase($size);
+
         return new self($box->getWidth(), $box->getHeight());
     }
 
@@ -113,5 +115,4 @@ class RelativeBox implements RelativeBoxInterface
     {
         return $this->scale($height / $this->height);
     }
-
 }

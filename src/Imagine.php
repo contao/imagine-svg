@@ -18,7 +18,7 @@ use Imagine\Exception\InvalidArgumentException;
 use Imagine\Exception\RuntimeException;
 
 /**
- * Imagine implementation for SVG images
+ * Imagine implementation for SVG images.
  *
  * @author Martin Auswöger <martin@auswoeger.com>
  */
@@ -45,7 +45,7 @@ class Imagine extends AbstractImagine
             throw new InvalidArgumentException('Imagine SVG doesn\'t support colors');
         }
 
-        $document = new \DOMDocument;
+        $document = new \DOMDocument();
         $svg = $document->createElementNS('http://www.w3.org/2000/svg', 'svg');
         $svg->setAttribute('version', '1.1');
         if ($size->getWidth()) {
@@ -56,7 +56,7 @@ class Imagine extends AbstractImagine
         }
         $document->appendChild($svg);
 
-        return new Image($document, new MetadataBag);
+        return new Image($document, new MetadataBag());
     }
 
     /**
@@ -83,14 +83,15 @@ class Imagine extends AbstractImagine
      */
     public function load($string)
     {
-        return $this->doLoad($string, new MetadataBag);
+        return $this->doLoad($string, new MetadataBag());
     }
 
     /**
-     * Loads SVG and returns an Image instance
+     * Loads SVG and returns an Image instance.
      *
-     * @param  string      $data
-     * @param  MetadataBag $metadata
+     * @param string      $data
+     * @param MetadataBag $metadata
+     *
      * @return Image
      */
     private function doLoad($data, MetadataBag $metadata)
@@ -99,7 +100,7 @@ class Imagine extends AbstractImagine
             $data = gzdecode($data);
         }
 
-        $document = new \DOMDocument;
+        $document = new \DOMDocument();
         $document->loadXML($data);
 
         if (strtolower($document->documentElement->tagName) !== 'svg') {

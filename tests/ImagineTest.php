@@ -14,10 +14,7 @@ use Contao\CoreBundle\ImagineSvg\Image;
 use Contao\CoreBundle\ImagineSvg\Imagine;
 use Contao\CoreBundle\ImagineSvg\UndefinedBox;
 use Contao\CoreBundle\Test\TestCase;
-use Imagine\Image\ImageInterface;
 use Imagine\Image\Box;
-use Imagine\Image\Point;
-use Imagine\Image\Metadata\MetadataBag;
 
 /**
  * Tests the Imagine class.
@@ -32,11 +29,11 @@ class ImagineTest extends TestCase
     private $imagine;
 
     /**
-     * Sets up the imagine instance
+     * Sets up the imagine instance.
      */
     public function setUp()
     {
-        $this->imagine = new Imagine;
+        $this->imagine = new Imagine();
     }
 
     /**
@@ -64,7 +61,7 @@ class ImagineTest extends TestCase
         $this->assertEquals('100', $svg->getAttribute('width'));
         $this->assertEquals('100', $svg->getAttribute('height'));
 
-        $image = $this->imagine->create(new UndefinedBox);
+        $image = $this->imagine->create(new UndefinedBox());
         $svg = $image->getDomDocument()->documentElement;
 
         $this->assertFalse($svg->hasAttribute('width'));
@@ -195,5 +192,4 @@ class ImagineTest extends TestCase
         $this->setExpectedException('Imagine\\Exception\\RuntimeException');
         $image->save();
     }
-
 }

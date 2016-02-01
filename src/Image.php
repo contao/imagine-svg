@@ -25,7 +25,7 @@ use Imagine\Exception\OutOfBoundsException;
 use Imagine\Exception\RuntimeException;
 
 /**
- * Image implementation for SVG images
+ * Image implementation for SVG images.
  *
  * @author Martin Auswöger <martin@auswoeger.com>
  */
@@ -37,7 +37,7 @@ class Image extends AbstractImage
     private $document;
 
     /**
-     * Constructs a new Image instance
+     * Constructs a new Image instance.
      *
      * @param \DOMDocument $document
      * @param MetadataBag  $metadata
@@ -49,7 +49,7 @@ class Image extends AbstractImage
     }
 
     /**
-     * Returns the DOM document
+     * Returns the DOM document.
      *
      * @return \DOMDocument
      */
@@ -133,21 +133,19 @@ class Image extends AbstractImage
     }
 
     /**
-     * Set the viewBox attribute from the original dimensions if it's not set
+     * Set the viewBox attribute from the original dimensions if it's not set.
      */
     private function fixViewBox()
     {
         $svg = $this->document->documentElement;
 
         if (!$svg->hasAttribute('viewBox')) {
-
             $width = floatval($svg->getAttribute('width'));
             $height = floatval($svg->getAttribute('height'));
 
             if ($width && $height) {
                 $svg->setAttribute('viewBox', '0 0 ' . $width . ' ' . $height);
             }
-
         }
     }
 
@@ -164,7 +162,7 @@ class Image extends AbstractImage
      *
      * @return ImageInterface
      */
-    public function save($path = null, array $options = array())
+    public function save($path = null, array $options = [])
     {
         if (null === $path && isset($this->metadata['filepath'])) {
             $path = $this->metadata['filepath'];
@@ -176,11 +174,9 @@ class Image extends AbstractImage
 
         if (isset($options['format'])) {
             $format = $options['format'];
-        }
-        elseif ('' !== $extension = pathinfo($path, \PATHINFO_EXTENSION)) {
+        } elseif ('' !== $extension = pathinfo($path, \PATHINFO_EXTENSION)) {
             $format = $extension;
-        }
-        else {
+        } else {
             $originalPath = isset($this->metadata['filepath']) ? $this->metadata['filepath'] : null;
             $format = pathinfo($originalPath, \PATHINFO_EXTENSION);
         }
@@ -203,7 +199,7 @@ class Image extends AbstractImage
      *
      * @return ImageInterface
      */
-    public function show($format, array $options = array())
+    public function show($format, array $options = [])
     {
         $image = $this->get($format, $options);
 
@@ -220,11 +216,11 @@ class Image extends AbstractImage
     /**
      * {@inheritdoc}
      */
-    public function get($format, array $options = array())
+    public function get($format, array $options = [])
     {
         $format = strtolower($format);
 
-        $supported = array('svg', 'svgz');
+        $supported = ['svg', 'svgz'];
 
         if (!in_array($format, $supported, true)) {
             throw new InvalidArgumentException(sprintf('Saving image in "%s" format is not supported, please use one of the following extensions: "%s"', $format, implode('", "', $supported)));
@@ -234,8 +230,7 @@ class Image extends AbstractImage
 
         $xml = $this->document->saveXML();
 
-        if ($format === 'svgz')
-        {
+        if ($format === 'svgz') {
             return gzencode($xml);
         }
 
@@ -311,7 +306,7 @@ class Image extends AbstractImage
 
         // Missing width/height and viewBox
         if ($viewBoxWidth <= 0 || $viewBoxHeight <= 0) {
-            return new UndefinedBox;
+            return new UndefinedBox();
         }
 
         // Fixed width and viewBox
@@ -338,11 +333,11 @@ class Image extends AbstractImage
     }
 
     /**
-     * Convert sizes like 2em, 10cm or 12pt to pixels
+     * Convert sizes like 2em, 10cm or 12pt to pixels.
      *
      * @param string $size The size string
      *
-     * @return integer The pixel value
+     * @return int The pixel value
      */
     private function getPixelValue($size)
     {
@@ -451,7 +446,7 @@ class Image extends AbstractImage
     }
 
     /**
-     * Assures the DOM document instance will be cloned too
+     * Assures the DOM document instance will be cloned too.
      */
     public function __clone()
     {
