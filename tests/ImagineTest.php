@@ -8,11 +8,11 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\ImagineSvg;
+namespace Contao\CoreBundle\Test\Image\ImagineSvg;
 
-use Contao\CoreBundle\ImagineSvg\Image;
-use Contao\CoreBundle\ImagineSvg\Imagine;
-use Contao\CoreBundle\ImagineSvg\UndefinedBox;
+use Contao\CoreBundle\Image\ImagineSvg\Image;
+use Contao\CoreBundle\Image\ImagineSvg\Imagine;
+use Contao\CoreBundle\Image\ImagineSvg\UndefinedBox;
 use Contao\CoreBundle\Test\TestCase;
 use Imagine\Image\Box;
 
@@ -41,7 +41,7 @@ class ImagineTest extends TestCase
      */
     public function testInstantiation()
     {
-        $this->assertInstanceOf('Contao\\CoreBundle\\ImagineSvg\\Imagine', $this->imagine);
+        $this->assertInstanceOf('Contao\\CoreBundle\\Image\\ImagineSvg\\Imagine', $this->imagine);
     }
 
     /**
@@ -52,7 +52,7 @@ class ImagineTest extends TestCase
         $image = $this->imagine->create(new Box(100, 100));
         $svg = $image->getDomDocument()->documentElement;
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\ImagineSvg\\Image', $image);
+        $this->assertInstanceOf('Contao\\CoreBundle\\Image\\ImagineSvg\\Image', $image);
         $this->assertInstanceOf('Imagine\\Image\\ImageInterface', $image);
 
         $this->assertEquals('svg', $svg->tagName);
@@ -85,7 +85,7 @@ class ImagineTest extends TestCase
 
         $image = $this->imagine->open($path . '.svg');
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\ImagineSvg\\Image', $image);
+        $this->assertInstanceOf('Contao\\CoreBundle\\Image\\ImagineSvg\\Image', $image);
         $this->assertInstanceOf('Imagine\\Image\\ImageInterface', $image);
 
         $this->assertEquals(100, $image->getSize()->getWidth());
@@ -100,7 +100,7 @@ class ImagineTest extends TestCase
 
         $image = $this->imagine->open($path . '.svgz');
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\ImagineSvg\\Image', $image);
+        $this->assertInstanceOf('Contao\\CoreBundle\\Image\\ImagineSvg\\Image', $image);
         $this->assertInstanceOf('Imagine\\Image\\ImageInterface', $image);
 
         $this->assertEquals(100, $image->getSize()->getWidth());
@@ -115,7 +115,7 @@ class ImagineTest extends TestCase
 
         $image = $this->imagine->open($path);
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\ImagineSvg\\Image', $image);
+        $this->assertInstanceOf('Contao\\CoreBundle\\Image\\ImagineSvg\\Image', $image);
         $this->assertInstanceOf('Imagine\\Image\\ImageInterface', $image);
 
         $this->assertEquals(100, $image->getSize()->getWidth());
@@ -141,7 +141,7 @@ class ImagineTest extends TestCase
 
         $image = $this->imagine->load($xml);
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\ImagineSvg\\Image', $image);
+        $this->assertInstanceOf('Contao\\CoreBundle\\Image\\ImagineSvg\\Image', $image);
         $this->assertInstanceOf('Imagine\\Image\\ImageInterface', $image);
 
         $this->assertEquals(100, $image->getSize()->getWidth());
@@ -149,7 +149,7 @@ class ImagineTest extends TestCase
 
         $image = $this->imagine->load(gzencode($xml));
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\ImagineSvg\\Image', $image);
+        $this->assertInstanceOf('Contao\\CoreBundle\\Image\\ImagineSvg\\Image', $image);
         $this->assertInstanceOf('Imagine\\Image\\ImageInterface', $image);
 
         $this->assertEquals(100, $image->getSize()->getWidth());
@@ -172,7 +172,7 @@ class ImagineTest extends TestCase
         rewind($stream);
         $image = $this->imagine->read($stream);
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\ImagineSvg\\Image', $image);
+        $this->assertInstanceOf('Contao\\CoreBundle\\Image\\ImagineSvg\\Image', $image);
         $this->assertInstanceOf('Imagine\\Image\\ImageInterface', $image);
 
         $this->assertEquals(100, $image->getSize()->getWidth());
@@ -183,7 +183,7 @@ class ImagineTest extends TestCase
         rewind($stream);
         $image = $this->imagine->read($stream);
 
-        $this->assertInstanceOf('Contao\\CoreBundle\\ImagineSvg\\Image', $image);
+        $this->assertInstanceOf('Contao\\CoreBundle\\Image\\ImagineSvg\\Image', $image);
         $this->assertInstanceOf('Imagine\\Image\\ImageInterface', $image);
 
         $this->assertEquals(100, $image->getSize()->getWidth());

@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\ImagineSvg;
+namespace Contao\CoreBundle\Image\ImagineSvg;
 
 use Imagine\Image\BoxInterface;
 use Imagine\Image\PointInterface;
