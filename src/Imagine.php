@@ -25,16 +25,6 @@ use Imagine\Exception\RuntimeException;
 class Imagine extends AbstractImagine
 {
     /**
-     * @throws RuntimeException
-     */
-    public function __construct()
-    {
-        if (!extension_loaded('dom')) {
-            throw new RuntimeException('The DOM extension is required but not installed');
-        }
-    }
-
-    /**
      * {@inheritdoc}
      *
      * @return Image
