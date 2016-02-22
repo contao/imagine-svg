@@ -8,11 +8,10 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\CoreBundle\Test\Image\ImagineSvg;
+namespace Contao\ImagineSvg\Test;
 
-use Contao\CoreBundle\Image\ImagineSvg\Image;
-use Contao\CoreBundle\Image\ImagineSvg\Imagine;
-use Contao\CoreBundle\Test\TestCase;
+use Contao\ImagineSvg\Image;
+use Contao\ImagineSvg\Imagine;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
@@ -23,14 +22,14 @@ use Imagine\Image\Metadata\MetadataBag;
  *
  * @author Martin Auswöger <martin@auswoeger.com>
  */
-class ImageTest extends TestCase
+class ImageTest extends \PHPUnit_Framework_TestCase
 {
     /**
      * Tests the object instantiation.
      */
     public function testInstantiation()
     {
-        $this->assertInstanceOf('Contao\\CoreBundle\\Image\\ImagineSvg\\Image', new Image(new \DOMDocument(), new MetadataBag()));
+        $this->assertInstanceOf('Contao\ImagineSvg\Image', new Image(new \DOMDocument(), new MetadataBag()));
     }
 
     /**
@@ -217,53 +216,53 @@ class ImageTest extends TestCase
         $image = $imagine->create(new Box(100, 100));
         $svg = $image->getDomDocument()->documentElement;
 
-        $this->assertNotInstanceOf('Contao\CoreBundle\Image\ImagineSvg\RelativeBoxInterface', $image->getSize());
+        $this->assertNotInstanceOf('Contao\ImagineSvg\RelativeBoxInterface', $image->getSize());
         $this->assertEquals(100, $image->getSize()->getWidth());
         $this->assertEquals(100, $image->getSize()->getHeight());
 
         $svg->setAttribute('height', 50);
-        $this->assertNotInstanceOf('Contao\CoreBundle\Image\ImagineSvg\RelativeBoxInterface', $image->getSize());
+        $this->assertNotInstanceOf('Contao\ImagineSvg\RelativeBoxInterface', $image->getSize());
         $this->assertEquals(100, $image->getSize()->getWidth());
         $this->assertEquals(50, $image->getSize()->getHeight());
 
         $svg->setAttribute('viewBox', '0 0 200 100');
         $svg->removeAttribute('height');
-        $this->assertNotInstanceOf('Contao\CoreBundle\Image\ImagineSvg\RelativeBoxInterface', $image->getSize());
+        $this->assertNotInstanceOf('Contao\ImagineSvg\RelativeBoxInterface', $image->getSize());
         $this->assertEquals(100, $image->getSize()->getWidth());
         $this->assertEquals(50, $image->getSize()->getHeight());
 
         $svg->setAttribute('height', 200);
         $svg->removeAttribute('width');
-        $this->assertNotInstanceOf('Contao\CoreBundle\Image\ImagineSvg\RelativeBoxInterface', $image->getSize());
+        $this->assertNotInstanceOf('Contao\ImagineSvg\RelativeBoxInterface', $image->getSize());
         $this->assertEquals(400, $image->getSize()->getWidth());
         $this->assertEquals(200, $image->getSize()->getHeight());
 
         $svg->removeAttribute('height');
-        $this->assertInstanceOf('Contao\CoreBundle\Image\ImagineSvg\RelativeBoxInterface', $image->getSize());
+        $this->assertInstanceOf('Contao\ImagineSvg\RelativeBoxInterface', $image->getSize());
         $this->assertEquals(200, $image->getSize()->getWidth());
         $this->assertEquals(100, $image->getSize()->getHeight());
 
         $svg->setAttribute('viewBox', '0 0 1 0.5');
-        $this->assertInstanceOf('Contao\CoreBundle\Image\ImagineSvg\RelativeBoxInterface', $image->getSize());
+        $this->assertInstanceOf('Contao\ImagineSvg\RelativeBoxInterface', $image->getSize());
         $this->assertEquals(1 / 0.5, $image->getSize()->getWidth() / $image->getSize()->getHeight());
 
         $svg->setAttribute('viewBox', '0 0 0.001 0.000333');
-        $this->assertInstanceOf('Contao\CoreBundle\Image\ImagineSvg\RelativeBoxInterface', $image->getSize());
+        $this->assertInstanceOf('Contao\ImagineSvg\RelativeBoxInterface', $image->getSize());
         $this->assertEquals(1 / 0.333, $image->getSize()->getWidth() / $image->getSize()->getHeight());
 
         $svg->removeAttribute('viewBox');
-        $this->assertInstanceOf('Contao\CoreBundle\Image\ImagineSvg\UndefinedBoxInterface', $image->getSize());
+        $this->assertInstanceOf('Contao\ImagineSvg\UndefinedBoxInterface', $image->getSize());
         $this->assertEquals(0, $image->getSize()->getWidth());
         $this->assertEquals(0, $image->getSize()->getHeight());
 
         $svg->setAttribute('width', 100);
-        $this->assertInstanceOf('Contao\CoreBundle\Image\ImagineSvg\UndefinedBoxInterface', $image->getSize());
+        $this->assertInstanceOf('Contao\ImagineSvg\UndefinedBoxInterface', $image->getSize());
         $this->assertEquals(0, $image->getSize()->getWidth());
         $this->assertEquals(0, $image->getSize()->getHeight());
 
         $svg->removeAttribute('width');
         $svg->setAttribute('height', 100);
-        $this->assertInstanceOf('Contao\CoreBundle\Image\ImagineSvg\UndefinedBoxInterface', $image->getSize());
+        $this->assertInstanceOf('Contao\ImagineSvg\UndefinedBoxInterface', $image->getSize());
         $this->assertEquals(0, $image->getSize()->getWidth());
         $this->assertEquals(0, $image->getSize()->getHeight());
     }
