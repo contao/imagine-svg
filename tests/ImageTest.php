@@ -16,6 +16,7 @@ use Imagine\Image\ImageInterface;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
 use Imagine\Image\Metadata\MetadataBag;
+use Symfony\Filesystem\Filesystem;
 
 /**
  * Tests the Image class.
@@ -24,6 +25,29 @@ use Imagine\Image\Metadata\MetadataBag;
  */
 class ImageTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @var string
+     */
+    private $rootDir;
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setUp()
+    {
+        $this->rootDir = __DIR__ . '/tmp';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function tearDown()
+    {
+        if (file_exists($this->rootDir)) {
+            (new Filesystem())->remove($this->rootDir);
+        }
+    }
+
     /**
      * Tests the object instantiation.
      */
@@ -123,7 +147,7 @@ class ImageTest extends \PHPUnit_Framework_TestCase
      */
     public function testSave()
     {
-        $path = $this->getRootDir() . '/system/tmp/images/image';
+        $path = $this->rootDir;
         if (!is_dir(dirname($path))) {
             mkdir(dirname($path), 0777, true);
         }

@@ -28,11 +28,27 @@ class ImagineTest extends \PHPUnit_Framework_TestCase
     private $imagine;
 
     /**
+     * @var string
+     */
+    private $rootDir;
+
+    /**
      * Sets up the imagine instance.
      */
     public function setUp()
     {
         $this->imagine = new Imagine();
+        $this->rootDir = __DIR__ . '/tmp';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function tearDown()
+    {
+        if (file_exists($this->rootDir)) {
+            (new Filesystem())->remove($this->rootDir);
+        }
     }
 
     /**
@@ -72,7 +88,7 @@ class ImagineTest extends \PHPUnit_Framework_TestCase
      */
     public function testOpen()
     {
-        $path = $this->getRootDir() . '/system/tmp/images/image';
+        $path = $this->rootDir;
         if (!is_dir(dirname($path))) {
             mkdir(dirname($path), 0777, true);
         }
