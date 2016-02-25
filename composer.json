@@ -11,6 +11,7 @@
     ],
     "require": {
         "php": ">=5.4.0",
+        "ext-dom": "*",
         "imagine/imagine": "~0.6"
     },
     "require-dev": {
