@@ -105,7 +105,9 @@ class RelativeBox implements RelativeBoxInterface
      */
     public function widen($width)
     {
-        return $this->scale($width / $this->width);
+        $box = $this->box->widen($width);
+
+        return new self($box->getWidth(), $box->getHeight());
     }
 
     /**
@@ -113,6 +115,8 @@ class RelativeBox implements RelativeBoxInterface
      */
     public function heighten($height)
     {
-        return $this->scale($height / $this->height);
+        $box = $this->box->heighten($height);
+
+        return new self($box->getWidth(), $box->getHeight());
     }
 }
