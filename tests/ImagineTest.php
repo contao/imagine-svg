@@ -10,7 +10,6 @@
 
 namespace Contao\ImagineSvg\Test;
 
-use Contao\ImagineSvg\Image;
 use Contao\ImagineSvg\Imagine;
 use Contao\ImagineSvg\UndefinedBox;
 use Imagine\Image\Box;
