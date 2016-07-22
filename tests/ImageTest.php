@@ -125,17 +125,35 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(100, $image->getSize()->getWidth());
         $this->assertEquals(100, $image->getSize()->getHeight());
 
-        $image->resize(new Box(50, 50));
+        $resized = $image->resize(new Box(50, 50));
 
         $this->assertEquals(50, $image->getSize()->getWidth());
         $this->assertEquals(50, $image->getSize()->getHeight());
+        $this->assertSame($image, $resized, 'Should return itself');
 
         $image->getDomDocument()->documentElement->removeAttribute('viewBox');
         $image->resize(new Box(100, 100));
 
         $this->assertEquals(100, $image->getSize()->getWidth());
         $this->assertEquals(100, $image->getSize()->getHeight());
-        $this->assertEquals('0 0 50 50', $image->getDomDocument()->documentElement->getAttribute('viewBox'));
+        $this->assertEquals('0 0 50 50', $image->getDomDocument()->documentElement->getAttribute('viewBox'), 'Viewbox should get fixed');
+
+        $image->getDomDocument()->documentElement->removeAttribute('width');
+        $image->getDomDocument()->documentElement->removeAttribute('height');
+        $image->getDomDocument()->documentElement->setAttribute('viewBox', '0 0 100 100');
+        $image->resize(new Box(100, 100));
+
+        $this->assertEquals(100, $image->getSize()->getWidth());
+        $this->assertEquals(100, $image->getSize()->getHeight());
+        $this->assertEquals('100', $image->getDomDocument()->documentElement->getAttribute('width'), 'Relative dimensions should get absolute');
+        $this->assertEquals('100', $image->getDomDocument()->documentElement->getAttribute('height'), 'Relative dimensions should get absolute');
+
+        $image->getDomDocument()->documentElement->removeAttribute('viewBox');
+        $image->resize(new Box(100, 100));
+
+        $this->assertEquals(100, $image->getSize()->getWidth());
+        $this->assertEquals(100, $image->getSize()->getHeight());
+        $this->assertEquals('', $image->getDomDocument()->documentElement->getAttribute('viewBox'), 'Viewbox should not get modified if no resize is necessary');
 
         $this->setExpectedException('Imagine\Exception\InvalidArgumentException');
 

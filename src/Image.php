@@ -118,7 +118,8 @@ class Image extends AbstractImage
         $currentSize = $this->getSize();
         if (
             $size->getWidth() === $currentSize->getWidth() &&
-            $size->getHeight() === $currentSize->getHeight()
+            $size->getHeight() === $currentSize->getHeight() &&
+            !($currentSize instanceof RelativeBox)
         ) {
             // Skip resize if the size didn't change
             return $this;
