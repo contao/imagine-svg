@@ -25,14 +25,16 @@ use Imagine\Image\Box;
 use Imagine\Image\Point;
 
 $imagine = new Imagine();
-$imagine->open('/path/to/image.svg')
+
+$imagine
+    ->open('/path/to/image.svg')
     ->crop(new Point(50, 50), new Box(100, 100))
     ->resize(new Box(40, 40))
     ->save('/path/to/thumbnail.svg')
 ;
 ```
 
-Because of the nature of SVG images the `getSize()` method differs a little bit
+Because of the nature of SVG images, the `getSize()` method differs a little bit
 from other implementations. You can check the return value like in this example:
 
 ```php
@@ -44,14 +46,12 @@ $imagine = new Imagine();
 $size = $imagine->open('/path/to/image.svg')->getSize();
 
 if ($size instanceof UndefinedBoxInterface) {
-	// The image has no defined size
-}
-elseif ($size instanceof RelativeBoxInterface) {
-	// The image has a relative size, $size->getWidth() and $size->getHeight()
-	// should be treated as an aspect ratio
-}
-else {
-	// The image has a defined size like a regular image
+    // The image has no defined size
+} elseif ($size instanceof RelativeBoxInterface) {
+    // The image has a relative size, $size->getWidth() and $size->getHeight()
+    // should be treated as an aspect ratio
+} else {
+    // The image has a defined size like a regular image
 }
 ```
 

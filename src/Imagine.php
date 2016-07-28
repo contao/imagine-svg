@@ -3,7 +3,7 @@
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -26,24 +26,25 @@ class Imagine extends AbstractImagine
 {
     /**
      * {@inheritdoc}
-     *
-     * @return Image
      */
     public function create(BoxInterface $size, ColorInterface $color = null)
     {
         if (null !== $color) {
-            throw new InvalidArgumentException('Imagine SVG doesn\'t support colors');
+            throw new InvalidArgumentException('Imagine SVG does not support colors');
         }
 
         $document = new \DOMDocument();
         $svg = $document->createElementNS('http://www.w3.org/2000/svg', 'svg');
         $svg->setAttribute('version', '1.1');
+
         if ($size->getWidth()) {
             $svg->setAttribute('width', $size->getWidth());
         }
+
         if ($size->getHeight()) {
             $svg->setAttribute('height', $size->getHeight());
         }
+
         $document->appendChild($svg);
 
         return new Image($document, new MetadataBag());
@@ -51,8 +52,6 @@ class Imagine extends AbstractImagine
 
     /**
      * {@inheritdoc}
-     *
-     * @return Image
      */
     public function open($path)
     {
@@ -60,7 +59,7 @@ class Imagine extends AbstractImagine
         $data = @file_get_contents($path);
 
         if (false === $data) {
-            throw new RuntimeException(sprintf('Failed to open file %s', $path));
+            throw new RuntimeException(sprintf('Failed to open file "%s"', $path));
         }
 
         return $this->doLoad($data, new MetadataBag(['filepath' => $path]));
@@ -68,8 +67,6 @@ class Imagine extends AbstractImagine
 
     /**
      * {@inheritdoc}
-     *
-     * @return Image
      */
     public function load($string)
     {
@@ -93,7 +90,7 @@ class Imagine extends AbstractImagine
         $document = new \DOMDocument();
         $document->loadXML($data);
 
-        if (strtolower($document->documentElement->tagName) !== 'svg') {
+        if ('svg' !== strtolower($document->documentElement->tagName)) {
             throw new RuntimeException('An image could not be created from the given input');
         }
 
@@ -102,8 +99,6 @@ class Imagine extends AbstractImagine
 
     /**
      * {@inheritdoc}
-     *
-     * @return Image
      */
     public function read($resource)
     {

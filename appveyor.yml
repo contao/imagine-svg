@@ -1,7 +1,10 @@
 build: false
 shallow_clone: true
 platform: x86
-clone_folder: c:\projects\contao
+clone_folder: c:\projects\contao-imagine-svg
+
+init:
+  - SET SYMFONY_DEPRECATIONS_HELPER=weak
 
 install:
   - cinst -y OpenSSL.Light
@@ -26,10 +29,10 @@ install:
   - echo extension=php_xmlrpc.dll >> php.ini
   - echo extension=php_xsl.dll >> php.ini
   - SET PATH=c:\tools\php;%PATH%
-  - cd c:\projects\contao
+  - cd c:\projects\contao-imagine-svg
   - php -r "readfile('http://getcomposer.org/installer');" | php
-  - php composer.phar install --prefer-source --no-interaction
+  - php composer.phar update --no-progress --no-interaction --ansi
 
 test_script:
-  - cd c:\projects\contao
+  - cd c:\projects\contao-imagine-svg
   - vendor\bin\phpunit.bat

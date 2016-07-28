@@ -3,7 +3,7 @@
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -13,10 +13,9 @@ namespace Contao\ImagineSvg;
 use Imagine\Image\Box;
 use Imagine\Image\BoxInterface;
 use Imagine\Image\PointInterface;
-use Imagine\Exception\InvalidArgumentException;
 
 /**
- * Relative Box.
+ * Relative box.
  *
  * @author Martin Auswöger <martin@auswoeger.com>
  */
@@ -28,12 +27,10 @@ class RelativeBox implements RelativeBoxInterface
     private $box;
 
     /**
-     * Constructs the Size with given width and height.
+     * Constructor.
      *
      * @param int $width
      * @param int $height
-     *
-     * @throws InvalidArgumentException
      */
     public function __construct($width, $height)
     {

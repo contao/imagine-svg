@@ -3,7 +3,7 @@
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -37,7 +37,7 @@ class Image extends AbstractImage
     private $document;
 
     /**
-     * Constructs a new Image instance.
+     * Constructor.
      *
      * @param \DOMDocument $document
      * @param MetadataBag  $metadata
@@ -60,8 +60,6 @@ class Image extends AbstractImage
 
     /**
      * {@inheritdoc}
-     *
-     * @return ImageInterface
      */
     public function copy()
     {
@@ -70,13 +68,14 @@ class Image extends AbstractImage
 
     /**
      * {@inheritdoc}
-     *
-     * @return ImageInterface
      */
     public function crop(PointInterface $start, BoxInterface $size)
     {
         if (!$start->in($this->getSize())) {
-            throw new OutOfBoundsException('Crop coordinates must start at minimum 0, 0 position from top left corner, crop height and width must be positive integers and must not exceed the current image borders');
+            throw new OutOfBoundsException(
+                'Crop coordinates must start at minimum 0, 0 position from top left corner, crop height and width '
+                    .'must be positive integers and must not exceed the current image borders'
+            );
         }
 
         $this->fixViewBox();
@@ -106,23 +105,23 @@ class Image extends AbstractImage
 
     /**
      * {@inheritdoc}
-     *
-     * @return ImageInterface
      */
     public function resize(BoxInterface $size, $filter = ImageInterface::FILTER_UNDEFINED)
     {
         if (ImageInterface::FILTER_UNDEFINED !== $filter) {
-            throw new InvalidArgumentException('Unsupported filter type, SVG only supports ImageInterface::FILTER_UNDEFINED filter');
+            throw new InvalidArgumentException(
+                'Unsupported filter type, SVG only supports ImageInterface::FILTER_UNDEFINED filter'
+            );
         }
 
         $currentSize = $this->getSize();
+
         if (
             $size->getWidth() === $currentSize->getWidth() &&
             $size->getHeight() === $currentSize->getHeight() &&
             !($currentSize instanceof RelativeBox)
         ) {
-            // Skip resize if the size didn't change
-            return $this;
+            return $this; // skip resize if the size didn't change
         }
 
         $this->fixViewBox();
@@ -134,19 +133,21 @@ class Image extends AbstractImage
     }
 
     /**
-     * Set the viewBox attribute from the original dimensions if it's not set.
+     * Sets the viewBox attribute from the original dimensions if it's not set.
      */
     private function fixViewBox()
     {
         $svg = $this->document->documentElement;
 
-        if (!$svg->hasAttribute('viewBox')) {
-            $width = floatval($svg->getAttribute('width'));
-            $height = floatval($svg->getAttribute('height'));
+        if ($svg->hasAttribute('viewBox')) {
+            return;
+        }
 
-            if ($width && $height) {
-                $svg->setAttribute('viewBox', '0 0 ' . $width . ' ' . $height);
-            }
+        $width = floatval($svg->getAttribute('width'));
+        $height = floatval($svg->getAttribute('height'));
+
+        if ($width && $height) {
+            $svg->setAttribute('viewBox', '0 0 '.$width.' '.$height);
         }
     }
 
@@ -160,8 +161,6 @@ class Image extends AbstractImage
 
     /**
      * {@inheritdoc}
-     *
-     * @return ImageInterface
      */
     public function save($path = null, array $options = [])
     {
@@ -189,7 +188,7 @@ class Image extends AbstractImage
         $image = $this->get($format, $options);
 
         if (!file_put_contents($path, $image)) {
-            throw new RuntimeException('Unable to save image to ' . $path);
+            throw new RuntimeException('Unable to save image to '.$path);
         }
 
         return $this;
@@ -197,16 +196,15 @@ class Image extends AbstractImage
 
     /**
      * {@inheritdoc}
-     *
-     * @return ImageInterface
      */
     public function show($format, array $options = [])
     {
         $image = $this->get($format, $options);
 
-        header('Content-Type: image/svg+xml');
-        if (strtolower($format) === 'svgz') {
+        if ('svgz' === strtolower($format)) {
             header('Content-Encoding: gzip');
+        } else {
+            header('Content-Type: image/svg+xml');
         }
 
         echo $image;
@@ -224,10 +222,12 @@ class Image extends AbstractImage
         $supported = ['svg', 'svgz'];
 
         if (!in_array($format, $supported, true)) {
-            throw new InvalidArgumentException(sprintf('Saving image in "%s" format is not supported, please use one of the following extensions: "%s"', $format, implode('", "', $supported)));
+            throw new InvalidArgumentException(sprintf(
+                'Saving image in "%s" format is not supported, please use one of the following extensions: "%s"',
+                $format,
+                implode('", "', $supported))
+            );
         }
-
-        $options = $this->updateSaveOptions($options);
 
         $xml = $this->document->saveXML();
 
@@ -321,10 +321,9 @@ class Image extends AbstractImage
         }
 
         // Normalize floating point values
-        if ($viewBoxWidth < 1000 && (
-            round($viewBoxWidth) !== $viewBoxWidth ||
-            round($viewBoxHeight) !== $viewBoxHeight
-        )) {
+        if ($viewBoxWidth < 1000
+            && (round($viewBoxWidth) !== $viewBoxWidth || round($viewBoxHeight) !== $viewBoxHeight)
+        ) {
             $viewBoxHeight = 1000 / $viewBoxWidth * $viewBoxHeight;
             $viewBoxWidth = 1000;
         }
@@ -334,11 +333,11 @@ class Image extends AbstractImage
     }
 
     /**
-     * Convert sizes like 2em, 10cm or 12pt to pixels.
+     * Converts sizes like 2em, 10cm or 12pt to pixels.
      *
-     * @param string $size The size string
+     * @param string $size
      *
-     * @return int The pixel value
+     * @return int
      */
     private function getPixelValue($size)
     {
