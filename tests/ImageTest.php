@@ -3,7 +3,7 @@
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -35,7 +35,7 @@ class ImageTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
-        $this->rootDir = __DIR__ . '/tmp';
+        $this->rootDir = __DIR__.'/tmp';
     }
 
     /**
@@ -182,9 +182,9 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(100, $document->documentElement->getAttribute('width'));
         $this->assertEquals(100, $document->documentElement->getAttribute('height'));
 
-        $image->save($path . '.svg');
+        $image->save($path.'.svg');
 
-        $contents = file_get_contents($path . '.svg');
+        $contents = file_get_contents($path.'.svg');
         $document = new \DOMDocument();
         $document->loadXML($contents);
 
@@ -192,9 +192,9 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(100, $document->documentElement->getAttribute('width'));
         $this->assertEquals(100, $document->documentElement->getAttribute('height'));
 
-        $image->save($path . '.svgz');
+        $image->save($path.'.svgz');
 
-        $contents = gzdecode(file_get_contents($path . '.svgz'));
+        $contents = gzdecode(file_get_contents($path.'.svgz'));
         $document = new \DOMDocument();
         $document->loadXML($contents);
 
@@ -203,8 +203,8 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(100, $document->documentElement->getAttribute('height'));
 
         unlink($path);
-        unlink($path . '.svg');
-        unlink($path . '.svgz');
+        unlink($path.'.svg');
+        unlink($path.'.svgz');
     }
 
     /**
@@ -343,9 +343,9 @@ class ImageTest extends \PHPUnit_Framework_TestCase
             'ex' => ['2ex', 16],
             'pt' => ['12pt', 16],
             'pc' => ['1pc', 16],
-            'in' => [(1 / 6) . 'in', 16],
-            'cm' => [(2.54 / 6) . 'cm', 16],
-            'mm' => [(25.4 / 6) . 'mm', 16],
+            'in' => [(1 / 6).'in', 16],
+            'cm' => [(2.54 / 6).'cm', 16],
+            'mm' => [(25.4 / 6).'mm', 16],
             'unknown' => ['100vw', 0],
             'invalid' => ['abc', 0],
         ];

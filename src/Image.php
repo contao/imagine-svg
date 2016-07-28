@@ -3,7 +3,7 @@
 /*
  * This file is part of Contao.
  *
- * Copyright (c) 2005-2015 Leo Feyer
+ * Copyright (c) 2005-2016 Leo Feyer
  *
  * @license LGPL-3.0+
  */
@@ -145,7 +145,7 @@ class Image extends AbstractImage
             $height = floatval($svg->getAttribute('height'));
 
             if ($width && $height) {
-                $svg->setAttribute('viewBox', '0 0 ' . $width . ' ' . $height);
+                $svg->setAttribute('viewBox', '0 0 '.$width.' '.$height);
             }
         }
     }
@@ -189,7 +189,7 @@ class Image extends AbstractImage
         $image = $this->get($format, $options);
 
         if (!file_put_contents($path, $image)) {
-            throw new RuntimeException('Unable to save image to ' . $path);
+            throw new RuntimeException('Unable to save image to '.$path);
         }
 
         return $this;
