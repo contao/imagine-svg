@@ -13,7 +13,7 @@ namespace Contao\ImagineSvg;
 use Imagine\Image\BoxInterface;
 
 /**
- * Relative Box Interface.
+ * Relative box interface.
  *
  * @author Martin Auswöger <martin@auswoeger.com>
  */

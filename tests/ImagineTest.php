@@ -13,6 +13,7 @@ namespace Contao\ImagineSvg\Test;
 use Contao\ImagineSvg\Imagine;
 use Contao\ImagineSvg\UndefinedBox;
 use Imagine\Image\Box;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Tests the Imagine class.
@@ -67,7 +68,7 @@ class ImagineTest extends \PHPUnit_Framework_TestCase
         $svg = $image->getDomDocument()->documentElement;
 
         $this->assertInstanceOf('Contao\ImagineSvg\Image', $image);
-        $this->assertInstanceOf('Imagine\\Image\\ImageInterface', $image);
+        $this->assertInstanceOf('Imagine\Image\ImageInterface', $image);
 
         $this->assertEquals('svg', $svg->tagName);
         $this->assertEquals('1.1', $svg->getAttribute('version'));
@@ -88,19 +89,21 @@ class ImagineTest extends \PHPUnit_Framework_TestCase
     public function testOpen()
     {
         $path = $this->rootDir;
+
         if (!is_dir(dirname($path))) {
             mkdir(dirname($path), 0777, true);
         }
 
-        $xml = '<?xml version="1.0"?>'.
-            '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100" height="100"></svg>';
+        $xml = '<?xml version="1.0"?>'
+            .'<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100" height="100"></svg>'
+        ;
 
         file_put_contents($path.'.svg', $xml);
 
         $image = $this->imagine->open($path.'.svg');
 
         $this->assertInstanceOf('Contao\ImagineSvg\Image', $image);
-        $this->assertInstanceOf('Imagine\\Image\\ImageInterface', $image);
+        $this->assertInstanceOf('Imagine\Image\ImageInterface', $image);
 
         $this->assertEquals(100, $image->getSize()->getWidth());
         $this->assertEquals(100, $image->getSize()->getHeight());
@@ -115,7 +118,7 @@ class ImagineTest extends \PHPUnit_Framework_TestCase
         $image = $this->imagine->open($path.'.svgz');
 
         $this->assertInstanceOf('Contao\ImagineSvg\Image', $image);
-        $this->assertInstanceOf('Imagine\\Image\\ImageInterface', $image);
+        $this->assertInstanceOf('Imagine\Image\ImageInterface', $image);
 
         $this->assertEquals(100, $image->getSize()->getWidth());
         $this->assertEquals(100, $image->getSize()->getHeight());
@@ -130,7 +133,7 @@ class ImagineTest extends \PHPUnit_Framework_TestCase
         $image = $this->imagine->open($path);
 
         $this->assertInstanceOf('Contao\ImagineSvg\Image', $image);
-        $this->assertInstanceOf('Imagine\\Image\\ImageInterface', $image);
+        $this->assertInstanceOf('Imagine\Image\ImageInterface', $image);
 
         $this->assertEquals(100, $image->getSize()->getWidth());
         $this->assertEquals(100, $image->getSize()->getHeight());
@@ -150,13 +153,14 @@ class ImagineTest extends \PHPUnit_Framework_TestCase
      */
     public function testLoad()
     {
-        $xml = '<?xml version="1.0"?>'.
-            '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100" height="100"></svg>';
+        $xml = '<?xml version="1.0"?>'
+            .'<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100" height="100"></svg>'
+        ;
 
         $image = $this->imagine->load($xml);
 
         $this->assertInstanceOf('Contao\ImagineSvg\Image', $image);
-        $this->assertInstanceOf('Imagine\\Image\\ImageInterface', $image);
+        $this->assertInstanceOf('Imagine\Image\ImageInterface', $image);
 
         $this->assertEquals(100, $image->getSize()->getWidth());
         $this->assertEquals(100, $image->getSize()->getHeight());
@@ -164,12 +168,13 @@ class ImagineTest extends \PHPUnit_Framework_TestCase
         $image = $this->imagine->load(gzencode($xml));
 
         $this->assertInstanceOf('Contao\ImagineSvg\Image', $image);
-        $this->assertInstanceOf('Imagine\\Image\\ImageInterface', $image);
+        $this->assertInstanceOf('Imagine\Image\ImageInterface', $image);
 
         $this->assertEquals(100, $image->getSize()->getWidth());
         $this->assertEquals(100, $image->getSize()->getHeight());
 
-        $this->setExpectedException('Imagine\\Exception\\RuntimeException');
+        $this->setExpectedException('Imagine\Exception\RuntimeException');
+
         $image->save();
     }
 
@@ -178,16 +183,18 @@ class ImagineTest extends \PHPUnit_Framework_TestCase
      */
     public function testRead()
     {
-        $xml = '<?xml version="1.0"?>'.
-            '<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100" height="100"></svg>';
+        $xml = '<?xml version="1.0"?>'
+            .'<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100" height="100"></svg>'
+        ;
 
         $stream = fopen('php://temp', 'r+');
         fwrite($stream, $xml);
         rewind($stream);
+
         $image = $this->imagine->read($stream);
 
         $this->assertInstanceOf('Contao\ImagineSvg\Image', $image);
-        $this->assertInstanceOf('Imagine\\Image\\ImageInterface', $image);
+        $this->assertInstanceOf('Imagine\Image\ImageInterface', $image);
 
         $this->assertEquals(100, $image->getSize()->getWidth());
         $this->assertEquals(100, $image->getSize()->getHeight());
@@ -195,15 +202,17 @@ class ImagineTest extends \PHPUnit_Framework_TestCase
         $stream = fopen('php://temp', 'r+');
         fwrite($stream, gzencode($xml));
         rewind($stream);
+
         $image = $this->imagine->read($stream);
 
         $this->assertInstanceOf('Contao\ImagineSvg\Image', $image);
-        $this->assertInstanceOf('Imagine\\Image\\ImageInterface', $image);
+        $this->assertInstanceOf('Imagine\Image\ImageInterface', $image);
 
         $this->assertEquals(100, $image->getSize()->getWidth());
         $this->assertEquals(100, $image->getSize()->getHeight());
 
-        $this->setExpectedException('Imagine\\Exception\\RuntimeException');
+        $this->setExpectedException('Imagine\Exception\RuntimeException');
+
         $image->save();
     }
 }

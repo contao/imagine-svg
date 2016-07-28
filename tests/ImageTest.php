@@ -16,7 +16,7 @@ use Imagine\Image\ImageInterface;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
 use Imagine\Image\Metadata\MetadataBag;
-use Symfony\Filesystem\Filesystem;
+use Symfony\Component\Filesystem\Filesystem;
 
 /**
  * Tests the Image class.
@@ -136,7 +136,12 @@ class ImageTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(100, $image->getSize()->getWidth());
         $this->assertEquals(100, $image->getSize()->getHeight());
-        $this->assertEquals('0 0 50 50', $image->getDomDocument()->documentElement->getAttribute('viewBox'), 'Viewbox should get fixed');
+
+        $this->assertEquals(
+            '0 0 50 50',
+            $image->getDomDocument()->documentElement->getAttribute('viewBox'),
+            'Viewbox should get fixed'
+        );
 
         $image->getDomDocument()->documentElement->removeAttribute('width');
         $image->getDomDocument()->documentElement->removeAttribute('height');
@@ -145,15 +150,30 @@ class ImageTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(100, $image->getSize()->getWidth());
         $this->assertEquals(100, $image->getSize()->getHeight());
-        $this->assertEquals('100', $image->getDomDocument()->documentElement->getAttribute('width'), 'Relative dimensions should get absolute');
-        $this->assertEquals('100', $image->getDomDocument()->documentElement->getAttribute('height'), 'Relative dimensions should get absolute');
+
+        $this->assertEquals(
+            '100',
+            $image->getDomDocument()->documentElement->getAttribute('width'),
+            'Relative dimensions should get absolute'
+        );
+
+        $this->assertEquals(
+            '100',
+            $image->getDomDocument()->documentElement->getAttribute('height'),
+            'Relative dimensions should get absolute'
+        );
 
         $image->getDomDocument()->documentElement->removeAttribute('viewBox');
         $image->resize(new Box(100, 100));
 
         $this->assertEquals(100, $image->getSize()->getWidth());
         $this->assertEquals(100, $image->getSize()->getHeight());
-        $this->assertEquals('', $image->getDomDocument()->documentElement->getAttribute('viewBox'), 'Viewbox should not get modified if no resize is necessary');
+
+        $this->assertEquals(
+            '',
+            $image->getDomDocument()->documentElement->getAttribute('viewBox'),
+            'Viewbox should not get modified if no resize is necessary'
+        );
 
         $this->setExpectedException('Imagine\Exception\InvalidArgumentException');
 
@@ -166,15 +186,17 @@ class ImageTest extends \PHPUnit_Framework_TestCase
     public function testSave()
     {
         $path = $this->rootDir;
+
         if (!is_dir(dirname($path))) {
             mkdir(dirname($path), 0777, true);
         }
+
         $imagine = new Imagine();
         $image = $imagine->create(new Box(100, 100));
-
         $image->save($path);
 
         $contents = file_get_contents($path);
+
         $document = new \DOMDocument();
         $document->loadXML($contents);
 
@@ -185,6 +207,7 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $image->save($path.'.svg');
 
         $contents = file_get_contents($path.'.svg');
+
         $document = new \DOMDocument();
         $document->loadXML($contents);
 
@@ -195,6 +218,7 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $image->save($path.'.svgz');
 
         $contents = gzdecode(file_get_contents($path.'.svgz'));
+
         $document = new \DOMDocument();
         $document->loadXML($contents);
 
@@ -230,6 +254,7 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(100, $document->documentElement->getAttribute('height'));
 
         $this->setExpectedException('Imagine\Exception\InvalidArgumentException');
+
         $image->get('jpg');
     }
 
@@ -263,47 +288,56 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(100, $image->getSize()->getHeight());
 
         $svg->setAttribute('height', 50);
+
         $this->assertNotInstanceOf('Contao\ImagineSvg\RelativeBoxInterface', $image->getSize());
         $this->assertEquals(100, $image->getSize()->getWidth());
         $this->assertEquals(50, $image->getSize()->getHeight());
 
         $svg->setAttribute('viewBox', '0 0 200 100');
         $svg->removeAttribute('height');
+
         $this->assertNotInstanceOf('Contao\ImagineSvg\RelativeBoxInterface', $image->getSize());
         $this->assertEquals(100, $image->getSize()->getWidth());
         $this->assertEquals(50, $image->getSize()->getHeight());
 
         $svg->setAttribute('height', 200);
         $svg->removeAttribute('width');
+
         $this->assertNotInstanceOf('Contao\ImagineSvg\RelativeBoxInterface', $image->getSize());
         $this->assertEquals(400, $image->getSize()->getWidth());
         $this->assertEquals(200, $image->getSize()->getHeight());
 
         $svg->removeAttribute('height');
+
         $this->assertInstanceOf('Contao\ImagineSvg\RelativeBoxInterface', $image->getSize());
         $this->assertEquals(200, $image->getSize()->getWidth());
         $this->assertEquals(100, $image->getSize()->getHeight());
 
         $svg->setAttribute('viewBox', '0 0 1 0.5');
+
         $this->assertInstanceOf('Contao\ImagineSvg\RelativeBoxInterface', $image->getSize());
         $this->assertEquals(1 / 0.5, $image->getSize()->getWidth() / $image->getSize()->getHeight());
 
         $svg->setAttribute('viewBox', '0 0 0.001 0.000333');
+
         $this->assertInstanceOf('Contao\ImagineSvg\RelativeBoxInterface', $image->getSize());
         $this->assertEquals(1 / 0.333, $image->getSize()->getWidth() / $image->getSize()->getHeight());
 
         $svg->removeAttribute('viewBox');
+
         $this->assertInstanceOf('Contao\ImagineSvg\UndefinedBoxInterface', $image->getSize());
         $this->assertEquals(0, $image->getSize()->getWidth());
         $this->assertEquals(0, $image->getSize()->getHeight());
 
         $svg->setAttribute('width', 100);
+
         $this->assertInstanceOf('Contao\ImagineSvg\UndefinedBoxInterface', $image->getSize());
         $this->assertEquals(0, $image->getSize()->getWidth());
         $this->assertEquals(0, $image->getSize()->getHeight());
 
         $svg->removeAttribute('width');
         $svg->setAttribute('height', 100);
+
         $this->assertInstanceOf('Contao\ImagineSvg\UndefinedBoxInterface', $image->getSize());
         $this->assertEquals(0, $image->getSize()->getWidth());
         $this->assertEquals(0, $image->getSize()->getHeight());
@@ -312,8 +346,8 @@ class ImageTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests the getSize() method.
      *
-     * @param string $value    The pixel value
-     * @param int    $expected The expected value
+     * @param string $value
+     * @param int    $expected
      *
      * @dataProvider getGetSizePixelValues
      */
@@ -332,7 +366,7 @@ class ImageTest extends \PHPUnit_Framework_TestCase
     /**
      * Provides the data for the testGetSizePixelValues() method.
      *
-     * @return array The data
+     * @return array
      */
     public function getGetSizePixelValues()
     {

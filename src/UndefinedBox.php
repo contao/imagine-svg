@@ -14,7 +14,7 @@ use Imagine\Image\BoxInterface;
 use Imagine\Image\PointInterface;
 
 /**
- * Undefined Box.
+ * Undefined box.
  *
  * @author Martin Auswöger <martin@auswoeger.com>
  */
