@@ -215,6 +215,17 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(100, $document->documentElement->getAttribute('width'));
         $this->assertEquals(100, $document->documentElement->getAttribute('height'));
 
+        $image->save($path.'.foo', ['format' => 'svg']);
+
+        $contents = file_get_contents($path.'.foo');
+
+        $document = new \DOMDocument();
+        $document->loadXML($contents);
+
+        $this->assertEquals('svg', $document->documentElement->tagName);
+        $this->assertEquals(100, $document->documentElement->getAttribute('width'));
+        $this->assertEquals(100, $document->documentElement->getAttribute('height'));
+
         $image->save($path.'.svgz');
 
         $contents = gzdecode(file_get_contents($path.'.svgz'));
@@ -228,7 +239,39 @@ class ImageTest extends \PHPUnit_Framework_TestCase
 
         unlink($path);
         unlink($path.'.svg');
+        unlink($path.'.foo');
         unlink($path.'.svgz');
+    }
+
+    /**
+     * Tests the show() method.
+     */
+    public function testShow()
+    {
+        $imagine = new Imagine();
+        $image = $imagine->create(new Box(100, 100));
+
+        ob_start();
+        @$image->show('svg'); // suppress headers already sent warning
+        $contents = ob_get_clean();
+
+        $document = new \DOMDocument();
+        $document->loadXML($contents);
+
+        $this->assertEquals('svg', $document->documentElement->tagName);
+        $this->assertEquals(100, $document->documentElement->getAttribute('width'));
+        $this->assertEquals(100, $document->documentElement->getAttribute('height'));
+
+        ob_start();
+        @$image->show('svgz'); // suppress headers already sent warning
+        $contents = ob_get_clean();
+
+        $document = new \DOMDocument();
+        $document->loadXML(gzdecode($contents));
+
+        $this->assertEquals('svg', $document->documentElement->tagName);
+        $this->assertEquals(100, $document->documentElement->getAttribute('width'));
+        $this->assertEquals(100, $document->documentElement->getAttribute('height'));
     }
 
     /**
