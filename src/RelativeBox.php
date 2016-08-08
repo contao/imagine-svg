@@ -94,7 +94,7 @@ class RelativeBox implements RelativeBoxInterface
      */
     public function __toString()
     {
-        return (string) $this->box;
+        return sprintf('%dx%d', $this->box->getWidth(), $this->box->getHeight());
     }
 
     /**
