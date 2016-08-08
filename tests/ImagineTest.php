@@ -84,6 +84,18 @@ class ImagineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests the create() method with a color.
+     */
+    public function testCreateWithColor()
+    {
+        $color = $this->getMock('Imagine\Image\Palette\Color\ColorInterface');
+
+        $this->setExpectedException('Imagine\Exception\InvalidArgumentException');
+
+        $this->imagine->create(new Box(100, 100), $color);
+    }
+
+    /**
      * Tests the open() method.
      */
     public function testOpen()
@@ -179,6 +191,16 @@ class ImagineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests the load() method with an invalid SVG image.
+     */
+    public function testLoadInvalidSvg()
+    {
+        $this->setExpectedException('Imagine\Exception\RuntimeException');
+
+        $this->imagine->load('<?xml version="1.0"?><notasvg/>');
+    }
+
+    /**
      * Tests the read() method.
      */
     public function testRead()
@@ -214,5 +236,27 @@ class ImagineTest extends \PHPUnit_Framework_TestCase
         $this->setExpectedException('Imagine\Exception\RuntimeException');
 
         $image->save();
+    }
+
+    /**
+     * Tests the read() method with an invalid resource.
+     */
+    public function testReadInvalidResource()
+    {
+        $this->setExpectedException('Imagine\Exception\InvalidArgumentException');
+
+        $this->imagine->read('not a resource');
+    }
+
+    /**
+     * Tests the font() method.
+     */
+    public function testFont()
+    {
+        $color = $this->getMock('Imagine\Image\Palette\Color\ColorInterface');
+
+        $this->setExpectedException('Imagine\Exception\RuntimeException');
+
+        $this->imagine->font($this->rootDir, 10, $color);
     }
 }
