@@ -231,7 +231,7 @@ class Image extends AbstractImage
 
         $xml = $this->document->saveXML();
 
-        if ($format === 'svgz') {
+        if ('svgz' === $format) {
             return gzencode($xml);
         }
 

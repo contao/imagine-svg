@@ -87,8 +87,21 @@ class Imagine extends AbstractImagine
             $data = gzdecode($data);
         }
 
+        $internalErrors = libxml_use_internal_errors(true);
+        $disableEntities = libxml_disable_entity_loader(true);
+        libxml_clear_errors();
+
         $document = new \DOMDocument();
-        $document->loadXML($data);
+        $document->loadXML($data, LIBXML_NONET);
+
+        libxml_use_internal_errors($internalErrors);
+        libxml_disable_entity_loader($disableEntities);
+
+        if ($error = libxml_get_last_error()) {
+            libxml_clear_errors();
+
+            throw new RuntimeException($error->message);
+        }
 
         if ('svg' !== strtolower($document->documentElement->tagName)) {
             throw new RuntimeException('An image could not be created from the given input');

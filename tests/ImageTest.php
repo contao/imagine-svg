@@ -215,6 +215,17 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(100, $document->documentElement->getAttribute('width'));
         $this->assertEquals(100, $document->documentElement->getAttribute('height'));
 
+        $image->save($path.'.foo', ['format' => 'svg']);
+
+        $contents = file_get_contents($path.'.foo');
+
+        $document = new \DOMDocument();
+        $document->loadXML($contents);
+
+        $this->assertEquals('svg', $document->documentElement->tagName);
+        $this->assertEquals(100, $document->documentElement->getAttribute('width'));
+        $this->assertEquals(100, $document->documentElement->getAttribute('height'));
+
         $image->save($path.'.svgz');
 
         $contents = gzdecode(file_get_contents($path.'.svgz'));
@@ -228,7 +239,39 @@ class ImageTest extends \PHPUnit_Framework_TestCase
 
         unlink($path);
         unlink($path.'.svg');
+        unlink($path.'.foo');
         unlink($path.'.svgz');
+    }
+
+    /**
+     * Tests the show() method.
+     */
+    public function testShow()
+    {
+        $imagine = new Imagine();
+        $image = $imagine->create(new Box(100, 100));
+
+        ob_start();
+        @$image->show('svg'); // suppress headers already sent warning
+        $contents = ob_get_clean();
+
+        $document = new \DOMDocument();
+        $document->loadXML($contents);
+
+        $this->assertEquals('svg', $document->documentElement->tagName);
+        $this->assertEquals(100, $document->documentElement->getAttribute('width'));
+        $this->assertEquals(100, $document->documentElement->getAttribute('height'));
+
+        ob_start();
+        @$image->show('svgz'); // suppress headers already sent warning
+        $contents = ob_get_clean();
+
+        $document = new \DOMDocument();
+        $document->loadXML(gzdecode($contents));
+
+        $this->assertEquals('svg', $document->documentElement->tagName);
+        $this->assertEquals(100, $document->documentElement->getAttribute('width'));
+        $this->assertEquals(100, $document->documentElement->getAttribute('height'));
     }
 
     /**
@@ -383,5 +426,209 @@ class ImageTest extends \PHPUnit_Framework_TestCase
             'unknown' => ['100vw', 0],
             'invalid' => ['abc', 0],
         ];
+    }
+
+    /**
+     * Tests the paste() method.
+     */
+    public function testPaste()
+    {
+        $image = new Image(new \DOMDocument(), new MetadataBag());
+
+        $this->setExpectedException('Imagine\Exception\RuntimeException');
+
+        $image->paste(new Image(new \DOMDocument(), new MetadataBag()), new Point(0, 0));
+    }
+
+    /**
+     * Tests the rotate() method.
+     */
+    public function testRotate()
+    {
+        $image = new Image(new \DOMDocument(), new MetadataBag());
+
+        $this->setExpectedException('Imagine\Exception\RuntimeException');
+
+        $image->rotate(90);
+    }
+
+    /**
+     * Tests the flipHorizontally() method.
+     */
+    public function testFlipHorizontally()
+    {
+        $image = new Image(new \DOMDocument(), new MetadataBag());
+
+        $this->setExpectedException('Imagine\Exception\RuntimeException');
+
+        $image->flipHorizontally();
+    }
+
+    /**
+     * Tests the flipVertically() method.
+     */
+    public function testFlipVertically()
+    {
+        $image = new Image(new \DOMDocument(), new MetadataBag());
+
+        $this->setExpectedException('Imagine\Exception\RuntimeException');
+
+        $image->flipVertically();
+    }
+
+    /**
+     * Tests the strip() method.
+     */
+    public function testStrip()
+    {
+        $image = new Image(new \DOMDocument(), new MetadataBag());
+
+        $this->setExpectedException('Imagine\Exception\RuntimeException');
+
+        $image->strip();
+    }
+
+    /**
+     * Tests the draw() method.
+     */
+    public function testDraw()
+    {
+        $image = new Image(new \DOMDocument(), new MetadataBag());
+
+        $this->setExpectedException('Imagine\Exception\RuntimeException');
+
+        $image->draw();
+    }
+
+    /**
+     * Tests the effects() method.
+     */
+    public function testEffects()
+    {
+        $image = new Image(new \DOMDocument(), new MetadataBag());
+
+        $this->setExpectedException('Imagine\Exception\RuntimeException');
+
+        $image->effects();
+    }
+
+    /**
+     * Tests the applyMask() method.
+     */
+    public function testApplyMask()
+    {
+        $image = new Image(new \DOMDocument(), new MetadataBag());
+
+        $this->setExpectedException('Imagine\Exception\RuntimeException');
+
+        $image->applyMask(new Image(new \DOMDocument(), new MetadataBag()));
+    }
+
+    /**
+     * Tests the fill() method.
+     */
+    public function testFill()
+    {
+        $image = new Image(new \DOMDocument(), new MetadataBag());
+
+        $this->setExpectedException('Imagine\Exception\RuntimeException');
+
+        $image->fill($this->getMock('Imagine\Image\Fill\FillInterface'));
+    }
+
+    /**
+     * Tests the mask() method.
+     */
+    public function testMask()
+    {
+        $image = new Image(new \DOMDocument(), new MetadataBag());
+
+        $this->setExpectedException('Imagine\Exception\RuntimeException');
+
+        $image->mask();
+    }
+
+    /**
+     * Tests the histogram() method.
+     */
+    public function testHistogram()
+    {
+        $image = new Image(new \DOMDocument(), new MetadataBag());
+
+        $this->setExpectedException('Imagine\Exception\RuntimeException');
+
+        $image->histogram();
+    }
+
+    /**
+     * Tests the getColorAt() method.
+     */
+    public function testGetColorAt()
+    {
+        $image = new Image(new \DOMDocument(), new MetadataBag());
+
+        $this->setExpectedException('Imagine\Exception\RuntimeException');
+
+        $image->getColorAt(new Point(0, 0));
+    }
+
+    /**
+     * Tests the layers() method.
+     */
+    public function testLayers()
+    {
+        $image = new Image(new \DOMDocument(), new MetadataBag());
+
+        $this->setExpectedException('Imagine\Exception\RuntimeException');
+
+        $image->layers();
+    }
+
+    /**
+     * Tests the interlace() method.
+     */
+    public function testInterlace()
+    {
+        $image = new Image(new \DOMDocument(), new MetadataBag());
+
+        $this->setExpectedException('Imagine\Exception\RuntimeException');
+
+        $image->interlace('');
+    }
+
+    /**
+     * Tests the palette() method.
+     */
+    public function testPalette()
+    {
+        $image = new Image(new \DOMDocument(), new MetadataBag());
+
+        $this->setExpectedException('Imagine\Exception\RuntimeException');
+
+        $image->palette();
+    }
+
+    /**
+     * Tests the profile() method.
+     */
+    public function testProfile()
+    {
+        $image = new Image(new \DOMDocument(), new MetadataBag());
+
+        $this->setExpectedException('Imagine\Exception\RuntimeException');
+
+        $image->profile($this->getMock('Imagine\Image\ProfileInterface'));
+    }
+
+    /**
+     * Tests the usePalette() method.
+     */
+    public function testUsePalette()
+    {
+        $image = new Image(new \DOMDocument(), new MetadataBag());
+
+        $this->setExpectedException('Imagine\Exception\RuntimeException');
+
+        $image->usePalette($this->getMock('Imagine\Image\Palette\PaletteInterface'));
     }
 }
