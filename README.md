@@ -4,6 +4,8 @@ Contao Imagine SVG library
 [![](https://img.shields.io/travis/contao/imagine-svg/master.svg?style=flat-square)](https://travis-ci.org/contao/imagine-svg/)
 [![](https://img.shields.io/scrutinizer/g/contao/imagine-svg/master.svg?style=flat-square)](https://scrutinizer-ci.com/g/contao/imagine-svg/)
 [![](https://img.shields.io/coveralls/contao/imagine-svg/master.svg?style=flat-square)](https://coveralls.io/github/contao/imagine-svg)
+[![](https://img.shields.io/packagist/v/contao/imagine-svg.svg?style=flat-square)](https://packagist.org/packages/contao/imagine-svg)
+[![](https://img.shields.io/packagist/dt/contao/imagine-svg.svg?style=flat-square)](https://packagist.org/packages/contao/imagine-svg)
 
 This project implements the interfaces of [Imagine][1] and allows you to make
 simple modifications to SVG images. It is used in [Contao][2] to handle
