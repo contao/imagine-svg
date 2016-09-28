@@ -201,6 +201,16 @@ class ImagineTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
+     * Tests the load() method with an invalid XML file.
+     */
+    public function testLoadInvalidXml()
+    {
+        $this->setExpectedException('Imagine\Exception\RuntimeException');
+
+        $this->imagine->load('<?xml version="1.0"?><svg><invalid>');
+    }
+
+    /**
      * Tests the read() method.
      */
     public function testRead()
