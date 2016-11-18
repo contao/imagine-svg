@@ -354,8 +354,11 @@ class Image extends AbstractImage
 
         $size = trim($size);
 
-        if (isset($map[substr($size, -2)])) {
-            $size = substr($size, 0, -2) * $map[substr($size, -2)];
+        $value = substr($size, 0, -2);
+        $unit = substr($size, -2);
+
+        if (isset($map[$unit]) && is_numeric($value)) {
+            $size = $value * $map[$unit];
         }
 
         if (is_numeric($size)) {
