@@ -12,7 +12,7 @@ sudo: false
 env:
   global:
     - COMPOSER_ALLOW_XDEBUG=0
-    - SYMFONY_DEPRECATIONS_HELPER=weak
+    - SYMFONY_DEPRECATIONS_HELPER='weak'
 
 matrix:
   include:
@@ -23,6 +23,8 @@ matrix:
     - php: 7.0
     - php: 7.0
       env: COMPOSER_FLAGS='--prefer-lowest --prefer-stable'
+    - php: 7.0
+      env: COVERAGE='--coverage-clover build/logs/clover.xml'
     - php: 7.1
 
 before_install:
@@ -32,8 +34,8 @@ before_script:
   - travis_wait composer update $COMPOSER_FLAGS --no-interaction
 
 script:
-  - mkdir -p build/logs
-  - php vendor/bin/phpunit --coverage-clover build/logs/clover.xml
+  - if [[ $COVERAGE ]]; then mkdir -p build/logs; fi
+  - php vendor/bin/phpunit $COVERAGE
 
 after_script:
-  - php vendor/bin/coveralls
+  - if [[ $COVERAGE ]]; then php vendor/bin/coveralls; fi
