@@ -423,8 +423,12 @@ class ImageTest extends \PHPUnit_Framework_TestCase
             'in' => [(1 / 6).'in', 16],
             'cm' => [(2.54 / 6).'cm', 16],
             'mm' => [(25.4 / 6).'mm', 16],
+            'No unit with spacing' => [" \r \n \t 1234.5 \r \n \t ", 1235],
+            'em with spacing' => [" \r \n \t 1234.5em \r \n \t ", 19752],
             'unknown' => ['100vw', 0],
+            'unknown mmm' => ['1mmm', 0],
             'invalid' => ['abc', 0],
+            'invalid number' => ['12.34.5', 0],
         ];
     }
 
