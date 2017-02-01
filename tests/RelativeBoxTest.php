@@ -8,7 +8,7 @@
  * @license LGPL-3.0+
  */
 
-namespace Contao\ImagineSvg\Test;
+namespace Contao\ImagineSvg\Tests;
 
 use Contao\ImagineSvg\RelativeBox;
 use Imagine\Image\Point;
