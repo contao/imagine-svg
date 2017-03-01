@@ -97,7 +97,7 @@ class Imagine extends AbstractImagine
         libxml_use_internal_errors($internalErrors);
         libxml_disable_entity_loader($disableEntities);
 
-        if ($error = libxml_get_last_error()) {
+        if (false !== ($error = libxml_get_last_error())) {
             libxml_clear_errors();
 
             throw new RuntimeException($error->message);
