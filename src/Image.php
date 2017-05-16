@@ -267,7 +267,13 @@ class Image extends AbstractImage
      */
     public function strip()
     {
-        throw new RuntimeException('This method is not implemented');
+        $xPath = new \DOMXPath($this->document);
+
+        foreach ($xPath->query('//comment()') as $comment) {
+            $comment->parentNode->removeChild($comment);
+        }
+
+        return $this;
     }
 
     /**

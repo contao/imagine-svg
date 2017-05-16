@@ -482,14 +482,39 @@ class ImageTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Tests the strip() method.
+     *
+     * @dataProvider getStrip
      */
-    public function testStrip()
+    public function testStrip($svg, $expected)
     {
-        $image = new Image(new \DOMDocument(), new MetadataBag());
+        $image = (new Imagine())
+            ->load($svg)
+            ->strip();
 
-        $this->setExpectedException('Imagine\Exception\RuntimeException');
+        $this->assertEquals($expected, $image->get('svg'));
+    }
 
-        $image->strip();
+    /**
+     * Provides the data for the testStrip() method.
+     *
+     * @return array
+     */
+    public function getStrip()
+    {
+        return [
+            'Comment' => [
+                "<?xml version=\"1.0\"?>\n<svg><!-- comment --></svg>\n",
+                "<?xml version=\"1.0\"?>\n<svg/>\n",
+            ],
+            'Multiple comments' => [
+                "<?xml version=\"1.0\"?><!-- comment -->\n<!-- comment --><svg><!-- comment --></svg><!-- comment -->\n",
+                "<?xml version=\"1.0\"?>\n<svg/>\n",
+            ],
+            'Complex comments' => [
+                "<?xml version=\"1.0\"?>\n<svg><!-- <!- -> -> \n</svg>\n  --></svg>\n",
+                "<?xml version=\"1.0\"?>\n<svg/>\n",
+            ],
+        ];
     }
 
     /**
