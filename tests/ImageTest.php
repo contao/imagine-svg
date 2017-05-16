@@ -16,6 +16,7 @@ use Imagine\Image\ImageInterface;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
 use Imagine\Image\Metadata\MetadataBag;
+use Imagine\Image\Palette\RGB;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -632,9 +633,7 @@ class ImageTest extends \PHPUnit_Framework_TestCase
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
-        $this->setExpectedException('Imagine\Exception\RuntimeException');
-
-        $image->palette();
+        $this->assertInstanceOf(RGB::class, $image->palette());
     }
 
     /**
@@ -655,6 +654,10 @@ class ImageTest extends \PHPUnit_Framework_TestCase
     public function testUsePalette()
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
+        $paletteRgb = $this->getMock(RGB::class);
+
+        $this->assertSame($image, $image->usePalette($paletteRgb));
+        $this->assertSame($paletteRgb, $image->palette());
 
         $this->setExpectedException('Imagine\Exception\RuntimeException');
 
