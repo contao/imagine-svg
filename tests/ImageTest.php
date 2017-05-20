@@ -16,6 +16,7 @@ use Imagine\Image\ImageInterface;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
 use Imagine\Image\Metadata\MetadataBag;
+use Imagine\Image\Palette\RGB;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -482,14 +483,39 @@ class ImageTest extends \PHPUnit_Framework_TestCase
 
     /**
      * Tests the strip() method.
+     *
+     * @dataProvider getStrip
      */
-    public function testStrip()
+    public function testStrip($svg, $expected)
     {
-        $image = new Image(new \DOMDocument(), new MetadataBag());
+        $image = (new Imagine())
+            ->load($svg)
+            ->strip();
 
-        $this->setExpectedException('Imagine\Exception\RuntimeException');
+        $this->assertEquals($expected, $image->get('svg'));
+    }
 
-        $image->strip();
+    /**
+     * Provides the data for the testStrip() method.
+     *
+     * @return array
+     */
+    public function getStrip()
+    {
+        return [
+            'Comment' => [
+                "<?xml version=\"1.0\"?>\n<svg><!-- comment --></svg>\n",
+                "<?xml version=\"1.0\"?>\n<svg/>\n",
+            ],
+            'Multiple comments' => [
+                "<?xml version=\"1.0\"?><!-- comment -->\n<!-- comment --><svg><!-- comment --></svg><!-- comment -->\n",
+                "<?xml version=\"1.0\"?>\n<svg/>\n",
+            ],
+            'Complex comments' => [
+                "<?xml version=\"1.0\"?>\n<svg><!-- <!- -> -> \n</svg>\n  --></svg>\n",
+                "<?xml version=\"1.0\"?>\n<svg/>\n",
+            ],
+        ];
     }
 
     /**
@@ -607,9 +633,7 @@ class ImageTest extends \PHPUnit_Framework_TestCase
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
-        $this->setExpectedException('Imagine\Exception\RuntimeException');
-
-        $image->palette();
+        $this->assertInstanceOf(RGB::class, $image->palette());
     }
 
     /**
@@ -630,6 +654,10 @@ class ImageTest extends \PHPUnit_Framework_TestCase
     public function testUsePalette()
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
+        $paletteRgb = $this->getMock(RGB::class);
+
+        $this->assertSame($image, $image->usePalette($paletteRgb));
+        $this->assertSame($paletteRgb, $image->palette());
 
         $this->setExpectedException('Imagine\Exception\RuntimeException');
 

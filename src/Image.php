@@ -19,6 +19,7 @@ use Imagine\Image\Palette\Color\ColorInterface;
 use Imagine\Image\Fill\FillInterface;
 use Imagine\Image\PointInterface;
 use Imagine\Image\Palette\PaletteInterface;
+use Imagine\Image\Palette\RGB;
 use Imagine\Image\ProfileInterface;
 use Imagine\Exception\InvalidArgumentException;
 use Imagine\Exception\OutOfBoundsException;
@@ -37,6 +38,11 @@ class Image extends AbstractImage
     private $document;
 
     /**
+     * @var PaletteInterface
+     */
+    private $palette;
+
+    /**
      * Constructor.
      *
      * @param \DOMDocument $document
@@ -46,6 +52,7 @@ class Image extends AbstractImage
     {
         $this->metadata = $metadata;
         $this->document = $document;
+        $this->palette = new RGB();
     }
 
     /**
@@ -267,7 +274,13 @@ class Image extends AbstractImage
      */
     public function strip()
     {
-        throw new RuntimeException('This method is not implemented');
+        $xPath = new \DOMXPath($this->document);
+
+        foreach ($xPath->query('//comment()') as $comment) {
+            $comment->parentNode->removeChild($comment);
+        }
+
+        return $this;
     }
 
     /**
@@ -429,7 +442,7 @@ class Image extends AbstractImage
      */
     public function palette()
     {
-        throw new RuntimeException('This method is not implemented');
+        return $this->palette;
     }
 
     /**
@@ -445,7 +458,13 @@ class Image extends AbstractImage
      */
     public function usePalette(PaletteInterface $palette)
     {
-        throw new RuntimeException('This method is not implemented');
+        if (!$palette instanceof RGB) {
+            throw new RuntimeException('SVG driver only supports RGB palette');
+        }
+
+        $this->palette = $palette;
+
+        return $this;
     }
 
     /**
