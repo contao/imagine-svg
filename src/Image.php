@@ -50,8 +50,8 @@ class Image extends AbstractImage
      */
     public function __construct(\DOMDocument $document, MetadataBag $metadata)
     {
-        $this->metadata = $metadata;
         $this->document = $document;
+        $this->metadata = $metadata;
         $this->palette = new RGB();
     }
 
@@ -181,7 +181,7 @@ class Image extends AbstractImage
 
         if (isset($options['format'])) {
             $format = $options['format'];
-        } elseif ('' !== $extension = pathinfo($path, \PATHINFO_EXTENSION)) {
+        } elseif ($extension = pathinfo($path, \PATHINFO_EXTENSION)) {
             $format = $extension;
         } else {
             $originalPath = isset($this->metadata['filepath']) ? $this->metadata['filepath'] : null;
