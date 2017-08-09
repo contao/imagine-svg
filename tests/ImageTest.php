@@ -485,6 +485,9 @@ class ImageTest extends \PHPUnit_Framework_TestCase
      * Tests the strip() method.
      *
      * @dataProvider getStrip
+     *
+     * @param string $svg
+     * @param string $expected
      */
     public function testStrip($svg, $expected)
     {
