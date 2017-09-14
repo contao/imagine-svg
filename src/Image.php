@@ -78,11 +78,23 @@ class Image extends AbstractImage
      */
     public function crop(PointInterface $start, BoxInterface $size)
     {
-        if (!$start->in($this->getSize())) {
+        $currentSize = $this->getSize();
+
+        if (!$start->in($currentSize)) {
             throw new OutOfBoundsException(
                 'Crop coordinates must start at minimum 0, 0 position from top left corner, crop height and width '
                     .'must be positive integers and must not exceed the current image borders'
             );
+        }
+
+        if (
+            0 === $start->getX()
+            && 0 === $start->getY()
+            && $size->getWidth() === $currentSize->getWidth()
+            && $size->getHeight() === $currentSize->getHeight()
+            && !($currentSize instanceof RelativeBox)
+        ) {
+            return $this; // skip crop if the size didn't change
         }
 
         $this->fixViewBox();

@@ -12,6 +12,7 @@ namespace Contao\ImagineSvg\Tests;
 
 use Contao\ImagineSvg\Image;
 use Contao\ImagineSvg\Imagine;
+use Contao\ImagineSvg\RelativeBox;
 use Imagine\Image\ImageInterface;
 use Imagine\Image\Box;
 use Imagine\Image\Point;
@@ -111,6 +112,24 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(50, $image->getSize()->getWidth());
         $this->assertEquals(50, $image->getSize()->getHeight());
         $this->assertEquals('0 0 50 50', $image->getDomDocument()->documentElement->getAttribute('viewBox'));
+
+        $imageBefore = $image->get('svg');
+        $image->crop(new Point(0, 0), new Box(50, 50));
+        $this->assertEquals($imageBefore, $image->get('svg'));
+
+        $image->getDomDocument()->documentElement->removeAttribute('viewBox');
+
+        $imageBefore = $image->get('svg');
+        $image->crop(new Point(0, 0), new Box(50, 50));
+        $this->assertEquals($imageBefore, $image->get('svg'));
+
+        $image->getDomDocument()->documentElement->setAttribute('viewBox', '0 0 50 50');
+        $image->getDomDocument()->documentElement->removeAttribute('width');
+        $image->getDomDocument()->documentElement->removeAttribute('height');
+
+        $this->assertInstanceOf(RelativeBox::class, $image->getSize());
+        $image->crop(new Point(0, 0), new Box(50, 50));
+        $this->assertNotInstanceOf(RelativeBox::class, $image->getSize());
 
         $this->setExpectedException('Imagine\Exception\OutOfBoundsException');
 
