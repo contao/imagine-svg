@@ -45,6 +45,10 @@ class Imagine extends AbstractImagine
             $svg->setAttribute('height', $size->getHeight());
         }
 
+        if ($size->getWidth() && $size->getHeight()) {
+            $svg->setAttribute('viewBox', '0 0 '.$size->getWidth().' '.$size->getHeight());
+        }
+
         $document->appendChild($svg);
 
         return new Image($document, new MetadataBag());

@@ -75,6 +75,7 @@ class ImagineTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('http://www.w3.org/2000/svg', $svg->getAttribute('xmlns'));
         $this->assertEquals('100', $svg->getAttribute('width'));
         $this->assertEquals('100', $svg->getAttribute('height'));
+        $this->assertEquals('0 0 100 100', $svg->getAttribute('viewBox'));
 
         $image = $this->imagine->create(new UndefinedBox());
         $svg = $image->getDomDocument()->documentElement;

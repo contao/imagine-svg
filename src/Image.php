@@ -98,6 +98,7 @@ class Image extends AbstractImage
         $svgWrap->appendChild($svg);
 
         $this->document->appendChild($svgWrap);
+        $this->fixViewBox();
 
         return $this;
     }

@@ -104,11 +104,13 @@ class ImageTest extends \PHPUnit_Framework_TestCase
 
         $this->assertEquals(100, $image->getSize()->getWidth());
         $this->assertEquals(100, $image->getSize()->getHeight());
+        $this->assertEquals('0 0 100 100', $image->getDomDocument()->documentElement->getAttribute('viewBox'));
 
         $image->crop(new Point(25, 25), new Box(50, 50));
 
         $this->assertEquals(50, $image->getSize()->getWidth());
         $this->assertEquals(50, $image->getSize()->getHeight());
+        $this->assertEquals('0 0 50 50', $image->getDomDocument()->documentElement->getAttribute('viewBox'));
 
         $this->setExpectedException('Imagine\Exception\OutOfBoundsException');
 
@@ -403,6 +405,8 @@ class ImageTest extends \PHPUnit_Framework_TestCase
 
         $document->documentElement->setAttribute('width', $value);
         $document->documentElement->setAttribute('height', $value);
+        $document->documentElement->removeAttribute('viewBox');
+
         $this->assertEquals($expected, $image->getSize()->getWidth());
         $this->assertEquals($expected, $image->getSize()->getHeight());
     }
