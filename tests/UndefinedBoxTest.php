@@ -11,17 +11,11 @@
 namespace Contao\ImagineSvg\Tests;
 
 use Contao\ImagineSvg\UndefinedBox;
+use Imagine\Image\PointInterface;
+use PHPUnit\Framework\TestCase;
 
-/**
- * Tests the UndefinedBox class.
- *
- * @author Martin Auswöger <martin@auswoeger.com>
- */
-class UndefinedBoxTest extends \PHPUnit_Framework_TestCase
+class UndefinedBoxTest extends TestCase
 {
-    /**
-     * Tests the object instantiation.
-     */
     public function testInstantiation()
     {
         $box = new UndefinedBox();
@@ -30,29 +24,20 @@ class UndefinedBoxTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Contao\ImagineSvg\UndefinedBoxInterface', $box);
     }
 
-    /**
-     * Tests the getWidth() method.
-     */
     public function testGetWidth()
     {
         $box = new UndefinedBox();
 
-        $this->assertEquals(0, $box->getWidth());
+        $this->assertSame(0, $box->getWidth());
     }
 
-    /**
-     * Tests the getHeight() method.
-     */
     public function testGetHeight()
     {
         $box = new UndefinedBox();
 
-        $this->assertEquals(0, $box->getHeight());
+        $this->assertSame(0, $box->getHeight());
     }
 
-    /**
-     * Tests the scale() method.
-     */
     public function testScale()
     {
         $box = new UndefinedBox();
@@ -60,9 +45,6 @@ class UndefinedBoxTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(new UndefinedBox(), $box->scale(2));
     }
 
-    /**
-     * Tests the increase() method.
-     */
     public function testIncrease()
     {
         $box = new UndefinedBox();
@@ -70,41 +52,29 @@ class UndefinedBoxTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(new UndefinedBox(), $box->increase(100));
     }
 
-    /**
-     * Tests the contains() method.
-     */
     public function testContains()
     {
         $box = new UndefinedBox();
-        $point = $this->getMock('Imagine\Image\PointInterface');
+        $point = $this->createMock(PointInterface::class);
 
         $this->assertFalse($box->contains(new UndefinedBox()));
         $this->assertFalse($box->contains(new UndefinedBox(), $point));
     }
 
-    /**
-     * Tests the square() method.
-     */
     public function testSquare()
     {
         $box = new UndefinedBox();
 
-        $this->assertEquals(0, $box->square());
+        $this->assertSame(0, $box->square());
     }
 
-    /**
-     * Tests the __toString() method.
-     */
     public function testToString()
     {
         $box = new UndefinedBox();
 
-        $this->assertEquals('undefined', (string) $box);
+        $this->assertSame('undefined', (string) $box);
     }
 
-    /**
-     * Tests the widen() method.
-     */
     public function testWiden()
     {
         $box = new UndefinedBox();
@@ -112,9 +82,6 @@ class UndefinedBoxTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals(new UndefinedBox(), $box->widen(100));
     }
 
-    /**
-     * Tests the heighten() method.
-     */
     public function testHeighten()
     {
         $box = new UndefinedBox();

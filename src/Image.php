@@ -10,26 +10,21 @@
 
 namespace Contao\ImagineSvg;
 
-use Imagine\Image\AbstractImage;
-use Imagine\Image\ImageInterface;
-use Imagine\Image\Box;
-use Imagine\Image\BoxInterface;
-use Imagine\Image\Metadata\MetadataBag;
-use Imagine\Image\Palette\Color\ColorInterface;
-use Imagine\Image\Fill\FillInterface;
-use Imagine\Image\PointInterface;
-use Imagine\Image\Palette\PaletteInterface;
-use Imagine\Image\Palette\RGB;
-use Imagine\Image\ProfileInterface;
 use Imagine\Exception\InvalidArgumentException;
 use Imagine\Exception\OutOfBoundsException;
 use Imagine\Exception\RuntimeException;
+use Imagine\Image\AbstractImage;
+use Imagine\Image\Box;
+use Imagine\Image\BoxInterface;
+use Imagine\Image\Fill\FillInterface;
+use Imagine\Image\ImageInterface;
+use Imagine\Image\Metadata\MetadataBag;
+use Imagine\Image\Palette\Color\ColorInterface;
+use Imagine\Image\Palette\PaletteInterface;
+use Imagine\Image\Palette\RGB;
+use Imagine\Image\PointInterface;
+use Imagine\Image\ProfileInterface;
 
-/**
- * Image implementation for SVG images.
- *
- * @author Martin Auswöger <martin@auswoeger.com>
- */
 class Image extends AbstractImage
 {
     /**
@@ -43,8 +38,6 @@ class Image extends AbstractImage
     private $palette;
 
     /**
-     * Constructor.
-     *
      * @param \DOMDocument $document
      * @param MetadataBag  $metadata
      */
@@ -53,6 +46,23 @@ class Image extends AbstractImage
         $this->document = $document;
         $this->metadata = $metadata;
         $this->palette = new RGB();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __toString()
+    {
+        return $this->get('svg');
+    }
+
+    /**
+     * Assures the DOM document instance will be cloned too.
+     */
+    public function __clone()
+    {
+        $this->document = clone $this->document;
+        $this->metadata = clone $this->metadata;
     }
 
     /**
@@ -153,25 +163,6 @@ class Image extends AbstractImage
     }
 
     /**
-     * Sets the viewBox attribute from the original dimensions if it's not set.
-     */
-    private function fixViewBox()
-    {
-        $svg = $this->document->documentElement;
-
-        if ($svg->hasAttribute('viewBox')) {
-            return;
-        }
-
-        $width = floatval($svg->getAttribute('width'));
-        $height = floatval($svg->getAttribute('height'));
-
-        if ($width && $height) {
-            $svg->setAttribute('viewBox', '0 0 '.$width.' '.$height);
-        }
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function rotate($angle, ColorInterface $background = null)
@@ -261,14 +252,6 @@ class Image extends AbstractImage
     /**
      * {@inheritdoc}
      */
-    public function __toString()
-    {
-        return $this->get('svg');
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function flipHorizontally()
     {
         throw new RuntimeException('This method is not implemented');
@@ -328,8 +311,8 @@ class Image extends AbstractImage
         }
 
         $viewBox = preg_split('/[\s,]+/', $svg->getAttribute('viewBox') ?: '');
-        $viewBoxWidth = isset($viewBox[2]) ? floatval($viewBox[2]) : 0;
-        $viewBoxHeight = isset($viewBox[3]) ? floatval($viewBox[3]) : 0;
+        $viewBoxWidth = isset($viewBox[2]) ? (float) ($viewBox[2]) : 0;
+        $viewBoxHeight = isset($viewBox[3]) ? (float) ($viewBox[3]) : 0;
 
         // Missing width/height and viewBox
         if ($viewBoxWidth <= 0 || $viewBoxHeight <= 0) {
@@ -356,42 +339,6 @@ class Image extends AbstractImage
 
         // Missing width/height, returning relative dimensions from viewBox
         return new RelativeBox(round($viewBoxWidth), round($viewBoxHeight));
-    }
-
-    /**
-     * Converts sizes like 2em, 10cm or 12pt to pixels.
-     *
-     * @param string $size
-     *
-     * @return int
-     */
-    private function getPixelValue($size)
-    {
-        $map = [
-            'px' => 1,
-            'em' => 16,
-            'ex' => 16 / 2,
-            'pt' => 16 / 12,
-            'pc' => 16,
-            'in' => 16 * 6,
-            'cm' => 16 / (2.54 / 6),
-            'mm' => 16 / (25.4 / 6),
-        ];
-
-        $size = trim($size);
-
-        $value = substr($size, 0, -2);
-        $unit = substr($size, -2);
-
-        if (isset($map[$unit]) && is_numeric($value)) {
-            $size = $value * $map[$unit];
-        }
-
-        if (is_numeric($size)) {
-            return (int) round($size);
-        }
-
-        return 0;
     }
 
     /**
@@ -481,11 +428,57 @@ class Image extends AbstractImage
     }
 
     /**
-     * Assures the DOM document instance will be cloned too.
+     * Sets the viewBox attribute from the original dimensions if it's not set.
      */
-    public function __clone()
+    private function fixViewBox()
     {
-        $this->document = clone $this->document;
-        $this->metadata = clone $this->metadata;
+        $svg = $this->document->documentElement;
+
+        if ($svg->hasAttribute('viewBox')) {
+            return;
+        }
+
+        $width = (float) ($svg->getAttribute('width'));
+        $height = (float) ($svg->getAttribute('height'));
+
+        if ($width && $height) {
+            $svg->setAttribute('viewBox', '0 0 '.$width.' '.$height);
+        }
+    }
+
+    /**
+     * Converts sizes like 2em, 10cm or 12pt to pixels.
+     *
+     * @param string $size
+     *
+     * @return int
+     */
+    private function getPixelValue($size)
+    {
+        $map = [
+            'px' => 1,
+            'em' => 16,
+            'ex' => 16 / 2,
+            'pt' => 16 / 12,
+            'pc' => 16,
+            'in' => 16 * 6,
+            'cm' => 16 / (2.54 / 6),
+            'mm' => 16 / (25.4 / 6),
+        ];
+
+        $size = trim($size);
+
+        $value = substr($size, 0, -2);
+        $unit = substr($size, -2);
+
+        if (isset($map[$unit]) && is_numeric($value)) {
+            $size = $value * $map[$unit];
+        }
+
+        if (is_numeric($size)) {
+            return (int) round($size);
+        }
+
+        return 0;
     }
 }

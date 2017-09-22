@@ -13,19 +13,21 @@ namespace Contao\ImagineSvg\Tests;
 use Contao\ImagineSvg\Image;
 use Contao\ImagineSvg\Imagine;
 use Contao\ImagineSvg\RelativeBox;
-use Imagine\Image\ImageInterface;
+use Imagine\Exception\InvalidArgumentException;
+use Imagine\Exception\OutOfBoundsException;
+use Imagine\Exception\RuntimeException;
 use Imagine\Image\Box;
-use Imagine\Image\Point;
+use Imagine\Image\Fill\FillInterface;
+use Imagine\Image\ImageInterface;
 use Imagine\Image\Metadata\MetadataBag;
+use Imagine\Image\Palette\PaletteInterface;
 use Imagine\Image\Palette\RGB;
+use Imagine\Image\Point;
+use Imagine\Image\ProfileInterface;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
-/**
- * Tests the Image class.
- *
- * @author Martin Auswöger <martin@auswoeger.com>
- */
-class ImageTest extends \PHPUnit_Framework_TestCase
+class ImageTest extends TestCase
 {
     /**
      * @var string
@@ -37,6 +39,8 @@ class ImageTest extends \PHPUnit_Framework_TestCase
      */
     public function setUp()
     {
+        parent::setUp();
+
         $this->rootDir = __DIR__.'/tmp';
     }
 
@@ -45,22 +49,18 @@ class ImageTest extends \PHPUnit_Framework_TestCase
      */
     public function tearDown()
     {
+        parent::tearDown();
+
         if (file_exists($this->rootDir)) {
             (new Filesystem())->remove($this->rootDir);
         }
     }
 
-    /**
-     * Tests the object instantiation.
-     */
     public function testInstantiation()
     {
         $this->assertInstanceOf('Contao\ImagineSvg\Image', new Image(new \DOMDocument(), new MetadataBag()));
     }
 
-    /**
-     * Tests the getDomDocument() method.
-     */
     public function testGetDomDocument()
     {
         $document = new \DOMDocument();
@@ -69,9 +69,6 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($document, $image->getDomDocument());
     }
 
-    /**
-     * Tests the copy() method.
-     */
     public function testCopy()
     {
         $document = new \DOMDocument();
@@ -82,9 +79,6 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $this->assertNotSame($document, $image2->getDomDocument());
     }
 
-    /**
-     * Tests the __clone() method.
-     */
     public function testClone()
     {
         $document = new \DOMDocument();
@@ -95,33 +89,30 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $this->assertNotSame($document, $image2->getDomDocument());
     }
 
-    /**
-     * Tests the crop() method.
-     */
     public function testCrop()
     {
         $imagine = new Imagine();
         $image = $imagine->create(new Box(100, 100));
 
-        $this->assertEquals(100, $image->getSize()->getWidth());
-        $this->assertEquals(100, $image->getSize()->getHeight());
-        $this->assertEquals('0 0 100 100', $image->getDomDocument()->documentElement->getAttribute('viewBox'));
+        $this->assertSame(100, $image->getSize()->getWidth());
+        $this->assertSame(100, $image->getSize()->getHeight());
+        $this->assertSame('0 0 100 100', $image->getDomDocument()->documentElement->getAttribute('viewBox'));
 
         $image->crop(new Point(25, 25), new Box(50, 50));
 
-        $this->assertEquals(50, $image->getSize()->getWidth());
-        $this->assertEquals(50, $image->getSize()->getHeight());
-        $this->assertEquals('0 0 50 50', $image->getDomDocument()->documentElement->getAttribute('viewBox'));
+        $this->assertSame(50, $image->getSize()->getWidth());
+        $this->assertSame(50, $image->getSize()->getHeight());
+        $this->assertSame('0 0 50 50', $image->getDomDocument()->documentElement->getAttribute('viewBox'));
 
         $imageBefore = $image->get('svg');
         $image->crop(new Point(0, 0), new Box(50, 50));
-        $this->assertEquals($imageBefore, $image->get('svg'));
+        $this->assertSame($imageBefore, $image->get('svg'));
 
         $image->getDomDocument()->documentElement->removeAttribute('viewBox');
 
         $imageBefore = $image->get('svg');
         $image->crop(new Point(0, 0), new Box(50, 50));
-        $this->assertEquals($imageBefore, $image->get('svg'));
+        $this->assertSame($imageBefore, $image->get('svg'));
 
         $image->getDomDocument()->documentElement->setAttribute('viewBox', '0 0 50 50');
         $image->getDomDocument()->documentElement->removeAttribute('width');
@@ -131,35 +122,32 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $image->crop(new Point(0, 0), new Box(50, 50));
         $this->assertNotInstanceOf(RelativeBox::class, $image->getSize());
 
-        $this->setExpectedException('Imagine\Exception\OutOfBoundsException');
+        $this->expectException(OutOfBoundsException::class);
 
         $image->crop(new Point(60, 60), new Box(50, 50));
     }
 
-    /**
-     * Tests the resize() method.
-     */
     public function testResize()
     {
         $imagine = new Imagine();
         $image = $imagine->create(new Box(100, 100));
 
-        $this->assertEquals(100, $image->getSize()->getWidth());
-        $this->assertEquals(100, $image->getSize()->getHeight());
+        $this->assertSame(100, $image->getSize()->getWidth());
+        $this->assertSame(100, $image->getSize()->getHeight());
 
         $resized = $image->resize(new Box(50, 50));
 
-        $this->assertEquals(50, $image->getSize()->getWidth());
-        $this->assertEquals(50, $image->getSize()->getHeight());
+        $this->assertSame(50, $image->getSize()->getWidth());
+        $this->assertSame(50, $image->getSize()->getHeight());
         $this->assertSame($image, $resized, 'Should return itself');
 
         $image->getDomDocument()->documentElement->removeAttribute('viewBox');
         $image->resize(new Box(100, 100));
 
-        $this->assertEquals(100, $image->getSize()->getWidth());
-        $this->assertEquals(100, $image->getSize()->getHeight());
+        $this->assertSame(100, $image->getSize()->getWidth());
+        $this->assertSame(100, $image->getSize()->getHeight());
 
-        $this->assertEquals(
+        $this->assertSame(
             '0 0 50 50',
             $image->getDomDocument()->documentElement->getAttribute('viewBox'),
             'Viewbox should get fixed'
@@ -170,16 +158,16 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $image->getDomDocument()->documentElement->setAttribute('viewBox', '0 0 100 100');
         $image->resize(new Box(100, 100));
 
-        $this->assertEquals(100, $image->getSize()->getWidth());
-        $this->assertEquals(100, $image->getSize()->getHeight());
+        $this->assertSame(100, $image->getSize()->getWidth());
+        $this->assertSame(100, $image->getSize()->getHeight());
 
-        $this->assertEquals(
+        $this->assertSame(
             '100',
             $image->getDomDocument()->documentElement->getAttribute('width'),
             'Relative dimensions should get absolute'
         );
 
-        $this->assertEquals(
+        $this->assertSame(
             '100',
             $image->getDomDocument()->documentElement->getAttribute('height'),
             'Relative dimensions should get absolute'
@@ -188,23 +176,20 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $image->getDomDocument()->documentElement->removeAttribute('viewBox');
         $image->resize(new Box(100, 100));
 
-        $this->assertEquals(100, $image->getSize()->getWidth());
-        $this->assertEquals(100, $image->getSize()->getHeight());
+        $this->assertSame(100, $image->getSize()->getWidth());
+        $this->assertSame(100, $image->getSize()->getHeight());
 
-        $this->assertEquals(
+        $this->assertSame(
             '',
             $image->getDomDocument()->documentElement->getAttribute('viewBox'),
             'Viewbox should not get modified if no resize is necessary'
         );
 
-        $this->setExpectedException('Imagine\Exception\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
 
         $image->resize(new Box(25, 25), ImageInterface::FILTER_POINT);
     }
 
-    /**
-     * Tests the save() method.
-     */
     public function testSave()
     {
         $path = $this->rootDir;
@@ -222,9 +207,9 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $document = new \DOMDocument();
         $document->loadXML($contents);
 
-        $this->assertEquals('svg', $document->documentElement->tagName);
-        $this->assertEquals(100, $document->documentElement->getAttribute('width'));
-        $this->assertEquals(100, $document->documentElement->getAttribute('height'));
+        $this->assertSame('svg', $document->documentElement->tagName);
+        $this->assertSame('100', $document->documentElement->getAttribute('width'));
+        $this->assertSame('100', $document->documentElement->getAttribute('height'));
 
         $image->save($path.'.svg');
 
@@ -233,9 +218,9 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $document = new \DOMDocument();
         $document->loadXML($contents);
 
-        $this->assertEquals('svg', $document->documentElement->tagName);
-        $this->assertEquals(100, $document->documentElement->getAttribute('width'));
-        $this->assertEquals(100, $document->documentElement->getAttribute('height'));
+        $this->assertSame('svg', $document->documentElement->tagName);
+        $this->assertSame('100', $document->documentElement->getAttribute('width'));
+        $this->assertSame('100', $document->documentElement->getAttribute('height'));
 
         $image->save($path.'.foo', ['format' => 'svg']);
 
@@ -244,9 +229,9 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $document = new \DOMDocument();
         $document->loadXML($contents);
 
-        $this->assertEquals('svg', $document->documentElement->tagName);
-        $this->assertEquals(100, $document->documentElement->getAttribute('width'));
-        $this->assertEquals(100, $document->documentElement->getAttribute('height'));
+        $this->assertSame('svg', $document->documentElement->tagName);
+        $this->assertSame('100', $document->documentElement->getAttribute('width'));
+        $this->assertSame('100', $document->documentElement->getAttribute('height'));
 
         $image->save($path.'.svgz');
 
@@ -255,9 +240,9 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $document = new \DOMDocument();
         $document->loadXML($contents);
 
-        $this->assertEquals('svg', $document->documentElement->tagName);
-        $this->assertEquals(100, $document->documentElement->getAttribute('width'));
-        $this->assertEquals(100, $document->documentElement->getAttribute('height'));
+        $this->assertSame('svg', $document->documentElement->tagName);
+        $this->assertSame('100', $document->documentElement->getAttribute('width'));
+        $this->assertSame('100', $document->documentElement->getAttribute('height'));
 
         unlink($path);
         unlink($path.'.svg');
@@ -265,9 +250,6 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         unlink($path.'.svgz');
     }
 
-    /**
-     * Tests the show() method.
-     */
     public function testShow()
     {
         $imagine = new Imagine();
@@ -280,9 +262,9 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $document = new \DOMDocument();
         $document->loadXML($contents);
 
-        $this->assertEquals('svg', $document->documentElement->tagName);
-        $this->assertEquals(100, $document->documentElement->getAttribute('width'));
-        $this->assertEquals(100, $document->documentElement->getAttribute('height'));
+        $this->assertSame('svg', $document->documentElement->tagName);
+        $this->assertSame('100', $document->documentElement->getAttribute('width'));
+        $this->assertSame('100', $document->documentElement->getAttribute('height'));
 
         ob_start();
         @$image->show('svgz'); // suppress headers already sent warning
@@ -291,14 +273,11 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $document = new \DOMDocument();
         $document->loadXML(gzdecode($contents));
 
-        $this->assertEquals('svg', $document->documentElement->tagName);
-        $this->assertEquals(100, $document->documentElement->getAttribute('width'));
-        $this->assertEquals(100, $document->documentElement->getAttribute('height'));
+        $this->assertSame('svg', $document->documentElement->tagName);
+        $this->assertSame('100', $document->documentElement->getAttribute('width'));
+        $this->assertSame('100', $document->documentElement->getAttribute('height'));
     }
 
-    /**
-     * Tests the get() method.
-     */
     public function testGet()
     {
         $imagine = new Imagine();
@@ -307,25 +286,22 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $document = new \DOMDocument();
         $document->loadXML($image->get('svg'));
 
-        $this->assertEquals('svg', $document->documentElement->tagName);
-        $this->assertEquals(100, $document->documentElement->getAttribute('width'));
-        $this->assertEquals(100, $document->documentElement->getAttribute('height'));
+        $this->assertSame('svg', $document->documentElement->tagName);
+        $this->assertSame('100', $document->documentElement->getAttribute('width'));
+        $this->assertSame('100', $document->documentElement->getAttribute('height'));
 
         $document = new \DOMDocument();
         $document->loadXML(gzdecode($image->get('svgz')));
 
-        $this->assertEquals('svg', $document->documentElement->tagName);
-        $this->assertEquals(100, $document->documentElement->getAttribute('width'));
-        $this->assertEquals(100, $document->documentElement->getAttribute('height'));
+        $this->assertSame('svg', $document->documentElement->tagName);
+        $this->assertSame('100', $document->documentElement->getAttribute('width'));
+        $this->assertSame('100', $document->documentElement->getAttribute('height'));
 
-        $this->setExpectedException('Imagine\Exception\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
 
         $image->get('jpg');
     }
 
-    /**
-     * Tests the __toString() method.
-     */
     public function testToString()
     {
         $imagine = new Imagine();
@@ -334,14 +310,11 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $document = new \DOMDocument();
         $document->loadXML((string) $image);
 
-        $this->assertEquals('svg', $document->documentElement->tagName);
-        $this->assertEquals(100, $document->documentElement->getAttribute('width'));
-        $this->assertEquals(100, $document->documentElement->getAttribute('height'));
+        $this->assertSame('svg', $document->documentElement->tagName);
+        $this->assertSame('100', $document->documentElement->getAttribute('width'));
+        $this->assertSame('100', $document->documentElement->getAttribute('height'));
     }
 
-    /**
-     * Tests the getSize() method.
-     */
     public function testGetSize()
     {
         $imagine = new Imagine();
@@ -349,68 +322,66 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $svg = $image->getDomDocument()->documentElement;
 
         $this->assertNotInstanceOf('Contao\ImagineSvg\RelativeBoxInterface', $image->getSize());
-        $this->assertEquals(100, $image->getSize()->getWidth());
-        $this->assertEquals(100, $image->getSize()->getHeight());
+        $this->assertSame(100, $image->getSize()->getWidth());
+        $this->assertSame(100, $image->getSize()->getHeight());
 
         $svg->setAttribute('height', 50);
 
         $this->assertNotInstanceOf('Contao\ImagineSvg\RelativeBoxInterface', $image->getSize());
-        $this->assertEquals(100, $image->getSize()->getWidth());
-        $this->assertEquals(50, $image->getSize()->getHeight());
+        $this->assertSame(100, $image->getSize()->getWidth());
+        $this->assertSame(50, $image->getSize()->getHeight());
 
         $svg->setAttribute('viewBox', '0 0 200 100');
         $svg->removeAttribute('height');
 
         $this->assertNotInstanceOf('Contao\ImagineSvg\RelativeBoxInterface', $image->getSize());
-        $this->assertEquals(100, $image->getSize()->getWidth());
-        $this->assertEquals(50, $image->getSize()->getHeight());
+        $this->assertSame(100, $image->getSize()->getWidth());
+        $this->assertSame(50, $image->getSize()->getHeight());
 
         $svg->setAttribute('height', 200);
         $svg->removeAttribute('width');
 
         $this->assertNotInstanceOf('Contao\ImagineSvg\RelativeBoxInterface', $image->getSize());
-        $this->assertEquals(400, $image->getSize()->getWidth());
-        $this->assertEquals(200, $image->getSize()->getHeight());
+        $this->assertSame(400, $image->getSize()->getWidth());
+        $this->assertSame(200, $image->getSize()->getHeight());
 
         $svg->removeAttribute('height');
 
         $this->assertInstanceOf('Contao\ImagineSvg\RelativeBoxInterface', $image->getSize());
-        $this->assertEquals(200, $image->getSize()->getWidth());
-        $this->assertEquals(100, $image->getSize()->getHeight());
+        $this->assertSame(200, $image->getSize()->getWidth());
+        $this->assertSame(100, $image->getSize()->getHeight());
 
         $svg->setAttribute('viewBox', '0 0 1 0.5');
 
         $this->assertInstanceOf('Contao\ImagineSvg\RelativeBoxInterface', $image->getSize());
-        $this->assertEquals(1 / 0.5, $image->getSize()->getWidth() / $image->getSize()->getHeight());
+        $this->assertSame(2, $image->getSize()->getWidth() / $image->getSize()->getHeight());
 
         $svg->setAttribute('viewBox', '0 0 0.001 0.000333');
 
         $this->assertInstanceOf('Contao\ImagineSvg\RelativeBoxInterface', $image->getSize());
-        $this->assertEquals(1 / 0.333, $image->getSize()->getWidth() / $image->getSize()->getHeight());
+        $this->assertSame(1 / 0.333, $image->getSize()->getWidth() / $image->getSize()->getHeight());
 
         $svg->removeAttribute('viewBox');
 
         $this->assertInstanceOf('Contao\ImagineSvg\UndefinedBoxInterface', $image->getSize());
-        $this->assertEquals(0, $image->getSize()->getWidth());
-        $this->assertEquals(0, $image->getSize()->getHeight());
+        $this->assertSame(0, $image->getSize()->getWidth());
+        $this->assertSame(0, $image->getSize()->getHeight());
 
         $svg->setAttribute('width', 100);
 
         $this->assertInstanceOf('Contao\ImagineSvg\UndefinedBoxInterface', $image->getSize());
-        $this->assertEquals(0, $image->getSize()->getWidth());
-        $this->assertEquals(0, $image->getSize()->getHeight());
+        $this->assertSame(0, $image->getSize()->getWidth());
+        $this->assertSame(0, $image->getSize()->getHeight());
 
         $svg->removeAttribute('width');
         $svg->setAttribute('height', 100);
 
         $this->assertInstanceOf('Contao\ImagineSvg\UndefinedBoxInterface', $image->getSize());
-        $this->assertEquals(0, $image->getSize()->getWidth());
-        $this->assertEquals(0, $image->getSize()->getHeight());
+        $this->assertSame(0, $image->getSize()->getWidth());
+        $this->assertSame(0, $image->getSize()->getHeight());
     }
 
     /**
-     * Tests the getSize() method.
-     *
      * @param string $value
      * @param int    $expected
      *
@@ -426,13 +397,11 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $document->documentElement->setAttribute('height', $value);
         $document->documentElement->removeAttribute('viewBox');
 
-        $this->assertEquals($expected, $image->getSize()->getWidth());
-        $this->assertEquals($expected, $image->getSize()->getHeight());
+        $this->assertSame($expected, $image->getSize()->getWidth());
+        $this->assertSame($expected, $image->getSize()->getHeight());
     }
 
     /**
-     * Provides the data for the testGetSizePixelValues() method.
-     *
      * @return array
      */
     public function getGetSizePixelValues()
@@ -456,57 +425,43 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    /**
-     * Tests the paste() method.
-     */
     public function testPaste()
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
-        $this->setExpectedException('Imagine\Exception\RuntimeException');
+        $this->expectException(RuntimeException::class);
 
         $image->paste(new Image(new \DOMDocument(), new MetadataBag()), new Point(0, 0));
     }
 
-    /**
-     * Tests the rotate() method.
-     */
     public function testRotate()
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
-        $this->setExpectedException('Imagine\Exception\RuntimeException');
+        $this->expectException(RuntimeException::class);
 
         $image->rotate(90);
     }
 
-    /**
-     * Tests the flipHorizontally() method.
-     */
     public function testFlipHorizontally()
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
-        $this->setExpectedException('Imagine\Exception\RuntimeException');
+        $this->expectException(RuntimeException::class);
 
         $image->flipHorizontally();
     }
 
-    /**
-     * Tests the flipVertically() method.
-     */
     public function testFlipVertically()
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
-        $this->setExpectedException('Imagine\Exception\RuntimeException');
+        $this->expectException(RuntimeException::class);
 
         $image->flipVertically();
     }
 
     /**
-     * Tests the strip() method.
-     *
      * @dataProvider getStrip
      *
      * @param string $svg
@@ -518,12 +473,10 @@ class ImageTest extends \PHPUnit_Framework_TestCase
             ->load($svg)
             ->strip();
 
-        $this->assertEquals($expected, $image->get('svg'));
+        $this->assertSame($expected, $image->get('svg'));
     }
 
     /**
-     * Provides the data for the testStrip() method.
-     *
      * @return array
      */
     public function getStrip()
@@ -544,117 +497,87 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         ];
     }
 
-    /**
-     * Tests the draw() method.
-     */
     public function testDraw()
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
-        $this->setExpectedException('Imagine\Exception\RuntimeException');
+        $this->expectException(RuntimeException::class);
 
         $image->draw();
     }
 
-    /**
-     * Tests the effects() method.
-     */
     public function testEffects()
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
-        $this->setExpectedException('Imagine\Exception\RuntimeException');
+        $this->expectException(RuntimeException::class);
 
         $image->effects();
     }
 
-    /**
-     * Tests the applyMask() method.
-     */
     public function testApplyMask()
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
-        $this->setExpectedException('Imagine\Exception\RuntimeException');
+        $this->expectException(RuntimeException::class);
 
         $image->applyMask(new Image(new \DOMDocument(), new MetadataBag()));
     }
 
-    /**
-     * Tests the fill() method.
-     */
     public function testFill()
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
-        $this->setExpectedException('Imagine\Exception\RuntimeException');
+        $this->expectException(RuntimeException::class);
 
-        $image->fill($this->getMock('Imagine\Image\Fill\FillInterface'));
+        $image->fill($this->createMock(FillInterface::class));
     }
 
-    /**
-     * Tests the mask() method.
-     */
     public function testMask()
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
-        $this->setExpectedException('Imagine\Exception\RuntimeException');
+        $this->expectException(RuntimeException::class);
 
         $image->mask();
     }
 
-    /**
-     * Tests the histogram() method.
-     */
     public function testHistogram()
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
-        $this->setExpectedException('Imagine\Exception\RuntimeException');
+        $this->expectException(RuntimeException::class);
 
         $image->histogram();
     }
 
-    /**
-     * Tests the getColorAt() method.
-     */
     public function testGetColorAt()
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
-        $this->setExpectedException('Imagine\Exception\RuntimeException');
+        $this->expectException(RuntimeException::class);
 
         $image->getColorAt(new Point(0, 0));
     }
 
-    /**
-     * Tests the layers() method.
-     */
     public function testLayers()
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
-        $this->setExpectedException('Imagine\Exception\RuntimeException');
+        $this->expectException(RuntimeException::class);
 
         $image->layers();
     }
 
-    /**
-     * Tests the interlace() method.
-     */
     public function testInterlace()
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
-        $this->setExpectedException('Imagine\Exception\RuntimeException');
+        $this->expectException(RuntimeException::class);
 
         $image->interlace('');
     }
 
-    /**
-     * Tests the palette() method.
-     */
     public function testPalette()
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
@@ -662,31 +585,25 @@ class ImageTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf(RGB::class, $image->palette());
     }
 
-    /**
-     * Tests the profile() method.
-     */
     public function testProfile()
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
-        $this->setExpectedException('Imagine\Exception\RuntimeException');
+        $this->expectException(RuntimeException::class);
 
-        $image->profile($this->getMock('Imagine\Image\ProfileInterface'));
+        $image->profile($this->createMock(ProfileInterface::class));
     }
 
-    /**
-     * Tests the usePalette() method.
-     */
     public function testUsePalette()
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
-        $paletteRgb = $this->getMock(RGB::class);
+        $paletteRgb = $this->createMock(RGB::class);
 
         $this->assertSame($image, $image->usePalette($paletteRgb));
         $this->assertSame($paletteRgb, $image->palette());
 
-        $this->setExpectedException('Imagine\Exception\RuntimeException');
+        $this->expectException(RuntimeException::class);
 
-        $image->usePalette($this->getMock('Imagine\Image\Palette\PaletteInterface'));
+        $image->usePalette($this->createMock(PaletteInterface::class));
     }
 }

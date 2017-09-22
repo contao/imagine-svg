@@ -12,15 +12,14 @@ namespace Contao\ImagineSvg\Tests;
 
 use Contao\ImagineSvg\Imagine;
 use Contao\ImagineSvg\UndefinedBox;
+use Imagine\Exception\InvalidArgumentException;
+use Imagine\Exception\RuntimeException;
 use Imagine\Image\Box;
+use Imagine\Image\Palette\Color\ColorInterface;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
-/**
- * Tests the Imagine class.
- *
- * @author Martin Auswöger <martin@auswoeger.com>
- */
-class ImagineTest extends \PHPUnit_Framework_TestCase
+class ImagineTest extends TestCase
 {
     /**
      * @var Imagine
@@ -33,10 +32,12 @@ class ImagineTest extends \PHPUnit_Framework_TestCase
     private $rootDir;
 
     /**
-     * Sets up the imagine instance.
+     * {@inheritdoc}
      */
     public function setUp()
     {
+        parent::setUp();
+
         $this->imagine = new Imagine();
         $this->rootDir = __DIR__.'/tmp';
     }
@@ -46,22 +47,18 @@ class ImagineTest extends \PHPUnit_Framework_TestCase
      */
     public function tearDown()
     {
+        parent::tearDown();
+
         if (file_exists($this->rootDir)) {
             (new Filesystem())->remove($this->rootDir);
         }
     }
 
-    /**
-     * Tests the object instantiation.
-     */
     public function testInstantiation()
     {
         $this->assertInstanceOf('Contao\ImagineSvg\Imagine', $this->imagine);
     }
 
-    /**
-     * Tests the create() method.
-     */
     public function testCreate()
     {
         $image = $this->imagine->create(new Box(100, 100));
@@ -70,12 +67,12 @@ class ImagineTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Contao\ImagineSvg\Image', $image);
         $this->assertInstanceOf('Imagine\Image\ImageInterface', $image);
 
-        $this->assertEquals('svg', $svg->tagName);
-        $this->assertEquals('1.1', $svg->getAttribute('version'));
-        $this->assertEquals('http://www.w3.org/2000/svg', $svg->getAttribute('xmlns'));
-        $this->assertEquals('100', $svg->getAttribute('width'));
-        $this->assertEquals('100', $svg->getAttribute('height'));
-        $this->assertEquals('0 0 100 100', $svg->getAttribute('viewBox'));
+        $this->assertSame('svg', $svg->tagName);
+        $this->assertSame('1.1', $svg->getAttribute('version'));
+        $this->assertSame('http://www.w3.org/2000/svg', $svg->getAttribute('xmlns'));
+        $this->assertSame('100', $svg->getAttribute('width'));
+        $this->assertSame('100', $svg->getAttribute('height'));
+        $this->assertSame('0 0 100 100', $svg->getAttribute('viewBox'));
 
         $image = $this->imagine->create(new UndefinedBox());
         $svg = $image->getDomDocument()->documentElement;
@@ -84,21 +81,15 @@ class ImagineTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse($svg->hasAttribute('height'));
     }
 
-    /**
-     * Tests the create() method with a color.
-     */
     public function testCreateWithColor()
     {
-        $color = $this->getMock('Imagine\Image\Palette\Color\ColorInterface');
+        $color = $this->createMock(ColorInterface::class);
 
-        $this->setExpectedException('Imagine\Exception\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
 
         $this->imagine->create(new Box(100, 100), $color);
     }
 
-    /**
-     * Tests the open() method.
-     */
     public function testOpen()
     {
         $path = $this->rootDir;
@@ -118,8 +109,8 @@ class ImagineTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Contao\ImagineSvg\Image', $image);
         $this->assertInstanceOf('Imagine\Image\ImageInterface', $image);
 
-        $this->assertEquals(100, $image->getSize()->getWidth());
-        $this->assertEquals(100, $image->getSize()->getHeight());
+        $this->assertSame(100, $image->getSize()->getWidth());
+        $this->assertSame(100, $image->getSize()->getHeight());
 
         unlink($path.'.svg');
         $image->save();
@@ -133,8 +124,8 @@ class ImagineTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Contao\ImagineSvg\Image', $image);
         $this->assertInstanceOf('Imagine\Image\ImageInterface', $image);
 
-        $this->assertEquals(100, $image->getSize()->getWidth());
-        $this->assertEquals(100, $image->getSize()->getHeight());
+        $this->assertSame(100, $image->getSize()->getWidth());
+        $this->assertSame(100, $image->getSize()->getHeight());
 
         unlink($path.'.svgz');
         $image->save();
@@ -148,8 +139,8 @@ class ImagineTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Contao\ImagineSvg\Image', $image);
         $this->assertInstanceOf('Imagine\Image\ImageInterface', $image);
 
-        $this->assertEquals(100, $image->getSize()->getWidth());
-        $this->assertEquals(100, $image->getSize()->getHeight());
+        $this->assertSame(100, $image->getSize()->getWidth());
+        $this->assertSame(100, $image->getSize()->getHeight());
 
         unlink($path);
         $image->save();
@@ -161,9 +152,6 @@ class ImagineTest extends \PHPUnit_Framework_TestCase
         unlink($path.'.svgz');
     }
 
-    /**
-     * Tests the load() method.
-     */
     public function testLoad()
     {
         $xml = '<?xml version="1.0"?>'
@@ -175,45 +163,36 @@ class ImagineTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Contao\ImagineSvg\Image', $image);
         $this->assertInstanceOf('Imagine\Image\ImageInterface', $image);
 
-        $this->assertEquals(100, $image->getSize()->getWidth());
-        $this->assertEquals(100, $image->getSize()->getHeight());
+        $this->assertSame(100, $image->getSize()->getWidth());
+        $this->assertSame(100, $image->getSize()->getHeight());
 
         $image = $this->imagine->load(gzencode($xml));
 
         $this->assertInstanceOf('Contao\ImagineSvg\Image', $image);
         $this->assertInstanceOf('Imagine\Image\ImageInterface', $image);
 
-        $this->assertEquals(100, $image->getSize()->getWidth());
-        $this->assertEquals(100, $image->getSize()->getHeight());
+        $this->assertSame(100, $image->getSize()->getWidth());
+        $this->assertSame(100, $image->getSize()->getHeight());
 
-        $this->setExpectedException('Imagine\Exception\RuntimeException');
+        $this->expectException(RuntimeException::class);
 
         $image->save();
     }
 
-    /**
-     * Tests the load() method with an invalid SVG image.
-     */
     public function testLoadInvalidSvg()
     {
-        $this->setExpectedException('Imagine\Exception\RuntimeException');
+        $this->expectException(RuntimeException::class);
 
         $this->imagine->load('<?xml version="1.0"?><notasvg/>');
     }
 
-    /**
-     * Tests the load() method with an invalid XML file.
-     */
     public function testLoadInvalidXml()
     {
-        $this->setExpectedException('Imagine\Exception\RuntimeException');
+        $this->expectException(RuntimeException::class);
 
         $this->imagine->load('<?xml version="1.0"?><svg><invalid>');
     }
 
-    /**
-     * Tests the read() method.
-     */
     public function testRead()
     {
         $xml = '<?xml version="1.0"?>'
@@ -229,8 +208,8 @@ class ImagineTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Contao\ImagineSvg\Image', $image);
         $this->assertInstanceOf('Imagine\Image\ImageInterface', $image);
 
-        $this->assertEquals(100, $image->getSize()->getWidth());
-        $this->assertEquals(100, $image->getSize()->getHeight());
+        $this->assertSame(100, $image->getSize()->getWidth());
+        $this->assertSame(100, $image->getSize()->getHeight());
 
         $stream = fopen('php://temp', 'r+');
         fwrite($stream, gzencode($xml));
@@ -241,32 +220,27 @@ class ImagineTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Contao\ImagineSvg\Image', $image);
         $this->assertInstanceOf('Imagine\Image\ImageInterface', $image);
 
-        $this->assertEquals(100, $image->getSize()->getWidth());
-        $this->assertEquals(100, $image->getSize()->getHeight());
+        $this->assertSame(100, $image->getSize()->getWidth());
+        $this->assertSame(100, $image->getSize()->getHeight());
 
-        $this->setExpectedException('Imagine\Exception\RuntimeException');
+        $this->expectException(RuntimeException::class);
 
         $image->save();
     }
 
-    /**
-     * Tests the read() method with an invalid resource.
-     */
     public function testReadInvalidResource()
     {
-        $this->setExpectedException('Imagine\Exception\InvalidArgumentException');
+        $this->expectException(InvalidArgumentException::class);
 
+        /* @noinspection PhpParamsInspection */
         $this->imagine->read('not a resource');
     }
 
-    /**
-     * Tests the font() method.
-     */
     public function testFont()
     {
-        $color = $this->getMock('Imagine\Image\Palette\Color\ColorInterface');
+        $color = $this->createMock(ColorInterface::class);
 
-        $this->setExpectedException('Imagine\Exception\RuntimeException');
+        $this->expectException(RuntimeException::class);
 
         $this->imagine->font($this->rootDir, 10, $color);
     }

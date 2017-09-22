@@ -10,18 +10,13 @@
 
 namespace Contao\ImagineSvg;
 
-use Imagine\Image\AbstractImagine;
-use Imagine\Image\Metadata\MetadataBag;
-use Imagine\Image\Palette\Color\ColorInterface;
-use Imagine\Image\BoxInterface;
 use Imagine\Exception\InvalidArgumentException;
 use Imagine\Exception\RuntimeException;
+use Imagine\Image\AbstractImagine;
+use Imagine\Image\BoxInterface;
+use Imagine\Image\Metadata\MetadataBag;
+use Imagine\Image\Palette\Color\ColorInterface;
 
-/**
- * Imagine implementation for SVG images.
- *
- * @author Martin Auswöger <martin@auswoeger.com>
- */
 class Imagine extends AbstractImagine
 {
     /**
@@ -78,7 +73,33 @@ class Imagine extends AbstractImagine
     }
 
     /**
-     * Loads SVG and returns an Image instance.
+     * {@inheritdoc}
+     */
+    public function read($resource)
+    {
+        if (!is_resource($resource)) {
+            throw new InvalidArgumentException('Variable does not contain a stream resource');
+        }
+
+        $content = stream_get_contents($resource);
+
+        if (false === $content) {
+            throw new InvalidArgumentException('Cannot read resource content');
+        }
+
+        return $this->load($content);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function font($file, $size, ColorInterface $color)
+    {
+        throw new RuntimeException('This method is not implemented');
+    }
+
+    /**
+     * Returns an Image instance from an SVG string.
      *
      * @param string      $data
      * @param MetadataBag $metadata
@@ -112,31 +133,5 @@ class Imagine extends AbstractImagine
         }
 
         return new Image($document, $metadata);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function read($resource)
-    {
-        if (!is_resource($resource)) {
-            throw new InvalidArgumentException('Variable does not contain a stream resource');
-        }
-
-        $content = stream_get_contents($resource);
-
-        if (false === $content) {
-            throw new InvalidArgumentException('Cannot read resource content');
-        }
-
-        return $this->load($content);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function font($file, $size, ColorInterface $color)
-    {
-        throw new RuntimeException('This method is not implemented');
     }
 }

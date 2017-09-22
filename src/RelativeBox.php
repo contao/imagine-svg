@@ -14,11 +14,6 @@ use Imagine\Image\Box;
 use Imagine\Image\BoxInterface;
 use Imagine\Image\PointInterface;
 
-/**
- * Relative box.
- *
- * @author Martin Auswöger <martin@auswoeger.com>
- */
 class RelativeBox implements RelativeBoxInterface
 {
     /**
@@ -27,14 +22,20 @@ class RelativeBox implements RelativeBoxInterface
     private $box;
 
     /**
-     * Constructor.
-     *
      * @param int $width
      * @param int $height
      */
     public function __construct($width, $height)
     {
         $this->box = new Box($width, $height);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function __toString()
+    {
+        return sprintf('%dx%d', $this->box->getWidth(), $this->box->getHeight());
     }
 
     /**
@@ -87,14 +88,6 @@ class RelativeBox implements RelativeBoxInterface
     public function square()
     {
         return $this->box->square();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function __toString()
-    {
-        return sprintf('%dx%d', $this->box->getWidth(), $this->box->getHeight());
     }
 
     /**

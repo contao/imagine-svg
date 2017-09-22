@@ -13,13 +13,16 @@ namespace Contao\ImagineSvg;
 use Imagine\Image\BoxInterface;
 use Imagine\Image\PointInterface;
 
-/**
- * Undefined box.
- *
- * @author Martin Auswöger <martin@auswoeger.com>
- */
 class UndefinedBox implements UndefinedBoxInterface
 {
+    /**
+     * {@inheritdoc}
+     */
+    public function __toString()
+    {
+        return 'undefined';
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -66,14 +69,6 @@ class UndefinedBox implements UndefinedBoxInterface
     public function square()
     {
         return 0;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function __toString()
-    {
-        return 'undefined';
     }
 
     /**
