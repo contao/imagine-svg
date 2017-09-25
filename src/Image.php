@@ -232,7 +232,7 @@ class Image extends AbstractImage
 
         $supported = ['svg', 'svgz'];
 
-        if (!in_array($format, $supported, true)) {
+        if (!\in_array($format, $supported, true)) {
             throw new InvalidArgumentException(sprintf(
                 'Saving image in "%s" format is not supported, please use one of the following extensions: "%s"',
                 $format,

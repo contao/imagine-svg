@@ -77,7 +77,7 @@ class Imagine extends AbstractImagine
      */
     public function read($resource)
     {
-        if (!is_resource($resource)) {
+        if (!\is_resource($resource)) {
             throw new InvalidArgumentException('Variable does not contain a stream resource');
         }
 
