@@ -199,7 +199,7 @@ class ImagineTest extends TestCase
             .'<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100" height="100"></svg>'
         ;
 
-        $stream = fopen('php://temp', 'r+');
+        $stream = fopen('php://temp', 'rb+');
         fwrite($stream, $xml);
         rewind($stream);
 
@@ -211,7 +211,7 @@ class ImagineTest extends TestCase
         $this->assertSame(100, $image->getSize()->getWidth());
         $this->assertSame(100, $image->getSize()->getHeight());
 
-        $stream = fopen('php://temp', 'r+');
+        $stream = fopen('php://temp', 'rb+');
         fwrite($stream, gzencode($xml));
         rewind($stream);
 

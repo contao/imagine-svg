@@ -97,12 +97,11 @@ class Image extends AbstractImage
             );
         }
 
-        if (
-            0 === $start->getX()
+        if (!($currentSize instanceof RelativeBox)
+            && 0 === $start->getX()
             && 0 === $start->getY()
             && $size->getWidth() === $currentSize->getWidth()
             && $size->getHeight() === $currentSize->getHeight()
-            && !($currentSize instanceof RelativeBox)
         ) {
             return $this; // skip crop if the size didn't change
         }
@@ -146,10 +145,9 @@ class Image extends AbstractImage
 
         $currentSize = $this->getSize();
 
-        if (
-            $size->getWidth() === $currentSize->getWidth() &&
-            $size->getHeight() === $currentSize->getHeight() &&
-            !($currentSize instanceof RelativeBox)
+        if (!($currentSize instanceof RelativeBox)
+            && $size->getWidth() === $currentSize->getWidth()
+            && $size->getHeight() === $currentSize->getHeight()
         ) {
             return $this; // skip resize if the size didn't change
         }
@@ -311,8 +309,8 @@ class Image extends AbstractImage
         }
 
         $viewBox = preg_split('/[\s,]+/', $svg->getAttribute('viewBox') ?: '');
-        $viewBoxWidth = isset($viewBox[2]) ? (float) ($viewBox[2]) : 0;
-        $viewBoxHeight = isset($viewBox[3]) ? (float) ($viewBox[3]) : 0;
+        $viewBoxWidth = isset($viewBox[2]) ? (float) $viewBox[2] : 0;
+        $viewBoxHeight = isset($viewBox[3]) ? (float) $viewBox[3] : 0;
 
         // Missing width/height and viewBox
         if ($viewBoxWidth <= 0 || $viewBoxHeight <= 0) {
@@ -438,8 +436,8 @@ class Image extends AbstractImage
             return;
         }
 
-        $width = (float) ($svg->getAttribute('width'));
-        $height = (float) ($svg->getAttribute('height'));
+        $width = (float) $svg->getAttribute('width');
+        $height = (float) $svg->getAttribute('height');
 
         if ($width && $height) {
             $svg->setAttribute('viewBox', '0 0 '.$width.' '.$height);
@@ -471,7 +469,7 @@ class Image extends AbstractImage
         $value = substr($size, 0, -2);
         $unit = substr($size, -2);
 
-        if (isset($map[$unit]) && is_numeric($value)) {
+        if (is_numeric($value) && isset($map[$unit])) {
             $size = $value * $map[$unit];
         }
 
