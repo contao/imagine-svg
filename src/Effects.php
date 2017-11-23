@@ -55,12 +55,11 @@ class Effects implements EffectsInterface
 
         $dom = $this->image->getDomDocument();
         $dom->documentElement->setAttribute("filter", "url(#rokkaBlur)");
-        $filter = $dom->documentElement->appendChild(new \DOMElement("filter"));
         $filter = $dom->createDocumentFragment();
         $filter->appendXML('<filter id="rokkaBlur">
                 <feGaussianBlur in="SourceGraphic" stdDeviation="'.$sigma.'" />
         </filter>');
-        $dom->documentElement->appendChild($filter);
+        $dom->documentElement->insertBefore($filter, $dom->documentElement->firstChild);
     }
 
 }
