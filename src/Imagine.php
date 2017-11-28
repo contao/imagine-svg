@@ -113,7 +113,7 @@ class Imagine extends AbstractImagine
         }
 
         $internalErrors = libxml_use_internal_errors(true);
-        $disableEntities = libxml_disable_entity_loader(true);
+        $disableEntities = libxml_disable_entity_loader();
         libxml_clear_errors();
 
         $document = new \DOMDocument();

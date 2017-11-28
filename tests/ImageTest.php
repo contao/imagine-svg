@@ -194,8 +194,8 @@ class ImageTest extends TestCase
     {
         $path = $this->rootDir;
 
-        if (!is_dir(dirname($path))) {
-            mkdir(dirname($path), 0777, true);
+        if (!is_dir(\dirname($path))) {
+            mkdir(\dirname($path), 0777, true);
         }
 
         $imagine = new Imagine();
