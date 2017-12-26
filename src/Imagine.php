@@ -108,7 +108,7 @@ class Imagine extends AbstractImagine
      */
     private function doLoad($data, MetadataBag $metadata)
     {
-        if (substr($data, 0, 2) === hex2bin('1F8B')) {
+        if (0 === strpos($data, hex2bin('1F8B'))) {
             $data = gzdecode($data);
         }
 
