@@ -97,7 +97,8 @@ class Image extends AbstractImage
             );
         }
 
-        if (!($currentSize instanceof RelativeBox)
+        if (
+            !($currentSize instanceof RelativeBox)
             && 0 === $start->getX()
             && 0 === $start->getY()
             && $size->getWidth() === $currentSize->getWidth()
@@ -145,7 +146,8 @@ class Image extends AbstractImage
 
         $currentSize = $this->getSize();
 
-        if (!($currentSize instanceof RelativeBox)
+        if (
+            !($currentSize instanceof RelativeBox)
             && $size->getWidth() === $currentSize->getWidth()
             && $size->getHeight() === $currentSize->getHeight()
         ) {
@@ -328,7 +330,8 @@ class Image extends AbstractImage
         }
 
         // Normalize floating point values
-        if ($viewBoxWidth < 1000
+        if (
+            $viewBoxWidth < 1000
             && (round($viewBoxWidth) !== $viewBoxWidth || round($viewBoxHeight) !== $viewBoxHeight)
         ) {
             $viewBoxHeight = 1000 / $viewBoxWidth * $viewBoxHeight;
