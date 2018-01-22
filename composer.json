@@ -2,7 +2,7 @@
     "name": "contao/imagine-svg",
     "type": "library",
     "description": "Contao Imagine SVG library",
-    "license": "LGPL-3.0+",
+    "license": "LGPL-3.0-or-later",
     "authors": [
         {
             "name": "Martin Auswöger",
@@ -15,7 +15,7 @@
         "imagine/imagine": "^0.6|^0.7"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.0",
+        "friendsofphp/php-cs-fixer": "^2.6",
         "phpunit/phpunit": "^5.7.26",
         "satooshi/php-coveralls": "^0.6",
         "symfony/filesystem": "^2.8|^3.0"
