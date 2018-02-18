@@ -292,7 +292,7 @@ class Image extends AbstractImage
      */
     public function effects()
     {
-        throw new RuntimeException('This method is not implemented');
+        return new Effects($this);
     }
 
     /**
