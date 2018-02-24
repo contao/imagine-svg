@@ -33,6 +33,17 @@ $imagine
     ->resize(new Box(40, 40))
     ->save('/path/to/thumbnail.svg')
 ;
+
+$image = $imagine->open('/path/to/image.svg');
+$image->effects()
+    ->gamma(1.5)
+    ->negative()
+    ->grayscale()
+    ->colorize($color)
+    ->sharpen()
+    ->blur(2)
+;
+$image->save('/path/to/image.svg');
 ```
 
 Because of the nature of SVG images, the `getSize()` method differs a little bit
