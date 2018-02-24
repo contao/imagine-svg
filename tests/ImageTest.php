@@ -10,9 +10,11 @@
 
 namespace Contao\ImagineSvg\Tests;
 
+use Contao\ImagineSvg\Effects;
 use Contao\ImagineSvg\Image;
 use Contao\ImagineSvg\Imagine;
 use Contao\ImagineSvg\RelativeBox;
+use Imagine\Effects\EffectsInterface;
 use Imagine\Exception\InvalidArgumentException;
 use Imagine\Exception\OutOfBoundsException;
 use Imagine\Exception\RuntimeException;
@@ -510,9 +512,8 @@ class ImageTest extends TestCase
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
-        $this->expectException(RuntimeException::class);
-
-        $image->effects();
+        $this->assertInstanceof(EffectsInterface::class, $image->effects());
+        $this->assertInstanceof(Effects::class, $image->effects());
     }
 
     public function testApplyMask()

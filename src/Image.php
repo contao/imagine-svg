@@ -292,7 +292,7 @@ class Image extends AbstractImage
      */
     public function effects()
     {
-        return new Effects($this);
+        return new Effects($this->document);
     }
 
     /**
