@@ -4,8 +4,6 @@ platform: x86
 clone_folder: C:\projects\contao-imagine-svg
 
 cache:
-  - C:\tools\php56 -> appveyor.yml
-  - C:\projects\contao-imagine-svg\vendor -> composer.lock
   - '%LOCALAPPDATA%\Composer\files'
 
 init:
