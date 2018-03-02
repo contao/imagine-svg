@@ -35,6 +35,7 @@ $imagine
 ;
 
 $image = $imagine->open('/path/to/image.svg');
+
 $image->effects()
     ->gamma(1.5)
     ->negative()
@@ -43,6 +44,7 @@ $image->effects()
     ->sharpen()
     ->blur(2)
 ;
+
 $image->save('/path/to/image.svg');
 ```
 

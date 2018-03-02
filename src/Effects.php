@@ -18,9 +18,6 @@ use Imagine\Image\Palette\Color\RGB;
 
 class Effects implements EffectsInterface
 {
-    /**
-     * @var string
-     */
     const SVG_FILTER_ID_PREFIX = 'svgImagineFilterV1_';
 
     /**
@@ -199,6 +196,7 @@ class Effects implements EffectsInterface
             $svg->firstChild->setAttribute('filter', 'url(#'.$id.')');
         }
 
+        /** @var \DOMElement $element */
         foreach ($this->document->getElementsByTagName('filter') as $element) {
             if ($element->getAttribute('id') === $id) {
                 return $element;
@@ -240,7 +238,7 @@ class Effects implements EffectsInterface
         $filter = $this->document->createElement($name);
 
         foreach ($attributes as $key => $value) {
-            if (is_string($key)) {
+            if (\is_string($key)) {
                 $filter->setAttribute($key, $value);
             } else {
                 $filter->appendChild($this->createElement($value[0], $value[1]));

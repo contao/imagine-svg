@@ -35,6 +35,7 @@ class EffectsTest extends TestCase
         $this->assertSame($effects, $effects->gamma(1));
         $this->assertTrue($dom->documentElement->firstChild->hasAttribute('filter'));
 
+        /** @var \DOMElement $filter */
         $filter = $dom->getElementsByTagName('filter')[0];
         $filterId = explode(')', explode('#', $dom->documentElement->firstChild->getAttribute('filter'))[1])[0];
 
@@ -64,12 +65,14 @@ class EffectsTest extends TestCase
         $this->assertSame($effects, $effects->negative());
         $this->assertTrue($dom->documentElement->firstChild->hasAttribute('filter'));
 
+        /** @var \DOMElement $filter */
         $filter = $dom->getElementsByTagName('filter')[0];
         $filterId = explode(')', explode('#', $dom->documentElement->firstChild->getAttribute('filter'))[1])[0];
 
         $this->assertSame($filterId, $filter->getAttribute('id'));
         $this->assertSame('feColorMatrix', $filter->firstChild->nodeName);
         $this->assertSame('matrix', $filter->firstChild->getAttribute('type'));
+
         $this->assertSame([
             '-1', '0', '0', '0', '1',
             '0', '-1', '0', '0', '1',
@@ -86,6 +89,7 @@ class EffectsTest extends TestCase
         $this->assertSame($effects, $effects->grayscale());
         $this->assertTrue($dom->documentElement->firstChild->hasAttribute('filter'));
 
+        /** @var \DOMElement $filter */
         $filter = $dom->getElementsByTagName('filter')[0];
         $filterId = explode(')', explode('#', $dom->documentElement->firstChild->getAttribute('filter'))[1])[0];
 
@@ -104,6 +108,7 @@ class EffectsTest extends TestCase
         $this->assertSame($effects, $effects->colorize($color));
         $this->assertTrue($dom->documentElement->firstChild->hasAttribute('filter'));
 
+        /** @var \DOMElement $filter */
         $filter = $dom->getElementsByTagName('filter')[0];
         $filterId = explode(')', explode('#', $dom->documentElement->firstChild->getAttribute('filter'))[1])[0];
 
@@ -134,11 +139,13 @@ class EffectsTest extends TestCase
         $this->assertSame($effects, $effects->sharpen());
         $this->assertTrue($dom->documentElement->firstChild->hasAttribute('filter'));
 
+        /** @var \DOMElement $filter */
         $filter = $dom->getElementsByTagName('filter')[0];
         $filterId = explode(')', explode('#', $dom->documentElement->firstChild->getAttribute('filter'))[1])[0];
 
         $this->assertSame($filterId, $filter->getAttribute('id'));
         $this->assertSame('feConvolveMatrix', $filter->firstChild->nodeName);
+
         $this->assertSame([
             '-0.02', '-0.12', '-0.02',
             '-0.12',  '1.56', '-0.12',
@@ -154,6 +161,7 @@ class EffectsTest extends TestCase
         $this->assertSame($effects, $effects->blur(1.5));
         $this->assertTrue($dom->documentElement->firstChild->hasAttribute('filter'));
 
+        /** @var \DOMElement $filter */
         $filter = $dom->getElementsByTagName('filter')[0];
         $filterId = explode(')', explode('#', $dom->documentElement->firstChild->getAttribute('filter'))[1])[0];
 
@@ -191,6 +199,7 @@ class EffectsTest extends TestCase
 
         $this->assertTrue($dom->documentElement->firstChild->hasAttribute('filter'));
 
+        /** @var \DOMElement $filter */
         $filter = $dom->getElementsByTagName('filter')[0];
         $filterId1 = explode(')', explode('#', $dom->documentElement->firstChild->getAttribute('filter'))[1])[0];
 
@@ -205,10 +214,13 @@ class EffectsTest extends TestCase
         $filter = $dom->getElementsByTagName('filter')[0];
         $filterId2 = explode(')', explode('#', $dom->documentElement->firstChild->getAttribute('filter'))[1])[0];
 
+        /** @var \DOMElement $g */
+        $g = $dom->getElementsByTagName('g')[1];
+
         $this->assertNotSame($filterId1, $filterId2);
         $this->assertSame($filterId2, $filter->getAttribute('id'));
         $this->assertSame(1, $filter->childNodes->length);
         $this->assertSame(2, $dom->getElementsByTagName('g')->length);
-        $this->assertSame('url(#differentId)', $dom->getElementsByTagName('g')[1]->getAttribute('filter'));
+        $this->assertSame('url(#differentId)', $g->getAttribute('filter'));
     }
 }

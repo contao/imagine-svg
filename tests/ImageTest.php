@@ -512,8 +512,8 @@ class ImageTest extends TestCase
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
-        $this->assertInstanceof(EffectsInterface::class, $image->effects());
-        $this->assertInstanceof(Effects::class, $image->effects());
+        $this->assertInstanceOf(EffectsInterface::class, $image->effects());
+        $this->assertInstanceOf(Effects::class, $image->effects());
     }
 
     public function testApplyMask()
