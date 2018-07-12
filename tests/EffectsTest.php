@@ -184,8 +184,8 @@ class EffectsTest extends TestCase
     public function testMultipleFilters()
     {
         $image = (new Imagine())->create(new UndefinedBox());
-        $dom = $image->getDomDocument();
 
+        $dom = $image->getDomDocument();
         $dom->documentElement->appendChild($dom->createElement('path'));
 
         $image->effects()

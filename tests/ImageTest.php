@@ -393,8 +393,8 @@ class ImageTest extends TestCase
     {
         $imagine = new Imagine();
         $image = $imagine->create(new Box(100, 100));
-        $document = $image->getDomDocument();
 
+        $document = $image->getDomDocument();
         $document->documentElement->setAttribute('width', $value);
         $document->documentElement->setAttribute('height', $value);
         $document->documentElement->removeAttribute('viewBox');
