@@ -50,7 +50,7 @@ class Effects implements EffectsInterface
 
         $funcAttributes = [
             'type' => 'gamma',
-            'exponent' => 1 / $gamma,
+            'exponent' => $this->numberToString(1 / $gamma),
         ];
 
         $this->addFilterElement('feComponentTransfer', [
@@ -169,7 +169,7 @@ class Effects implements EffectsInterface
 
         $funcAttributes = [
             'type' => 'linear',
-            'intercept' => $intercept,
+            'intercept' => $this->numberToString($intercept),
         ];
 
         $this->addFilterElement('feComponentTransfer', [
@@ -187,7 +187,10 @@ class Effects implements EffectsInterface
     public function convolve(Matrix $matrix)
     {
         $attributes = [
-            'kernelMatrix' => implode(' ', $matrix->getValueList()),
+            'kernelMatrix' => implode(' ', array_map(
+                [$this, 'numberToString'],
+                $matrix->getValueList()
+            )),
             'kernelUnitLength' => '1',
         ];
 
@@ -293,5 +296,15 @@ class Effects implements EffectsInterface
         }
 
         return $filter;
+    }
+
+    /**
+     * @param number $number
+     *
+     * @return string
+     */
+    private function numberToString($number)
+    {
+        return rtrim(rtrim(sprintf('%.7F', $number), '0'), '.');
     }
 }

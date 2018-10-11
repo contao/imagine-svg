@@ -58,6 +58,11 @@ class EffectsTest extends TestCase
         $effects->gamma(0);
     }
 
+    public function testGammaWithLocale()
+    {
+        $this->executeTestWithLocale('testGamma');
+    }
+
     public function testNegative()
     {
         $dom = (new Imagine())->create(new UndefinedBox())->getDomDocument();
@@ -184,6 +189,11 @@ class EffectsTest extends TestCase
         $effects->blur(0);
     }
 
+    public function testBlurWithLocale()
+    {
+        $this->executeTestWithLocale('testBlur');
+    }
+
     public function testBrightness()
     {
         $dom = (new Imagine())->create(new UndefinedBox())->getDomDocument();
@@ -212,6 +222,11 @@ class EffectsTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
 
         $effects->brightness(101);
+    }
+
+    public function testBrightnessWithLocale()
+    {
+        $this->executeTestWithLocale('testBrightness');
     }
 
     public function testConvolve()
@@ -252,6 +267,11 @@ class EffectsTest extends TestCase
         );
         $this->assertSame('1', $filter->lastChild->getAttribute('divisor'));
         $this->assertSame('5 3', $filter->lastChild->getAttribute('order'));
+    }
+
+    public function testConvolveWithLocale()
+    {
+        $this->executeTestWithLocale('testConvolve');
     }
 
     public function testMultipleFilters()
@@ -295,5 +315,25 @@ class EffectsTest extends TestCase
         $this->assertSame(1, $filter->childNodes->length);
         $this->assertSame(2, $dom->getElementsByTagName('g')->length);
         $this->assertSame('url(#differentId)', $g->getAttribute('filter'));
+    }
+
+    /**
+     * @param string $methodName
+     */
+    private function executeTestWithLocale($methodName)
+    {
+        $locale = setlocale(LC_NUMERIC, 0);
+        if (false === $locale) {
+            $this->markTestSkipped('Your platform does not support locales.');
+        }
+        try {
+            $requiredLocales = ['de_DE.UTF-8', 'de_DE.UTF8', 'de_DE.utf-8', 'de_DE.utf8', 'German_Germany.1252'];
+            if (false === setlocale(LC_NUMERIC, $requiredLocales)) {
+                $this->markTestSkipped('Could not set any of required locales: '.implode(', ', $requiredLocales));
+            }
+            $this->$methodName();
+        } finally {
+            setlocale(LC_NUMERIC, $locale);
+        }
     }
 }

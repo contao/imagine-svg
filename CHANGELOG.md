@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [Unreleased]
 
  * Compatibility with Imagine 1.0.
+ * Fix bug with LC_NUMERIC locale.
  * Add contents for the CHANGELOG.md file.
 
 ## [0.2.1] (2018-03-02)
