@@ -18,6 +18,7 @@ use Imagine\Exception\NotSupportedException;
 use Imagine\Image\Palette\Color\ColorInterface;
 use Imagine\Image\Palette\Color\RGB as ColorRgb;
 use Imagine\Image\Palette\RGB as PaletteRgb;
+use Imagine\Utils\Matrix;
 use PHPUnit\Framework\TestCase;
 
 class EffectsTest extends TestCase
@@ -146,6 +147,8 @@ class EffectsTest extends TestCase
         $this->assertSame($filterId, $filter->getAttribute('id'));
         $this->assertSame('feConvolveMatrix', $filter->firstChild->nodeName);
 
+        $this->assertSame('1', $filter->firstChild->getAttribute('kernelUnitLength'));
+
         $this->assertSame([
             '-0.02', '-0.12', '-0.02',
             '-0.12',  '1.56', '-0.12',
@@ -179,6 +182,76 @@ class EffectsTest extends TestCase
         $this->expectException(InvalidArgumentException::class);
 
         $effects->blur(0);
+    }
+
+    public function testBrightness()
+    {
+        $dom = (new Imagine())->create(new UndefinedBox())->getDomDocument();
+        $effects = new Effects($dom);
+
+        $this->assertSame($effects, $effects->brightness(10));
+        $this->assertTrue($dom->documentElement->firstChild->hasAttribute('filter'));
+
+        /** @var \DOMElement $filter */
+        $filter = $dom->getElementsByTagName('filter')[0];
+        $filterId = explode(')', explode('#', $dom->documentElement->firstChild->getAttribute('filter'))[1])[0];
+
+        $this->assertSame($filterId, $filter->getAttribute('id'));
+        $this->assertSame('feComponentTransfer', $filter->firstChild->nodeName);
+        $this->assertSame('linear', $filter->firstChild->firstChild->getAttribute('type'));
+        $this->assertSame('0.1', $filter->firstChild->firstChild->getAttribute('intercept'));
+
+        $effects->brightness(-99);
+
+        $this->assertSame('url(#'.$filterId.')', $dom->documentElement->firstChild->getAttribute('filter'));
+        $this->assertSame(2, $filter->childNodes->length);
+        $this->assertSame('feComponentTransfer', $filter->lastChild->nodeName);
+        $this->assertSame('linear', $filter->lastChild->lastChild->getAttribute('type'));
+        $this->assertSame('-0.99', $filter->lastChild->lastChild->getAttribute('intercept'));
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $effects->brightness(101);
+    }
+
+    public function testConvolve()
+    {
+        if (!class_exists(Matrix::class)) {
+            $this->markTestSkipped('Effects::convolve() in only available since Imagine 1.0');
+        }
+
+        $dom = (new Imagine())->create(new UndefinedBox())->getDomDocument();
+        $effects = new Effects($dom);
+
+        $this->assertSame($effects, $effects->convolve(new Matrix(3, 3, [-1.9, 0.02, -1, -1, 10, -1.0, -1, -3.12])));
+        $this->assertTrue($dom->documentElement->firstChild->hasAttribute('filter'));
+
+        /** @var \DOMElement $filter */
+        $filter = $dom->getElementsByTagName('filter')[0];
+        $filterId = explode(')', explode('#', $dom->documentElement->firstChild->getAttribute('filter'))[1])[0];
+
+        $this->assertSame($filterId, $filter->getAttribute('id'));
+        $this->assertSame('feConvolveMatrix', $filter->firstChild->nodeName);
+        $this->assertSame('1', $filter->firstChild->getAttribute('kernelUnitLength'));
+        $this->assertSame(
+            ['-1.9', '0.02', '-1', '-1', '10', '-1', '-1', '-3.12', '0'],
+            preg_split('/\s+/', $filter->firstChild->getAttribute('kernelMatrix'))
+        );
+        $this->assertEmpty($filter->firstChild->getAttribute('divisor'));
+        $this->assertEmpty($filter->firstChild->getAttribute('order'));
+
+        $effects->convolve(new Matrix(5, 3, [-1, -1, -1, -1, -1, -1, -1, 9]));
+
+        $this->assertSame('url(#'.$filterId.')', $dom->documentElement->firstChild->getAttribute('filter'));
+        $this->assertSame(2, $filter->childNodes->length);
+        $this->assertSame('feConvolveMatrix', $filter->lastChild->nodeName);
+        $this->assertSame('1', $filter->lastChild->getAttribute('kernelUnitLength'));
+        $this->assertSame(
+            ['-1', '-1', '-1', '-1', '-1', '-1', '-1', '9', '0', '0', '0', '0', '0', '0', '0'],
+            preg_split('/\s+/', $filter->lastChild->getAttribute('kernelMatrix'))
+        );
+        $this->assertSame('1', $filter->lastChild->getAttribute('divisor'));
+        $this->assertSame('5 3', $filter->lastChild->getAttribute('order'));
     }
 
     public function testMultipleFilters()

@@ -15,6 +15,7 @@ use Imagine\Exception\InvalidArgumentException;
 use Imagine\Exception\NotSupportedException;
 use Imagine\Image\Palette\Color\ColorInterface;
 use Imagine\Image\Palette\Color\RGB;
+use Imagine\Utils\Matrix;
 
 class Effects implements EffectsInterface
 {
@@ -47,21 +48,15 @@ class Effects implements EffectsInterface
             ));
         }
 
-        $exponent = 1 / $gamma;
+        $funcAttributes = [
+            'type' => 'gamma',
+            'exponent' => 1 / $gamma,
+        ];
 
         $this->addFilterElement('feComponentTransfer', [
-            ['feFuncR', [
-                'type' => 'gamma',
-                'exponent' => $exponent,
-            ]],
-            ['feFuncG', [
-                'type' => 'gamma',
-                'exponent' => $exponent,
-            ]],
-            ['feFuncB', [
-                'type' => 'gamma',
-                'exponent' => $exponent,
-            ]],
+            ['feFuncR', $funcAttributes],
+            ['feFuncG', $funcAttributes],
+            ['feFuncB', $funcAttributes],
         ]);
 
         return $this;
@@ -126,6 +121,7 @@ class Effects implements EffectsInterface
     public function sharpen()
     {
         $this->addFilterElement('feConvolveMatrix', [
+            'kernelUnitLength' => '1',
             'kernelMatrix' => implode(' ', [
                 '-0.02 -0.12 -0.02',
                 '-0.12  1.56 -0.12',
@@ -153,6 +149,57 @@ class Effects implements EffectsInterface
         $this->addFilterElement('feGaussianBlur', [
             'stdDeviation' => json_encode($deviation),
         ]);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function brightness($brightness)
+    {
+        $intercept = ((int) $brightness) / 100;
+
+        if ($intercept < -1 || $intercept > 1) {
+            throw new InvalidArgumentException(sprintf(
+                'Invalid brightness value %s, must be between -100 and 100',
+                var_export($brightness, true)
+            ));
+        }
+
+        $funcAttributes = [
+            'type' => 'linear',
+            'intercept' => $intercept,
+        ];
+
+        $this->addFilterElement('feComponentTransfer', [
+            ['feFuncR', $funcAttributes],
+            ['feFuncG', $funcAttributes],
+            ['feFuncB', $funcAttributes],
+        ]);
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function convolve(Matrix $matrix)
+    {
+        $attributes = [
+            'kernelMatrix' => implode(' ', $matrix->getValueList()),
+            'kernelUnitLength' => '1',
+        ];
+
+        if (!\in_array((float) array_sum($matrix->getValueList()), [0.0, 1.0], true)) {
+            $attributes['divisor'] = '1';
+        }
+
+        if ($matrix->getWidth() !== 3 || $matrix->getHeight() !== 3) {
+            $attributes['order'] = $matrix->getWidth() . ' ' . $matrix->getHeight();
+        }
+
+        $this->addFilterElement('feConvolveMatrix', $attributes);
 
         return $this;
     }

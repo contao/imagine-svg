@@ -128,7 +128,7 @@ class Image extends AbstractImage
     /**
      * {@inheritdoc}
      */
-    public function paste(ImageInterface $image, PointInterface $start)
+    public function paste(ImageInterface $image, PointInterface $start, $alpha = 100)
     {
         throw new RuntimeException('This method is not implemented');
     }
