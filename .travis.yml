@@ -7,8 +7,6 @@ cache:
   directories:
     - $HOME/.composer/cache
 
-sudo: false
-
 env:
   global:
     - COMPOSER_ALLOW_XDEBUG=0
