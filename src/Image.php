@@ -392,7 +392,7 @@ class Image extends AbstractImage
 
     /**
      * {@inheritdoc}
-     **/
+     */
     public function interlace($scheme)
     {
         throw new RuntimeException('This method is not implemented');

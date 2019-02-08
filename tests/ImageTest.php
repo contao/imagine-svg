@@ -473,7 +473,8 @@ class ImageTest extends TestCase
     {
         $image = (new Imagine())
             ->load($svg)
-            ->strip();
+            ->strip()
+        ;
 
         $this->assertSame($expected, $image->get('svg'));
     }

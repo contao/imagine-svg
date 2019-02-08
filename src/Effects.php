@@ -198,8 +198,8 @@ class Effects implements EffectsInterface
             $attributes['divisor'] = '1';
         }
 
-        if ($matrix->getWidth() !== 3 || $matrix->getHeight() !== 3) {
-            $attributes['order'] = $matrix->getWidth() . ' ' . $matrix->getHeight();
+        if (3 !== $matrix->getWidth() || 3 !== $matrix->getHeight()) {
+            $attributes['order'] = $matrix->getWidth().' '.$matrix->getHeight();
         }
 
         $this->addFilterElement('feConvolveMatrix', $attributes);
