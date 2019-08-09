@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [Unreleased]
 
  * Don’t throw exceptions for LIBXML warnings. [#13]
+ * Fix bug with viewBox computation.
 
 ## [0.2.2] (2019-01-27)
 

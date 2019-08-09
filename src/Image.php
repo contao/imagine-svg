@@ -439,8 +439,8 @@ class Image extends AbstractImage
             return;
         }
 
-        $width = (float) $svg->getAttribute('width');
-        $height = (float) $svg->getAttribute('height');
+        $width = $this->getPixelValue($svg->getAttribute('width'));
+        $height = $this->getPixelValue($svg->getAttribute('height'));
 
         if ($width && $height) {
             $svg->setAttribute('viewBox', '0 0 '.$width.' '.$height);

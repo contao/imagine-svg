@@ -144,6 +144,8 @@ class ImageTest extends TestCase
         $this->assertSame($image, $resized, 'Should return itself');
 
         $image->getDomDocument()->documentElement->removeAttribute('viewBox');
+        $image->getDomDocument()->documentElement->setAttribute('width', '50px');
+        $image->getDomDocument()->documentElement->setAttribute('height', '3.125em');
         $image->resize(new Box(100, 100));
 
         $this->assertSame(100, $image->getSize()->getWidth());
