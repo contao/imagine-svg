@@ -125,7 +125,9 @@ class Imagine extends AbstractImagine
         if ($error = libxml_get_last_error()) {
             libxml_clear_errors();
 
-            throw new RuntimeException($error->message);
+            if (\in_array($error->level, [LIBXML_ERR_ERROR, LIBXML_ERR_FATAL], true)) {
+                throw new RuntimeException($error->message);
+            }
         }
 
         if ('svg' !== strtolower($document->documentElement->tagName)) {
