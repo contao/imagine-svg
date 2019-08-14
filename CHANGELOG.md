@@ -4,6 +4,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+ * Don’t throw exceptions for LIBXML warnings. [#13]
 
 ## [0.2.2] (2019-01-27)
 
@@ -59,6 +60,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 [0.1.1]: https://github.com/contao/imagine-svg/compare/0.1.0...0.1.1
 [0.1.0]: https://github.com/contao/imagine-svg/commits/0.1.0
 
+[#13]: https://github.com/contao/imagine-svg/issues/13
 [#10]: https://github.com/contao/imagine-svg/issues/10
 [#9]: https://github.com/contao/imagine-svg/issues/9
 [#8]: https://github.com/contao/imagine-svg/issues/8
