@@ -44,10 +44,10 @@ class EffectsTest extends TestCase
         $this->assertSame('feComponentTransfer', $filter->firstChild->nodeName);
         $this->assertSame('gamma', $filter->firstChild->firstChild->getAttribute('type'));
         $this->assertSame('1', $filter->firstChild->firstChild->getAttribute('exponent'));
-        $this->assertSame(3, $filter->firstChild->childNodes->count());
-        $this->assertSame(1, $filter->firstChild->getElementsByTagName('feFuncR')->count());
-        $this->assertSame(1, $filter->firstChild->getElementsByTagName('feFuncG')->count());
-        $this->assertSame(1, $filter->firstChild->getElementsByTagName('feFuncB')->count());
+        $this->assertSame(3, $filter->firstChild->childNodes->length);
+        $this->assertSame(1, $filter->firstChild->getElementsByTagName('feFuncR')->length);
+        $this->assertSame(1, $filter->firstChild->getElementsByTagName('feFuncG')->length);
+        $this->assertSame(1, $filter->firstChild->getElementsByTagName('feFuncB')->length);
 
         $effects->gamma(1.6);
 
@@ -214,10 +214,10 @@ class EffectsTest extends TestCase
         $this->assertSame('feComponentTransfer', $filter->firstChild->nodeName);
         $this->assertSame('linear', $filter->firstChild->firstChild->getAttribute('type'));
         $this->assertSame('0.1', $filter->firstChild->firstChild->getAttribute('intercept'));
-        $this->assertSame(3, $filter->firstChild->childNodes->count());
-        $this->assertSame(1, $filter->firstChild->getElementsByTagName('feFuncR')->count());
-        $this->assertSame(1, $filter->firstChild->getElementsByTagName('feFuncG')->count());
-        $this->assertSame(1, $filter->firstChild->getElementsByTagName('feFuncB')->count());
+        $this->assertSame(3, $filter->firstChild->childNodes->length);
+        $this->assertSame(1, $filter->firstChild->getElementsByTagName('feFuncR')->length);
+        $this->assertSame(1, $filter->firstChild->getElementsByTagName('feFuncG')->length);
+        $this->assertSame(1, $filter->firstChild->getElementsByTagName('feFuncB')->length);
 
         $effects->brightness(-99);
 
