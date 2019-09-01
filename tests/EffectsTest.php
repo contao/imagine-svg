@@ -44,6 +44,10 @@ class EffectsTest extends TestCase
         $this->assertSame('feComponentTransfer', $filter->firstChild->nodeName);
         $this->assertSame('gamma', $filter->firstChild->firstChild->getAttribute('type'));
         $this->assertSame('1', $filter->firstChild->firstChild->getAttribute('exponent'));
+        $this->assertSame(3, $filter->firstChild->childNodes->count());
+        $this->assertSame(1, $filter->firstChild->getElementsByTagName('feFuncR')->count());
+        $this->assertSame(1, $filter->firstChild->getElementsByTagName('feFuncG')->count());
+        $this->assertSame(1, $filter->firstChild->getElementsByTagName('feFuncB')->count());
 
         $effects->gamma(1.6);
 
@@ -109,7 +113,7 @@ class EffectsTest extends TestCase
     {
         $dom = (new Imagine())->create(new UndefinedBox())->getDomDocument();
         $effects = new Effects($dom);
-        $color = new ColorRgb(new PaletteRgb(), [255, 0, 0], 100);
+        $color = new ColorRgb(new PaletteRgb(), [255, 127.5, 63.75], 100);
 
         $this->assertSame($effects, $effects->colorize($color));
         $this->assertTrue($dom->documentElement->firstChild->hasAttribute('filter'));
@@ -121,16 +125,16 @@ class EffectsTest extends TestCase
         $this->assertSame($filterId, $filter->getAttribute('id'));
         $this->assertSame('feColorMatrix', $filter->firstChild->nodeName);
         $this->assertSame('matrix', $filter->firstChild->getAttribute('type'));
-        $this->assertSame('1 0 0 0 1 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0', $filter->firstChild->getAttribute('values'));
+        $this->assertSame('1 0 0 0 1 0 1 0 0 0.5 0 0 1 0 0.25 0 0 0 1 0', $filter->firstChild->getAttribute('values'));
 
-        $color = new ColorRgb(new PaletteRgb(), [0, 255, 0], 100);
+        $color = new ColorRgb(new PaletteRgb(), [63.75, 255, 127.5], 100);
         $effects->colorize($color);
 
         $this->assertSame('url(#'.$filterId.')', $dom->documentElement->firstChild->getAttribute('filter'));
         $this->assertSame(2, $filter->childNodes->length);
         $this->assertSame('feColorMatrix', $filter->lastChild->nodeName);
         $this->assertSame('matrix', $filter->lastChild->getAttribute('type'));
-        $this->assertSame('1 0 0 0 0 0 1 0 0 1 0 0 1 0 0 0 0 0 1 0', $filter->lastChild->getAttribute('values'));
+        $this->assertSame('1 0 0 0 0.25 0 1 0 0 1 0 0 1 0 0.5 0 0 0 1 0', $filter->lastChild->getAttribute('values'));
 
         $this->expectException(NotSupportedException::class);
 
@@ -166,7 +170,7 @@ class EffectsTest extends TestCase
         $dom = (new Imagine())->create(new UndefinedBox())->getDomDocument();
         $effects = new Effects($dom);
 
-        $this->assertSame($effects, $effects->blur(1.5));
+        $this->assertSame($effects, $effects->blur(' 1.50'));
         $this->assertTrue($dom->documentElement->firstChild->hasAttribute('filter'));
 
         /** @var \DOMElement $filter */
@@ -210,6 +214,10 @@ class EffectsTest extends TestCase
         $this->assertSame('feComponentTransfer', $filter->firstChild->nodeName);
         $this->assertSame('linear', $filter->firstChild->firstChild->getAttribute('type'));
         $this->assertSame('0.1', $filter->firstChild->firstChild->getAttribute('intercept'));
+        $this->assertSame(3, $filter->firstChild->childNodes->count());
+        $this->assertSame(1, $filter->firstChild->getElementsByTagName('feFuncR')->count());
+        $this->assertSame(1, $filter->firstChild->getElementsByTagName('feFuncG')->count());
+        $this->assertSame(1, $filter->firstChild->getElementsByTagName('feFuncB')->count());
 
         $effects->brightness(-99);
 
@@ -218,6 +226,12 @@ class EffectsTest extends TestCase
         $this->assertSame('feComponentTransfer', $filter->lastChild->nodeName);
         $this->assertSame('linear', $filter->lastChild->lastChild->getAttribute('type'));
         $this->assertSame('-0.99', $filter->lastChild->lastChild->getAttribute('intercept'));
+
+        $effects->brightness(-100);
+        $this->assertSame('-1', $filter->lastChild->lastChild->getAttribute('intercept'));
+
+        $effects->brightness(100);
+        $this->assertSame('1', $filter->lastChild->lastChild->getAttribute('intercept'));
 
         $this->expectException(InvalidArgumentException::class);
 
@@ -267,6 +281,16 @@ class EffectsTest extends TestCase
         );
         $this->assertSame('1', $filter->lastChild->getAttribute('divisor'));
         $this->assertSame('5 3', $filter->lastChild->getAttribute('order'));
+
+        $effects->convolve(new Matrix(3, 3, [0, 0, 0, 0, 0, 0, 0, 0]));
+        $this->assertSame('feConvolveMatrix', $filter->lastChild->nodeName);
+        $this->assertSame('1', $filter->lastChild->getAttribute('kernelUnitLength'));
+        $this->assertSame(
+            ['0', '0', '0', '0', '0', '0', '0', '0', '0'],
+            preg_split('/\s+/', $filter->lastChild->getAttribute('kernelMatrix'))
+        );
+        $this->assertEmpty($filter->lastChild->getAttribute('divisor'));
+        $this->assertEmpty($filter->firstChild->getAttribute('order'));
     }
 
     public function testConvolveWithLocale()
