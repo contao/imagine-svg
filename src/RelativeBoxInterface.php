@@ -12,6 +12,9 @@ namespace Contao\ImagineSvg;
 
 use Imagine\Image\BoxInterface;
 
+/**
+ * @deprecated use SvgBox::getType() === SvgBox::TYPE_ASPECT_RATIO instead
+ */
 interface RelativeBoxInterface extends BoxInterface
 {
 }

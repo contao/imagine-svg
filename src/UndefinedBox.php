@@ -13,14 +13,14 @@ namespace Contao\ImagineSvg;
 use Imagine\Image\BoxInterface;
 use Imagine\Image\PointInterface;
 
-class UndefinedBox implements UndefinedBoxInterface
+/**
+ * @deprecated use SvgBox::createTypeNone() instead
+ */
+class UndefinedBox extends SvgBox implements UndefinedBoxInterface
 {
-    /**
-     * {@inheritdoc}
-     */
-    public function __toString()
+    public function __construct()
     {
-        return 'undefined';
+        parent::__construct(0, 0, self::TYPE_NONE);
     }
 
     /**
@@ -28,6 +28,11 @@ class UndefinedBox implements UndefinedBoxInterface
      */
     public function getWidth()
     {
+        @trigger_error(
+            'Relying on UndefinedBox::getWidth() being 0 is deprecated and will be changed in Version 1.0.0.',
+            E_USER_DEPRECATED
+        );
+
         return 0;
     }
 
@@ -36,6 +41,11 @@ class UndefinedBox implements UndefinedBoxInterface
      */
     public function getHeight()
     {
+        @trigger_error(
+            'Relying on UndefinedBox::getHeight() being 0 is deprecated and will be changed in Version 1.0.0.',
+            E_USER_DEPRECATED
+        );
+
         return 0;
     }
 
@@ -60,6 +70,11 @@ class UndefinedBox implements UndefinedBoxInterface
      */
     public function contains(BoxInterface $box, PointInterface $start = null)
     {
+        @trigger_error(
+            'Relying on UndefinedBox::contains() being false is deprecated and will be changed in Version 1.0.0.',
+            E_USER_DEPRECATED
+        );
+
         return false;
     }
 
@@ -68,6 +83,11 @@ class UndefinedBox implements UndefinedBoxInterface
      */
     public function square()
     {
+        @trigger_error(
+            'Relying on UndefinedBox::square() being 0 is deprecated and will be changed in Version 1.0.0.',
+            E_USER_DEPRECATED
+        );
+
         return 0;
     }
 
