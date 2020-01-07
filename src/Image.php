@@ -421,7 +421,7 @@ class Image extends AbstractImage
     public function usePalette(PaletteInterface $palette)
     {
         if (!$palette instanceof RGB) {
-            throw new RuntimeException('SVG driver only supports RGB palette');
+            throw $this->createNotImplementedException('SVG driver only supports RGB palette');
         }
 
         $this->palette = $palette;
@@ -487,14 +487,16 @@ class Image extends AbstractImage
     /**
      * Returns a NotSupportedException for newer imagine version and RuntimeException for older versions.
      *
+     * @param string $message
+     *
      * @return NotSupportedException|RuntimeException
      */
-    private function createNotImplementedException()
+    private function createNotImplementedException($message = 'This method is not implemented')
     {
         if (class_exists(NotSupportedException::class)) {
-            return new NotSupportedException('This method is not implemented');
+            return new NotSupportedException($message);
         }
 
-        return new RuntimeException('This method is not implemented');
+        return new RuntimeException($message);
     }
 }
