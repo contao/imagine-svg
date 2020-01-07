@@ -11,6 +11,7 @@
 namespace Contao\ImagineSvg;
 
 use Imagine\Exception\InvalidArgumentException;
+use Imagine\Exception\NotSupportedException;
 use Imagine\Exception\RuntimeException;
 use Imagine\Image\AbstractImagine;
 use Imagine\Image\BoxInterface;
@@ -95,6 +96,10 @@ class Imagine extends AbstractImagine
      */
     public function font($file, $size, ColorInterface $color)
     {
+        if (class_exists(NotSupportedException::class)) {
+            throw new NotSupportedException('This method is not implemented');
+        }
+
         throw new RuntimeException('This method is not implemented');
     }
 

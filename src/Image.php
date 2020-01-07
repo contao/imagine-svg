@@ -11,6 +11,7 @@
 namespace Contao\ImagineSvg;
 
 use Imagine\Exception\InvalidArgumentException;
+use Imagine\Exception\NotSupportedException;
 use Imagine\Exception\OutOfBoundsException;
 use Imagine\Exception\RuntimeException;
 use Imagine\Image\AbstractImage;
@@ -130,7 +131,7 @@ class Image extends AbstractImage
      */
     public function paste(ImageInterface $image, PointInterface $start, $alpha = 100)
     {
-        throw new RuntimeException('This method is not implemented');
+        throw $this->createNotImplementedException();
     }
 
     /**
@@ -167,7 +168,7 @@ class Image extends AbstractImage
      */
     public function rotate($angle, ColorInterface $background = null)
     {
-        throw new RuntimeException('This method is not implemented');
+        throw $this->createNotImplementedException();
     }
 
     /**
@@ -254,7 +255,7 @@ class Image extends AbstractImage
      */
     public function flipHorizontally()
     {
-        throw new RuntimeException('This method is not implemented');
+        throw $this->createNotImplementedException();
     }
 
     /**
@@ -262,7 +263,7 @@ class Image extends AbstractImage
      */
     public function flipVertically()
     {
-        throw new RuntimeException('This method is not implemented');
+        throw $this->createNotImplementedException();
     }
 
     /**
@@ -284,7 +285,7 @@ class Image extends AbstractImage
      */
     public function draw()
     {
-        throw new RuntimeException('This method is not implemented');
+        throw $this->createNotImplementedException();
     }
 
     /**
@@ -347,7 +348,7 @@ class Image extends AbstractImage
      */
     public function applyMask(ImageInterface $mask)
     {
-        throw new RuntimeException('This method is not implemented');
+        throw $this->createNotImplementedException();
     }
 
     /**
@@ -355,7 +356,7 @@ class Image extends AbstractImage
      */
     public function fill(FillInterface $fill)
     {
-        throw new RuntimeException('This method is not implemented');
+        throw $this->createNotImplementedException();
     }
 
     /**
@@ -363,7 +364,7 @@ class Image extends AbstractImage
      */
     public function mask()
     {
-        throw new RuntimeException('This method is not implemented');
+        throw $this->createNotImplementedException();
     }
 
     /**
@@ -371,7 +372,7 @@ class Image extends AbstractImage
      */
     public function histogram()
     {
-        throw new RuntimeException('This method is not implemented');
+        throw $this->createNotImplementedException();
     }
 
     /**
@@ -379,7 +380,7 @@ class Image extends AbstractImage
      */
     public function getColorAt(PointInterface $point)
     {
-        throw new RuntimeException('This method is not implemented');
+        throw $this->createNotImplementedException();
     }
 
     /**
@@ -387,7 +388,7 @@ class Image extends AbstractImage
      */
     public function layers()
     {
-        throw new RuntimeException('This method is not implemented');
+        throw $this->createNotImplementedException();
     }
 
     /**
@@ -395,7 +396,7 @@ class Image extends AbstractImage
      */
     public function interlace($scheme)
     {
-        throw new RuntimeException('This method is not implemented');
+        throw $this->createNotImplementedException();
     }
 
     /**
@@ -411,7 +412,7 @@ class Image extends AbstractImage
      */
     public function profile(ProfileInterface $profile)
     {
-        throw new RuntimeException('This method is not implemented');
+        throw $this->createNotImplementedException();
     }
 
     /**
@@ -420,7 +421,7 @@ class Image extends AbstractImage
     public function usePalette(PaletteInterface $palette)
     {
         if (!$palette instanceof RGB) {
-            throw new RuntimeException('SVG driver only supports RGB palette');
+            throw $this->createNotImplementedException('SVG driver only supports RGB palette');
         }
 
         $this->palette = $palette;
@@ -481,5 +482,21 @@ class Image extends AbstractImage
         }
 
         return 0;
+    }
+
+    /**
+     * Returns a NotSupportedException for newer imagine version and RuntimeException for older versions.
+     *
+     * @param string $message
+     *
+     * @return NotSupportedException|RuntimeException
+     */
+    private function createNotImplementedException($message = 'This method is not implemented')
+    {
+        if (class_exists(NotSupportedException::class)) {
+            return new NotSupportedException($message);
+        }
+
+        return new RuntimeException($message);
     }
 }

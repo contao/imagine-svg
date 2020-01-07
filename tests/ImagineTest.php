@@ -13,6 +13,7 @@ namespace Contao\ImagineSvg\Tests;
 use Contao\ImagineSvg\Imagine;
 use Contao\ImagineSvg\UndefinedBox;
 use Imagine\Exception\InvalidArgumentException;
+use Imagine\Exception\NotSupportedException;
 use Imagine\Exception\RuntimeException;
 use Imagine\Image\Box;
 use Imagine\Image\Palette\Color\ColorInterface;
@@ -241,6 +242,10 @@ class ImagineTest extends TestCase
         $color = $this->createMock(ColorInterface::class);
 
         $this->expectException(RuntimeException::class);
+
+        if (class_exists(NotSupportedException::class)) {
+            $this->expectException(NotSupportedException::class);
+        }
 
         $this->imagine->font($this->rootDir, 10, $color);
     }

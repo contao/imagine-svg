@@ -16,6 +16,7 @@ use Contao\ImagineSvg\Imagine;
 use Contao\ImagineSvg\RelativeBox;
 use Imagine\Effects\EffectsInterface;
 use Imagine\Exception\InvalidArgumentException;
+use Imagine\Exception\NotSupportedException;
 use Imagine\Exception\OutOfBoundsException;
 use Imagine\Exception\RuntimeException;
 use Imagine\Image\Box;
@@ -450,6 +451,10 @@ class ImageTest extends TestCase
 
         $this->expectException(RuntimeException::class);
 
+        if (class_exists(NotSupportedException::class)) {
+            $this->expectException(NotSupportedException::class);
+        }
+
         $image->paste(new Image(new \DOMDocument(), new MetadataBag()), new Point(0, 0));
     }
 
@@ -458,6 +463,10 @@ class ImageTest extends TestCase
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
         $this->expectException(RuntimeException::class);
+
+        if (class_exists(NotSupportedException::class)) {
+            $this->expectException(NotSupportedException::class);
+        }
 
         $image->rotate(90);
     }
@@ -468,6 +477,10 @@ class ImageTest extends TestCase
 
         $this->expectException(RuntimeException::class);
 
+        if (class_exists(NotSupportedException::class)) {
+            $this->expectException(NotSupportedException::class);
+        }
+
         $image->flipHorizontally();
     }
 
@@ -476,6 +489,10 @@ class ImageTest extends TestCase
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
         $this->expectException(RuntimeException::class);
+
+        if (class_exists(NotSupportedException::class)) {
+            $this->expectException(NotSupportedException::class);
+        }
 
         $image->flipVertically();
     }
@@ -523,6 +540,10 @@ class ImageTest extends TestCase
 
         $this->expectException(RuntimeException::class);
 
+        if (class_exists(NotSupportedException::class)) {
+            $this->expectException(NotSupportedException::class);
+        }
+
         $image->draw();
     }
 
@@ -540,6 +561,10 @@ class ImageTest extends TestCase
 
         $this->expectException(RuntimeException::class);
 
+        if (class_exists(NotSupportedException::class)) {
+            $this->expectException(NotSupportedException::class);
+        }
+
         $image->applyMask(new Image(new \DOMDocument(), new MetadataBag()));
     }
 
@@ -548,6 +573,10 @@ class ImageTest extends TestCase
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
         $this->expectException(RuntimeException::class);
+
+        if (class_exists(NotSupportedException::class)) {
+            $this->expectException(NotSupportedException::class);
+        }
 
         $image->fill($this->createMock(FillInterface::class));
     }
@@ -558,6 +587,10 @@ class ImageTest extends TestCase
 
         $this->expectException(RuntimeException::class);
 
+        if (class_exists(NotSupportedException::class)) {
+            $this->expectException(NotSupportedException::class);
+        }
+
         $image->mask();
     }
 
@@ -566,6 +599,10 @@ class ImageTest extends TestCase
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
         $this->expectException(RuntimeException::class);
+
+        if (class_exists(NotSupportedException::class)) {
+            $this->expectException(NotSupportedException::class);
+        }
 
         $image->histogram();
     }
@@ -576,6 +613,10 @@ class ImageTest extends TestCase
 
         $this->expectException(RuntimeException::class);
 
+        if (class_exists(NotSupportedException::class)) {
+            $this->expectException(NotSupportedException::class);
+        }
+
         $image->getColorAt(new Point(0, 0));
     }
 
@@ -585,6 +626,10 @@ class ImageTest extends TestCase
 
         $this->expectException(RuntimeException::class);
 
+        if (class_exists(NotSupportedException::class)) {
+            $this->expectException(NotSupportedException::class);
+        }
+
         $image->layers();
     }
 
@@ -593,6 +638,10 @@ class ImageTest extends TestCase
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
         $this->expectException(RuntimeException::class);
+
+        if (class_exists(NotSupportedException::class)) {
+            $this->expectException(NotSupportedException::class);
+        }
 
         $image->interlace('');
     }
@@ -610,6 +659,10 @@ class ImageTest extends TestCase
 
         $this->expectException(RuntimeException::class);
 
+        if (class_exists(NotSupportedException::class)) {
+            $this->expectException(NotSupportedException::class);
+        }
+
         $image->profile($this->createMock(ProfileInterface::class));
     }
 
@@ -622,6 +675,10 @@ class ImageTest extends TestCase
         $this->assertSame($paletteRgb, $image->palette());
 
         $this->expectException(RuntimeException::class);
+
+        if (class_exists(NotSupportedException::class)) {
+            $this->expectException(NotSupportedException::class);
+        }
 
         $image->usePalette($this->createMock(PaletteInterface::class));
     }
