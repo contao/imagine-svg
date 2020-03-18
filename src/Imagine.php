@@ -106,8 +106,7 @@ class Imagine extends AbstractImagine
     /**
      * Returns an Image instance from an SVG string.
      *
-     * @param string      $data
-     * @param MetadataBag $metadata
+     * @param string $data
      *
      * @return Image
      */
