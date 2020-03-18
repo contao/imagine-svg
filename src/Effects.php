@@ -26,9 +26,6 @@ class Effects implements EffectsInterface
      */
     private $document;
 
-    /**
-     * @param \DOMDocument $document
-     */
     public function __construct(\DOMDocument $document)
     {
         $this->document = $document;
@@ -42,10 +39,7 @@ class Effects implements EffectsInterface
         $gamma = (float) $correction;
 
         if ($gamma <= 0) {
-            throw new InvalidArgumentException(sprintf(
-                'Invalid gamma correction value %s, must be a positive float or integer',
-                var_export($correction, true)
-            ));
+            throw new InvalidArgumentException(sprintf('Invalid gamma correction value %s, must be a positive float or integer', var_export($correction, true)));
         }
 
         $funcAttributes = [
@@ -140,10 +134,7 @@ class Effects implements EffectsInterface
         $deviation = (float) $sigma;
 
         if ($deviation <= 0) {
-            throw new InvalidArgumentException(sprintf(
-                'Invalid sigma %s, must be a positive float or integer',
-                var_export($sigma, true)
-            ));
+            throw new InvalidArgumentException(sprintf('Invalid sigma %s, must be a positive float or integer', var_export($sigma, true)));
         }
 
         $this->addFilterElement('feGaussianBlur', [
@@ -161,10 +152,7 @@ class Effects implements EffectsInterface
         $intercept = ((int) $brightness) / 100;
 
         if ($intercept < -1 || $intercept > 1) {
-            throw new InvalidArgumentException(sprintf(
-                'Invalid brightness value %s, must be between -100 and 100',
-                var_export($brightness, true)
-            ));
+            throw new InvalidArgumentException(sprintf('Invalid brightness value %s, must be between -100 and 100', var_export($brightness, true)));
         }
 
         $funcAttributes = [
@@ -211,7 +199,6 @@ class Effects implements EffectsInterface
      * Create and add a new filter element.
      *
      * @param string $name
-     * @param array  $attributes
      */
     private function addFilterElement($name, array $attributes)
     {
@@ -279,7 +266,6 @@ class Effects implements EffectsInterface
      * Create element with the specified attributes.
      *
      * @param string $name
-     * @param array  $attributes
      *
      * @return \DOMElement
      */

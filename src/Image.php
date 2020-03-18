@@ -38,10 +38,6 @@ class Image extends AbstractImage
      */
     private $palette;
 
-    /**
-     * @param \DOMDocument $document
-     * @param MetadataBag  $metadata
-     */
     public function __construct(\DOMDocument $document, MetadataBag $metadata)
     {
         $this->document = $document;
@@ -92,10 +88,7 @@ class Image extends AbstractImage
         $currentSize = $this->getSize();
 
         if (!$start->in($currentSize)) {
-            throw new OutOfBoundsException(
-                'Crop coordinates must start at minimum 0, 0 position from top left corner, crop height and width '
-                    .'must be positive integers and must not exceed the current image borders'
-            );
+            throw new OutOfBoundsException('Crop coordinates must start at minimum 0, 0 position from top left corner, crop height and width '.'must be positive integers and must not exceed the current image borders');
         }
 
         if (
@@ -140,9 +133,7 @@ class Image extends AbstractImage
     public function resize(BoxInterface $size, $filter = ImageInterface::FILTER_UNDEFINED)
     {
         if (ImageInterface::FILTER_UNDEFINED !== $filter) {
-            throw new InvalidArgumentException(
-                'Unsupported filter type, SVG only supports ImageInterface::FILTER_UNDEFINED filter'
-            );
+            throw new InvalidArgumentException('Unsupported filter type, SVG only supports ImageInterface::FILTER_UNDEFINED filter');
         }
 
         $currentSize = $this->getSize();
@@ -234,11 +225,7 @@ class Image extends AbstractImage
         $supported = ['svg', 'svgz'];
 
         if (!\in_array($format, $supported, true)) {
-            throw new InvalidArgumentException(sprintf(
-                'Saving image in "%s" format is not supported, please use one of the following extensions: "%s"',
-                $format,
-                implode('", "', $supported))
-            );
+            throw new InvalidArgumentException(sprintf('Saving image in "%s" format is not supported, please use one of the following extensions: "%s"', $format, implode('", "', $supported)));
         }
 
         $xml = $this->document->saveXML();

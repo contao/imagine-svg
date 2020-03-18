@@ -1,0 +1,136 @@
+name: CI
+
+on:
+    pull_request: ~
+    push:
+        branches:
+            - master
+        tags:
+            - '*'
+    schedule:
+        - cron: 0 13 * * MON,TUE
+
+jobs:
+    coverage:
+        name: Coverage
+        runs-on: ubuntu-latest
+        if: github.event_name != 'schedule'
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 7.3
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
+                  tools: prestissimo, flex
+                  coverage: none
+
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: Install the dependencies
+              run: composer install --no-interaction --no-suggest
+
+            - name: Generate the coverage report
+              run: phpdbg -qrr vendor/bin/phpunit --coverage-clover=clover.xml  --colors=always
+
+            - name: Upload the coverage report
+              uses: codecov/codecov-action@v1
+              with:
+                  file: ./clover.xml
+                  fail_ci_if_error: true
+
+    coding-style:
+        name: Coding Style
+        runs-on: ubuntu-latest
+        if: github.event_name == 'pull_request'
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 7.3
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
+                  tools: prestissimo, flex
+                  coverage: none
+
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: Install the dependencies
+              run: composer install --no-interaction --no-suggest
+
+            - name: Check the coding style
+              run: vendor/bin/php-cs-fixer fix --diff --diff-format=udiff --dry-run
+
+    tests:
+        name: PHP ${{ matrix.php }}
+        runs-on: ubuntu-latest
+        if: github.event_name != 'push'
+        strategy:
+            fail-fast: false
+            matrix:
+                php: [5.6, 7.2, 7.3]
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php }}
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
+                  tools: prestissimo, flex
+                  coverage: none
+
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: Install the dependencies
+              run: composer install --no-interaction --no-suggest
+
+            - name: Run the unit tests
+              run: vendor/bin/phpunit --colors=always
+
+    prefer-lowest:
+        name: Prefer Lowest
+        runs-on: ubuntu-latest
+        if: github.event_name != 'push'
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 7.3
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
+                  tools: prestissimo, flex
+                  coverage: none
+
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: Install the dependencies
+              run: composer update --prefer-lowest --prefer-stable --no-interaction --no-suggest
+
+            - name: Run the unit tests
+              run: vendor/bin/phpunit --colors=always
+
+    windows:
+        name: Windows
+        runs-on: windows-latest
+        if: github.event_name != 'push'
+        steps:
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: 7.3
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
+                  ini-values: memory_limit=1G
+                  tools: prestissimo, flex
+                  coverage: none
+
+            - name: Adjust the Git autocrlf setting
+              run: git config --global core.autocrlf false
+
+            - name: Checkout
+              uses: actions/checkout@v2
+
+            - name: Install the dependencies
+              run: composer install --no-interaction --no-suggest --no-progress
+
+            - name: Run the unit tests
+              run: vendor/bin/phpunit.bat --colors=always
