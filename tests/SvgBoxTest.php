@@ -10,9 +10,7 @@
 
 namespace Contao\ImagineSvg\Tests;
 
-use Contao\ImagineSvg\RelativeBoxInterface;
 use Contao\ImagineSvg\SvgBox;
-use Contao\ImagineSvg\UndefinedBoxInterface;
 use Imagine\Exception\InvalidArgumentException;
 use Imagine\Image\BoxInterface;
 use Imagine\Image\Point;
@@ -33,12 +31,10 @@ class SvgBoxTest extends TestCase
         $box = SvgBox::createTypeAspectRatio(100, 100);
 
         $this->assertInstanceOf(BoxInterface::class, $box);
-        $this->assertInstanceOf(RelativeBoxInterface::class, $box);
 
         $box = SvgBox::createTypeNone();
 
         $this->assertInstanceOf(BoxInterface::class, $box);
-        $this->assertInstanceOf(UndefinedBoxInterface::class, $box);
 
         $this->expectException(InvalidArgumentException::class);
 
@@ -50,10 +46,7 @@ class SvgBoxTest extends TestCase
         $this->assertSame(100, (new SvgBox(100, 100))->getWidth());
         $this->assertSame(100, SvgBox::createTypeAbsolute(100, 100)->getWidth());
         $this->assertSame(100, SvgBox::createTypeAspectRatio(100, 100)->getWidth());
-        $this->assertSame(300, (new SvgBox(100, 100, SvgBox::TYPE_NONE))->getWidth());
-
-        // Deprecated
-        $this->assertSame(0, SvgBox::createTypeNone()->getWidth());
+        $this->assertSame(300, SvgBox::createTypeNone()->getWidth());
     }
 
     public function testGetHeight()
@@ -61,10 +54,7 @@ class SvgBoxTest extends TestCase
         $this->assertSame(100, (new SvgBox(100, 100))->getHeight());
         $this->assertSame(100, SvgBox::createTypeAbsolute(100, 100)->getHeight());
         $this->assertSame(100, SvgBox::createTypeAspectRatio(100, 100)->getHeight());
-        $this->assertSame(150, (new SvgBox(100, 100, SvgBox::TYPE_NONE))->getHeight());
-
-        // Deprecated
-        $this->assertSame(0, SvgBox::createTypeNone()->getHeight());
+        $this->assertSame(150, SvgBox::createTypeNone()->getHeight());
     }
 
     public function testScale()
@@ -116,10 +106,7 @@ class SvgBoxTest extends TestCase
     {
         $this->assertSame(10000, (new SvgBox(100, 100))->square());
         $this->assertSame(2500, (new SvgBox(50, 50))->square());
-        $this->assertSame(45000, (new SvgBox(0, 0, SvgBox::TYPE_NONE))->square());
-
-        // Deprecated
-        $this->assertSame(0, SvgBox::createTypeNone()->square());
+        $this->assertSame(45000, SvgBox::createTypeNone()->square());
     }
 
     public function testToString()

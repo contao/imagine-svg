@@ -11,7 +11,7 @@
 namespace Contao\ImagineSvg\Tests;
 
 use Contao\ImagineSvg\Imagine;
-use Contao\ImagineSvg\UndefinedBox;
+use Contao\ImagineSvg\SvgBox;
 use Imagine\Exception\InvalidArgumentException;
 use Imagine\Exception\NotSupportedException;
 use Imagine\Exception\RuntimeException;
@@ -75,7 +75,7 @@ class ImagineTest extends TestCase
         $this->assertSame('100', $svg->getAttribute('height'));
         $this->assertSame('0 0 100 100', $svg->getAttribute('viewBox'));
 
-        $image = $this->imagine->create(new UndefinedBox());
+        $image = $this->imagine->create(SvgBox::createTypeNone());
         $svg = $image->getDomDocument()->documentElement;
 
         $this->assertFalse($svg->hasAttribute('width'));

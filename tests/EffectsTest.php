@@ -12,7 +12,7 @@ namespace Contao\ImagineSvg\Tests;
 
 use Contao\ImagineSvg\Effects;
 use Contao\ImagineSvg\Imagine;
-use Contao\ImagineSvg\UndefinedBox;
+use Contao\ImagineSvg\SvgBox;
 use Imagine\Exception\InvalidArgumentException;
 use Imagine\Exception\NotSupportedException;
 use Imagine\Image\Palette\Color\ColorInterface;
@@ -30,7 +30,7 @@ class EffectsTest extends TestCase
 
     public function testGamma()
     {
-        $dom = (new Imagine())->create(new UndefinedBox())->getDomDocument();
+        $dom = (new Imagine())->create(SvgBox::createTypeNone())->getDomDocument();
         $effects = new Effects($dom);
 
         $this->assertSame($effects, $effects->gamma(1));
@@ -69,7 +69,7 @@ class EffectsTest extends TestCase
 
     public function testNegative()
     {
-        $dom = (new Imagine())->create(new UndefinedBox())->getDomDocument();
+        $dom = (new Imagine())->create(SvgBox::createTypeNone())->getDomDocument();
         $effects = new Effects($dom);
 
         $this->assertSame($effects, $effects->negative());
@@ -93,7 +93,7 @@ class EffectsTest extends TestCase
 
     public function testGrayscale()
     {
-        $dom = (new Imagine())->create(new UndefinedBox())->getDomDocument();
+        $dom = (new Imagine())->create(SvgBox::createTypeNone())->getDomDocument();
         $effects = new Effects($dom);
 
         $this->assertSame($effects, $effects->grayscale());
@@ -111,7 +111,7 @@ class EffectsTest extends TestCase
 
     public function testColorize()
     {
-        $dom = (new Imagine())->create(new UndefinedBox())->getDomDocument();
+        $dom = (new Imagine())->create(SvgBox::createTypeNone())->getDomDocument();
         $effects = new Effects($dom);
         $color = new ColorRgb(new PaletteRgb(), [255, 127.5, 63.75], 100);
 
@@ -143,7 +143,7 @@ class EffectsTest extends TestCase
 
     public function testSharpen()
     {
-        $dom = (new Imagine())->create(new UndefinedBox())->getDomDocument();
+        $dom = (new Imagine())->create(SvgBox::createTypeNone())->getDomDocument();
         $effects = new Effects($dom);
 
         $this->assertSame($effects, $effects->sharpen());
@@ -167,7 +167,7 @@ class EffectsTest extends TestCase
 
     public function testBlur()
     {
-        $dom = (new Imagine())->create(new UndefinedBox())->getDomDocument();
+        $dom = (new Imagine())->create(SvgBox::createTypeNone())->getDomDocument();
         $effects = new Effects($dom);
 
         $this->assertSame($effects, $effects->blur(' 1.50'));
@@ -200,7 +200,7 @@ class EffectsTest extends TestCase
 
     public function testBrightness()
     {
-        $dom = (new Imagine())->create(new UndefinedBox())->getDomDocument();
+        $dom = (new Imagine())->create(SvgBox::createTypeNone())->getDomDocument();
         $effects = new Effects($dom);
 
         $this->assertSame($effects, $effects->brightness(10));
@@ -249,7 +249,7 @@ class EffectsTest extends TestCase
             $this->markTestSkipped('Effects::convolve() in only available since Imagine 1.0');
         }
 
-        $dom = (new Imagine())->create(new UndefinedBox())->getDomDocument();
+        $dom = (new Imagine())->create(SvgBox::createTypeNone())->getDomDocument();
         $effects = new Effects($dom);
 
         $this->assertSame($effects, $effects->convolve(new Matrix(3, 3, [-1.9, 0.02, -1, -1, 10, -1.0, -1, -3.12])));
@@ -300,7 +300,7 @@ class EffectsTest extends TestCase
 
     public function testMultipleFilters()
     {
-        $image = (new Imagine())->create(new UndefinedBox());
+        $image = (new Imagine())->create(SvgBox::createTypeNone());
 
         $dom = $image->getDomDocument();
         $dom->documentElement->appendChild($dom->createElement('path'));

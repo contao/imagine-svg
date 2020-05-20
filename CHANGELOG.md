@@ -6,6 +6,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
  * Increase required PHP version to 7.2.
  * Increase required imagine/imagine version to 1.0.
+ * Remove UndefinedBox and RelativeBox.
 
 ## [Unreleased]
 

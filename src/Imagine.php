@@ -33,15 +33,12 @@ class Imagine extends AbstractImagine
         $svg = $document->createElementNS('http://www.w3.org/2000/svg', 'svg');
         $svg->setAttribute('version', '1.1');
 
-        if ($size->getWidth()) {
+        if (!$size instanceof SvgBox || SvgBox::TYPE_ABSOLUTE === $size->getType()) {
             $svg->setAttribute('width', $size->getWidth());
-        }
-
-        if ($size->getHeight()) {
             $svg->setAttribute('height', $size->getHeight());
         }
 
-        if ($size->getWidth() && $size->getHeight()) {
+        if (!$size instanceof SvgBox || SvgBox::TYPE_NONE !== $size->getType()) {
             $svg->setAttribute('viewBox', '0 0 '.$size->getWidth().' '.$size->getHeight());
         }
 

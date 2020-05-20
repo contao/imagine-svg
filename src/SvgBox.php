@@ -16,9 +16,9 @@ use Imagine\Image\PointInterface;
 
 class SvgBox implements BoxInterface
 {
-    const TYPE_ABSOLUTE = 0;
-    const TYPE_ASPECT_RATIO = 1;
-    const TYPE_NONE = 2;
+    public const TYPE_ABSOLUTE = 0;
+    public const TYPE_ASPECT_RATIO = 1;
+    public const TYPE_NONE = 2;
 
     /**
      * @var int
@@ -84,7 +84,7 @@ class SvgBox implements BoxInterface
      */
     public static function createTypeAspectRatio($width, $height)
     {
-        return new RelativeBox($width, $height);
+        return new self($width, $height, self::TYPE_ASPECT_RATIO);
     }
 
     /**
@@ -92,7 +92,7 @@ class SvgBox implements BoxInterface
      */
     public static function createTypeNone()
     {
-        return new UndefinedBox();
+        return new self(0, 0, self::TYPE_NONE);
     }
 
     /**

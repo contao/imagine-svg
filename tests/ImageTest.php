@@ -13,7 +13,7 @@ namespace Contao\ImagineSvg\Tests;
 use Contao\ImagineSvg\Effects;
 use Contao\ImagineSvg\Image;
 use Contao\ImagineSvg\Imagine;
-use Contao\ImagineSvg\RelativeBox;
+use Contao\ImagineSvg\SvgBox;
 use Imagine\Effects\EffectsInterface;
 use Imagine\Exception\InvalidArgumentException;
 use Imagine\Exception\NotSupportedException;
@@ -121,9 +121,9 @@ class ImageTest extends TestCase
         $image->getDomDocument()->documentElement->removeAttribute('width');
         $image->getDomDocument()->documentElement->removeAttribute('height');
 
-        $this->assertInstanceOf(RelativeBox::class, $image->getSize());
+        $this->assertSame(SvgBox::TYPE_ASPECT_RATIO, $image->getSize()->getType());
         $image->crop(new Point(0, 0), new Box(50, 50));
-        $this->assertNotInstanceOf(RelativeBox::class, $image->getSize());
+        $this->assertSame(SvgBox::TYPE_ABSOLUTE, $image->getSize()->getType());
 
         $this->expectException(OutOfBoundsException::class);
 
@@ -341,64 +341,64 @@ class ImageTest extends TestCase
         $image = $imagine->create(new Box(100, 100));
         $svg = $image->getDomDocument()->documentElement;
 
-        $this->assertNotInstanceOf('Contao\ImagineSvg\RelativeBoxInterface', $image->getSize());
+        $this->assertSame(SvgBox::TYPE_ABSOLUTE, $image->getSize()->getType());
         $this->assertSame(100, $image->getSize()->getWidth());
         $this->assertSame(100, $image->getSize()->getHeight());
 
         $svg->setAttribute('height', 50);
 
-        $this->assertNotInstanceOf('Contao\ImagineSvg\RelativeBoxInterface', $image->getSize());
+        $this->assertSame(SvgBox::TYPE_ABSOLUTE, $image->getSize()->getType());
         $this->assertSame(100, $image->getSize()->getWidth());
         $this->assertSame(50, $image->getSize()->getHeight());
 
         $svg->setAttribute('viewBox', '0 0 200 100');
         $svg->removeAttribute('height');
 
-        $this->assertNotInstanceOf('Contao\ImagineSvg\RelativeBoxInterface', $image->getSize());
+        $this->assertSame(SvgBox::TYPE_ABSOLUTE, $image->getSize()->getType());
         $this->assertSame(100, $image->getSize()->getWidth());
         $this->assertSame(50, $image->getSize()->getHeight());
 
         $svg->setAttribute('height', 200);
         $svg->removeAttribute('width');
 
-        $this->assertNotInstanceOf('Contao\ImagineSvg\RelativeBoxInterface', $image->getSize());
+        $this->assertSame(SvgBox::TYPE_ABSOLUTE, $image->getSize()->getType());
         $this->assertSame(400, $image->getSize()->getWidth());
         $this->assertSame(200, $image->getSize()->getHeight());
 
         $svg->removeAttribute('height');
 
-        $this->assertInstanceOf('Contao\ImagineSvg\RelativeBoxInterface', $image->getSize());
+        $this->assertSame(SvgBox::TYPE_ASPECT_RATIO, $image->getSize()->getType());
         $this->assertSame(200, $image->getSize()->getWidth());
         $this->assertSame(100, $image->getSize()->getHeight());
 
         $svg->setAttribute('viewBox', '0 0 1 0.5');
 
-        $this->assertInstanceOf('Contao\ImagineSvg\RelativeBoxInterface', $image->getSize());
+        $this->assertSame(SvgBox::TYPE_ASPECT_RATIO, $image->getSize()->getType());
         $this->assertSame(2, $image->getSize()->getWidth() / $image->getSize()->getHeight());
 
         $svg->setAttribute('viewBox', '0 0 0.001 0.000333');
 
-        $this->assertInstanceOf('Contao\ImagineSvg\RelativeBoxInterface', $image->getSize());
+        $this->assertSame(SvgBox::TYPE_ASPECT_RATIO, $image->getSize()->getType());
         $this->assertSame(1 / 0.333, $image->getSize()->getWidth() / $image->getSize()->getHeight());
 
         $svg->removeAttribute('viewBox');
 
-        $this->assertInstanceOf('Contao\ImagineSvg\UndefinedBoxInterface', $image->getSize());
-        $this->assertSame(0, $image->getSize()->getWidth());
-        $this->assertSame(0, $image->getSize()->getHeight());
+        $this->assertSame(SvgBox::TYPE_NONE, $image->getSize()->getType());
+        $this->assertSame(300, $image->getSize()->getWidth());
+        $this->assertSame(150, $image->getSize()->getHeight());
 
         $svg->setAttribute('width', 100);
 
-        $this->assertInstanceOf('Contao\ImagineSvg\UndefinedBoxInterface', $image->getSize());
-        $this->assertSame(0, $image->getSize()->getWidth());
-        $this->assertSame(0, $image->getSize()->getHeight());
+        $this->assertSame(SvgBox::TYPE_NONE, $image->getSize()->getType());
+        $this->assertSame(300, $image->getSize()->getWidth());
+        $this->assertSame(150, $image->getSize()->getHeight());
 
         $svg->removeAttribute('width');
         $svg->setAttribute('height', 100);
 
-        $this->assertInstanceOf('Contao\ImagineSvg\UndefinedBoxInterface', $image->getSize());
-        $this->assertSame(0, $image->getSize()->getWidth());
-        $this->assertSame(0, $image->getSize()->getHeight());
+        $this->assertSame(SvgBox::TYPE_NONE, $image->getSize()->getType());
+        $this->assertSame(300, $image->getSize()->getWidth());
+        $this->assertSame(150, $image->getSize()->getHeight());
     }
 
     /**
@@ -417,8 +417,12 @@ class ImageTest extends TestCase
         $document->documentElement->setAttribute('height', $value);
         $document->documentElement->removeAttribute('viewBox');
 
-        $this->assertSame($expected, $image->getSize()->getWidth());
-        $this->assertSame($expected, $image->getSize()->getHeight());
+        if (null === $expected) {
+            $this->assertSame(SvgBox::TYPE_NONE, $image->getSize()->getType());
+        } else {
+            $this->assertSame($expected, $image->getSize()->getWidth());
+            $this->assertSame($expected, $image->getSize()->getHeight());
+        }
     }
 
     /**
@@ -438,10 +442,10 @@ class ImageTest extends TestCase
             'mm' => [(25.4 / 6).'mm', 16],
             'No unit with spacing' => [" \r \n \t 1234.5 \r \n \t ", 1235],
             'em with spacing' => [" \r \n \t 1234.5em \r \n \t ", 19752],
-            'unknown' => ['100vw', 0],
-            'unknown mmm' => ['1mmm', 0],
-            'invalid' => ['abc', 0],
-            'invalid number' => ['12.34.5', 0],
+            'unknown' => ['100vw', null],
+            'unknown mmm' => ['1mmm', null],
+            'invalid' => ['abc', null],
+            'invalid number' => ['12.34.5', null],
         ];
     }
 
