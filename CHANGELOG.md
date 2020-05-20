@@ -7,6 +7,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
  * Don’t throw exceptions for LIBXML warnings. [#13]
  * Fix bug with viewBox computation.
  * Use NotSupportedException if available. [#15]
+ * Deprecate UndefinedBox and RelativeBox, replace them with SvgBox. [#14]
 
 ## [0.2.2] (2019-01-27)
 
@@ -63,6 +64,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 [0.1.0]: https://github.com/contao/imagine-svg/commits/0.1.0
 
 [#15]: https://github.com/contao/imagine-svg/issues/15
+[#14]: https://github.com/contao/imagine-svg/issues/14
 [#13]: https://github.com/contao/imagine-svg/issues/13
 [#10]: https://github.com/contao/imagine-svg/issues/10
 [#9]: https://github.com/contao/imagine-svg/issues/9

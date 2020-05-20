@@ -10,48 +10,18 @@
 
 namespace Contao\ImagineSvg;
 
-use Imagine\Image\Box;
-use Imagine\Image\BoxInterface;
-use Imagine\Image\PointInterface;
-
-class RelativeBox implements RelativeBoxInterface
+/**
+ * @deprecated use SvgBox::createTypeAspectRatio() instead
+ */
+class RelativeBox extends SvgBox implements RelativeBoxInterface
 {
-    /**
-     * @var Box
-     */
-    private $box;
-
     /**
      * @param int $width
      * @param int $height
      */
     public function __construct($width, $height)
     {
-        $this->box = new Box($width, $height);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function __toString()
-    {
-        return sprintf('%dx%d', $this->box->getWidth(), $this->box->getHeight());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getWidth()
-    {
-        return $this->box->getWidth();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getHeight()
-    {
-        return $this->box->getHeight();
+        parent::__construct($width, $height, self::TYPE_ASPECT_RATIO);
     }
 
     /**
@@ -59,7 +29,7 @@ class RelativeBox implements RelativeBoxInterface
      */
     public function scale($ratio)
     {
-        $box = $this->box->scale($ratio);
+        $box = parent::scale($ratio);
 
         return new self($box->getWidth(), $box->getHeight());
     }
@@ -69,7 +39,7 @@ class RelativeBox implements RelativeBoxInterface
      */
     public function increase($size)
     {
-        $box = $this->box->increase($size);
+        $box = parent::increase($size);
 
         return new self($box->getWidth(), $box->getHeight());
     }
@@ -77,25 +47,9 @@ class RelativeBox implements RelativeBoxInterface
     /**
      * {@inheritdoc}
      */
-    public function contains(BoxInterface $box, PointInterface $start = null)
-    {
-        return $this->box->contains($box, $start);
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function square()
-    {
-        return $this->box->square();
-    }
-
-    /**
-     * {@inheritdoc}
-     */
     public function widen($width)
     {
-        $box = $this->box->widen($width);
+        $box = parent::widen($width);
 
         return new self($box->getWidth(), $box->getHeight());
     }
@@ -105,7 +59,7 @@ class RelativeBox implements RelativeBoxInterface
      */
     public function heighten($height)
     {
-        $box = $this->box->heighten($height);
+        $box = parent::heighten($height);
 
         return new self($box->getWidth(), $box->getHeight());
     }
