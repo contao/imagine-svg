@@ -38,11 +38,7 @@ class SvgBox implements BoxInterface
     public function __construct($width, $height, $type = self::TYPE_ABSOLUTE)
     {
         if (!\in_array($type, [self::TYPE_ABSOLUTE, self::TYPE_ASPECT_RATIO, self::TYPE_NONE], true)) {
-            throw new \InvalidArgumentException(sprintf(
-                'Invalid SvgBox type "%s", must be one of the %s::TYPE_* constants.',
-                $type,
-                __CLASS__
-            ));
+            throw new \InvalidArgumentException(sprintf('Invalid SvgBox type "%s", must be one of the %s::TYPE_* constants.', $type, __CLASS__));
         }
 
         $this->type = $type;
