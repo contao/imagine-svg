@@ -18,7 +18,6 @@ use Imagine\Effects\EffectsInterface;
 use Imagine\Exception\InvalidArgumentException;
 use Imagine\Exception\NotSupportedException;
 use Imagine\Exception\OutOfBoundsException;
-use Imagine\Exception\RuntimeException;
 use Imagine\Image\Box;
 use Imagine\Image\Fill\FillInterface;
 use Imagine\Image\ImageInterface;
@@ -59,12 +58,12 @@ class ImageTest extends TestCase
         }
     }
 
-    public function testInstantiation()
+    public function testInstantiation(): void
     {
         $this->assertInstanceOf('Contao\ImagineSvg\Image', new Image(new \DOMDocument(), new MetadataBag()));
     }
 
-    public function testGetDomDocument()
+    public function testGetDomDocument(): void
     {
         $document = new \DOMDocument();
         $image = new Image($document, new MetadataBag());
@@ -72,7 +71,7 @@ class ImageTest extends TestCase
         $this->assertSame($document, $image->getDomDocument());
     }
 
-    public function testCopy()
+    public function testCopy(): void
     {
         $document = new \DOMDocument();
         $image1 = new Image($document, new MetadataBag());
@@ -82,7 +81,7 @@ class ImageTest extends TestCase
         $this->assertNotSame($document, $image2->getDomDocument());
     }
 
-    public function testClone()
+    public function testClone(): void
     {
         $document = new \DOMDocument();
         $image1 = new Image($document, new MetadataBag());
@@ -92,7 +91,7 @@ class ImageTest extends TestCase
         $this->assertNotSame($document, $image2->getDomDocument());
     }
 
-    public function testCrop()
+    public function testCrop(): void
     {
         $imagine = new Imagine();
         $image = $imagine->create(new Box(100, 100));
@@ -130,7 +129,7 @@ class ImageTest extends TestCase
         $image->crop(new Point(60, 60), new Box(50, 50));
     }
 
-    public function testResize()
+    public function testResize(): void
     {
         $imagine = new Imagine();
         $image = $imagine->create(new Box(100, 100));
@@ -207,7 +206,7 @@ class ImageTest extends TestCase
         $image->resize(new Box(25, 25), ImageInterface::FILTER_POINT);
     }
 
-    public function testSave()
+    public function testSave(): void
     {
         $path = $this->rootDir;
 
@@ -267,7 +266,7 @@ class ImageTest extends TestCase
         unlink($path.'.svgz');
     }
 
-    public function testShow()
+    public function testShow(): void
     {
         $imagine = new Imagine();
         $image = $imagine->create(new Box(100, 100));
@@ -298,7 +297,7 @@ class ImageTest extends TestCase
         $this->assertSame('100', $document->documentElement->getAttribute('height'));
     }
 
-    public function testGet()
+    public function testGet(): void
     {
         $imagine = new Imagine();
         $image = $imagine->create(new Box(100, 100));
@@ -322,7 +321,7 @@ class ImageTest extends TestCase
         $image->get('jpg');
     }
 
-    public function testToString()
+    public function testToString(): void
     {
         $imagine = new Imagine();
         $image = $imagine->create(new Box(100, 100));
@@ -335,7 +334,7 @@ class ImageTest extends TestCase
         $this->assertSame('100', $document->documentElement->getAttribute('height'));
     }
 
-    public function testGetSize()
+    public function testGetSize(): void
     {
         $imagine = new Imagine();
         $image = $imagine->create(new Box(100, 100));
@@ -407,7 +406,7 @@ class ImageTest extends TestCase
      *
      * @dataProvider getGetSizePixelValues
      */
-    public function testGetSizePixelValues($value, $expected)
+    public function testGetSizePixelValues($value, $expected): void
     {
         $imagine = new Imagine();
         $image = $imagine->create(new Box(100, 100));
@@ -425,10 +424,7 @@ class ImageTest extends TestCase
         }
     }
 
-    /**
-     * @return array
-     */
-    public function getGetSizePixelValues()
+    public function getGetSizePixelValues(): array
     {
         return [
             'No unit' => ['1234.5', 1235],
@@ -449,65 +445,46 @@ class ImageTest extends TestCase
         ];
     }
 
-    public function testPaste()
+    public function testPaste(): void
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
-        $this->expectException(RuntimeException::class);
-
-        if (class_exists(NotSupportedException::class)) {
-            $this->expectException(NotSupportedException::class);
-        }
+        $this->expectException(NotSupportedException::class);
 
         $image->paste(new Image(new \DOMDocument(), new MetadataBag()), new Point(0, 0));
     }
 
-    public function testRotate()
+    public function testRotate(): void
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
-        $this->expectException(RuntimeException::class);
-
-        if (class_exists(NotSupportedException::class)) {
-            $this->expectException(NotSupportedException::class);
-        }
+        $this->expectException(NotSupportedException::class);
 
         $image->rotate(90);
     }
 
-    public function testFlipHorizontally()
+    public function testFlipHorizontally(): void
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
-        $this->expectException(RuntimeException::class);
-
-        if (class_exists(NotSupportedException::class)) {
-            $this->expectException(NotSupportedException::class);
-        }
+        $this->expectException(NotSupportedException::class);
 
         $image->flipHorizontally();
     }
 
-    public function testFlipVertically()
+    public function testFlipVertically(): void
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
-        $this->expectException(RuntimeException::class);
-
-        if (class_exists(NotSupportedException::class)) {
-            $this->expectException(NotSupportedException::class);
-        }
+        $this->expectException(NotSupportedException::class);
 
         $image->flipVertically();
     }
 
     /**
      * @dataProvider getStrip
-     *
-     * @param string $svg
-     * @param string $expected
      */
-    public function testStrip($svg, $expected)
+    public function testStrip(string $svg, string $expected): void
     {
         $image = (new Imagine())
             ->load($svg)
@@ -517,10 +494,7 @@ class ImageTest extends TestCase
         $this->assertSame($expected, $image->get('svg'));
     }
 
-    /**
-     * @return array
-     */
-    public function getStrip()
+    public function getStrip(): array
     {
         return [
             'Comment' => [
@@ -538,20 +512,16 @@ class ImageTest extends TestCase
         ];
     }
 
-    public function testDraw()
+    public function testDraw(): void
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
-        $this->expectException(RuntimeException::class);
-
-        if (class_exists(NotSupportedException::class)) {
-            $this->expectException(NotSupportedException::class);
-        }
+        $this->expectException(NotSupportedException::class);
 
         $image->draw();
     }
 
-    public function testEffects()
+    public function testEffects(): void
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
@@ -559,118 +529,86 @@ class ImageTest extends TestCase
         $this->assertInstanceOf(Effects::class, $image->effects());
     }
 
-    public function testApplyMask()
+    public function testApplyMask(): void
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
-        $this->expectException(RuntimeException::class);
-
-        if (class_exists(NotSupportedException::class)) {
-            $this->expectException(NotSupportedException::class);
-        }
+        $this->expectException(NotSupportedException::class);
 
         $image->applyMask(new Image(new \DOMDocument(), new MetadataBag()));
     }
 
-    public function testFill()
+    public function testFill(): void
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
-        $this->expectException(RuntimeException::class);
-
-        if (class_exists(NotSupportedException::class)) {
-            $this->expectException(NotSupportedException::class);
-        }
+        $this->expectException(NotSupportedException::class);
 
         $image->fill($this->createMock(FillInterface::class));
     }
 
-    public function testMask()
+    public function testMask(): void
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
-        $this->expectException(RuntimeException::class);
-
-        if (class_exists(NotSupportedException::class)) {
-            $this->expectException(NotSupportedException::class);
-        }
+        $this->expectException(NotSupportedException::class);
 
         $image->mask();
     }
 
-    public function testHistogram()
+    public function testHistogram(): void
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
-        $this->expectException(RuntimeException::class);
-
-        if (class_exists(NotSupportedException::class)) {
-            $this->expectException(NotSupportedException::class);
-        }
+        $this->expectException(NotSupportedException::class);
 
         $image->histogram();
     }
 
-    public function testGetColorAt()
+    public function testGetColorAt(): void
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
-        $this->expectException(RuntimeException::class);
-
-        if (class_exists(NotSupportedException::class)) {
-            $this->expectException(NotSupportedException::class);
-        }
+        $this->expectException(NotSupportedException::class);
 
         $image->getColorAt(new Point(0, 0));
     }
 
-    public function testLayers()
+    public function testLayers(): void
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
-        $this->expectException(RuntimeException::class);
-
-        if (class_exists(NotSupportedException::class)) {
-            $this->expectException(NotSupportedException::class);
-        }
+        $this->expectException(NotSupportedException::class);
 
         $image->layers();
     }
 
-    public function testInterlace()
+    public function testInterlace(): void
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
-        $this->expectException(RuntimeException::class);
-
-        if (class_exists(NotSupportedException::class)) {
-            $this->expectException(NotSupportedException::class);
-        }
+        $this->expectException(NotSupportedException::class);
 
         $image->interlace('');
     }
 
-    public function testPalette()
+    public function testPalette(): void
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
         $this->assertInstanceOf(RGB::class, $image->palette());
     }
 
-    public function testProfile()
+    public function testProfile(): void
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
 
-        $this->expectException(RuntimeException::class);
-
-        if (class_exists(NotSupportedException::class)) {
-            $this->expectException(NotSupportedException::class);
-        }
+        $this->expectException(NotSupportedException::class);
 
         $image->profile($this->createMock(ProfileInterface::class));
     }
 
-    public function testUsePalette()
+    public function testUsePalette(): void
     {
         $image = new Image(new \DOMDocument(), new MetadataBag());
         $paletteRgb = $this->createMock(RGB::class);
@@ -678,11 +616,7 @@ class ImageTest extends TestCase
         $this->assertSame($image, $image->usePalette($paletteRgb));
         $this->assertSame($paletteRgb, $image->palette());
 
-        $this->expectException(RuntimeException::class);
-
-        if (class_exists(NotSupportedException::class)) {
-            $this->expectException(NotSupportedException::class);
-        }
+        $this->expectException(NotSupportedException::class);
 
         $image->usePalette($this->createMock(PaletteInterface::class));
     }

@@ -10,6 +10,7 @@
 
 namespace Contao\ImagineSvg;
 
+use Imagine\Draw\DrawerInterface;
 use Imagine\Exception\InvalidArgumentException;
 use Imagine\Exception\NotSupportedException;
 use Imagine\Exception\OutOfBoundsException;
@@ -18,6 +19,7 @@ use Imagine\Image\AbstractImage;
 use Imagine\Image\BoxInterface;
 use Imagine\Image\Fill\FillInterface;
 use Imagine\Image\ImageInterface;
+use Imagine\Image\LayersInterface;
 use Imagine\Image\Metadata\MetadataBag;
 use Imagine\Image\Palette\Color\ColorInterface;
 use Imagine\Image\Palette\PaletteInterface;
@@ -47,7 +49,7 @@ class Image extends AbstractImage
     /**
      * {@inheritdoc}
      */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->get('svg');
     }
@@ -57,16 +59,14 @@ class Image extends AbstractImage
      */
     public function __clone()
     {
+        parent::__clone();
         $this->document = clone $this->document;
-        $this->metadata = clone $this->metadata;
     }
 
     /**
      * Returns the DOM document.
-     *
-     * @return \DOMDocument
      */
-    public function getDomDocument()
+    public function getDomDocument(): \DOMDocument
     {
         return $this->document;
     }
@@ -74,7 +74,7 @@ class Image extends AbstractImage
     /**
      * {@inheritdoc}
      */
-    public function copy()
+    public function copy(): self
     {
         return new self(clone $this->document, clone $this->metadata);
     }
@@ -82,7 +82,7 @@ class Image extends AbstractImage
     /**
      * {@inheritdoc}
      */
-    public function crop(PointInterface $start, BoxInterface $size)
+    public function crop(PointInterface $start, BoxInterface $size): self
     {
         $currentSize = $this->getSize();
 
@@ -121,15 +121,15 @@ class Image extends AbstractImage
     /**
      * {@inheritdoc}
      */
-    public function paste(ImageInterface $image, PointInterface $start, $alpha = 100)
+    public function paste(ImageInterface $image, PointInterface $start, $alpha = 100): self
     {
-        throw $this->createNotImplementedException();
+        throw new NotSupportedException('This method is not implemented');
     }
 
     /**
      * {@inheritdoc}
      */
-    public function resize(BoxInterface $size, $filter = ImageInterface::FILTER_UNDEFINED)
+    public function resize(BoxInterface $size, $filter = ImageInterface::FILTER_UNDEFINED): self
     {
         if (ImageInterface::FILTER_UNDEFINED !== $filter) {
             throw new InvalidArgumentException('Unsupported filter type, SVG only supports ImageInterface::FILTER_UNDEFINED filter');
@@ -156,15 +156,15 @@ class Image extends AbstractImage
     /**
      * {@inheritdoc}
      */
-    public function rotate($angle, ColorInterface $background = null)
+    public function rotate($angle, ColorInterface $background = null): self
     {
-        throw $this->createNotImplementedException();
+        throw new NotSupportedException('This method is not implemented');
     }
 
     /**
      * {@inheritdoc}
      */
-    public function save($path = null, array $options = [])
+    public function save($path = null, array $options = []): self
     {
         if (null === $path && isset($this->metadata['filepath'])) {
             $path = $this->metadata['filepath'];
@@ -199,7 +199,7 @@ class Image extends AbstractImage
     /**
      * {@inheritdoc}
      */
-    public function show($format, array $options = [])
+    public function show($format, array $options = []): self
     {
         $image = $this->get($format, $options);
 
@@ -217,7 +217,7 @@ class Image extends AbstractImage
     /**
      * {@inheritdoc}
      */
-    public function get($format, array $options = [])
+    public function get($format, array $options = []): string
     {
         $format = strtolower($format);
 
@@ -239,23 +239,23 @@ class Image extends AbstractImage
     /**
      * {@inheritdoc}
      */
-    public function flipHorizontally()
+    public function flipHorizontally(): self
     {
-        throw $this->createNotImplementedException();
+        throw new NotSupportedException('This method is not implemented');
     }
 
     /**
      * {@inheritdoc}
      */
-    public function flipVertically()
+    public function flipVertically(): self
     {
-        throw $this->createNotImplementedException();
+        throw new NotSupportedException('This method is not implemented');
     }
 
     /**
      * {@inheritdoc}
      */
-    public function strip()
+    public function strip(): self
     {
         $xPath = new \DOMXPath($this->document);
 
@@ -269,25 +269,23 @@ class Image extends AbstractImage
     /**
      * {@inheritdoc}
      */
-    public function draw()
+    public function draw(): DrawerInterface
     {
-        throw $this->createNotImplementedException();
+        throw new NotSupportedException('This method is not implemented');
     }
 
     /**
      * {@inheritdoc}
      */
-    public function effects()
+    public function effects(): Effects
     {
         return new Effects($this->document);
     }
 
     /**
      * {@inheritdoc}
-     *
-     * @return SvgBox
      */
-    public function getSize()
+    public function getSize(): SvgBox
     {
         $svg = $this->document->documentElement;
 
@@ -334,63 +332,63 @@ class Image extends AbstractImage
     /**
      * {@inheritdoc}
      */
-    public function applyMask(ImageInterface $mask)
+    public function applyMask(ImageInterface $mask): self
     {
-        throw $this->createNotImplementedException();
+        throw new NotSupportedException('This method is not implemented');
     }
 
     /**
      * {@inheritdoc}
      */
-    public function fill(FillInterface $fill)
+    public function fill(FillInterface $fill): self
     {
-        throw $this->createNotImplementedException();
+        throw new NotSupportedException('This method is not implemented');
     }
 
     /**
      * {@inheritdoc}
      */
-    public function mask()
+    public function mask(): self
     {
-        throw $this->createNotImplementedException();
+        throw new NotSupportedException('This method is not implemented');
     }
 
     /**
      * {@inheritdoc}
      */
-    public function histogram()
+    public function histogram(): array
     {
-        throw $this->createNotImplementedException();
+        throw new NotSupportedException('This method is not implemented');
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getColorAt(PointInterface $point)
+    public function getColorAt(PointInterface $point): ColorInterface
     {
-        throw $this->createNotImplementedException();
+        throw new NotSupportedException('This method is not implemented');
     }
 
     /**
      * {@inheritdoc}
      */
-    public function layers()
+    public function layers(): LayersInterface
     {
-        throw $this->createNotImplementedException();
+        throw new NotSupportedException('This method is not implemented');
     }
 
     /**
      * {@inheritdoc}
      */
-    public function interlace($scheme)
+    public function interlace($scheme): self
     {
-        throw $this->createNotImplementedException();
+        throw new NotSupportedException('This method is not implemented');
     }
 
     /**
      * {@inheritdoc}
      */
-    public function palette()
+    public function palette(): PaletteInterface
     {
         return $this->palette;
     }
@@ -398,18 +396,18 @@ class Image extends AbstractImage
     /**
      * {@inheritdoc}
      */
-    public function profile(ProfileInterface $profile)
+    public function profile(ProfileInterface $profile): self
     {
-        throw $this->createNotImplementedException();
+        throw new NotSupportedException('This method is not implemented');
     }
 
     /**
      * {@inheritdoc}
      */
-    public function usePalette(PaletteInterface $palette)
+    public function usePalette(PaletteInterface $palette): self
     {
         if (!$palette instanceof RGB) {
-            throw $this->createNotImplementedException('SVG driver only supports RGB palette');
+            throw new NotSupportedException('SVG driver only supports RGB palette');
         }
 
         $this->palette = $palette;
@@ -420,7 +418,7 @@ class Image extends AbstractImage
     /**
      * Sets the viewBox attribute from the original dimensions if it's not set.
      */
-    private function fixViewBox()
+    private function fixViewBox(): void
     {
         $svg = $this->document->documentElement;
 
@@ -438,12 +436,8 @@ class Image extends AbstractImage
 
     /**
      * Converts sizes like 2em, 10cm or 12pt to pixels.
-     *
-     * @param string $size
-     *
-     * @return int
      */
-    private function getPixelValue($size)
+    private function getPixelValue(string $size): int
     {
         $map = [
             'px' => 1,
@@ -470,21 +464,5 @@ class Image extends AbstractImage
         }
 
         return 0;
-    }
-
-    /**
-     * Returns a NotSupportedException for newer imagine version and RuntimeException for older versions.
-     *
-     * @param string $message
-     *
-     * @return NotSupportedException|RuntimeException
-     */
-    private function createNotImplementedException($message = 'This method is not implemented')
-    {
-        if (class_exists(NotSupportedException::class)) {
-            return new NotSupportedException($message);
-        }
-
-        return new RuntimeException($message);
     }
 }

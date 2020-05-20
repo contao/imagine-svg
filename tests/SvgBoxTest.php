@@ -18,7 +18,7 @@ use PHPUnit\Framework\TestCase;
 
 class SvgBoxTest extends TestCase
 {
-    public function testInstantiation()
+    public function testInstantiation(): void
     {
         $box = new SvgBox(100, 100);
 
@@ -41,7 +41,7 @@ class SvgBoxTest extends TestCase
         new SvgBox(0, 0);
     }
 
-    public function testGetWidth()
+    public function testGetWidth(): void
     {
         $this->assertSame(100, (new SvgBox(100, 100))->getWidth());
         $this->assertSame(100, SvgBox::createTypeAbsolute(100, 100)->getWidth());
@@ -49,7 +49,7 @@ class SvgBoxTest extends TestCase
         $this->assertSame(300, SvgBox::createTypeNone()->getWidth());
     }
 
-    public function testGetHeight()
+    public function testGetHeight(): void
     {
         $this->assertSame(100, (new SvgBox(100, 100))->getHeight());
         $this->assertSame(100, SvgBox::createTypeAbsolute(100, 100)->getHeight());
@@ -57,7 +57,7 @@ class SvgBoxTest extends TestCase
         $this->assertSame(150, SvgBox::createTypeNone()->getHeight());
     }
 
-    public function testScale()
+    public function testScale(): void
     {
         $this->assertEquals(
             new SvgBox(200, 200),
@@ -73,7 +73,7 @@ class SvgBoxTest extends TestCase
         );
     }
 
-    public function testIncrease()
+    public function testIncrease(): void
     {
         $this->assertEquals(
             new SvgBox(200, 200),
@@ -89,7 +89,7 @@ class SvgBoxTest extends TestCase
         );
     }
 
-    public function testContains()
+    public function testContains(): void
     {
         $box = new SvgBox(100, 100);
 
@@ -102,14 +102,14 @@ class SvgBoxTest extends TestCase
         $this->assertFalse($box->contains(new SvgBox(51, 50), new Point(50, 50)));
     }
 
-    public function testSquare()
+    public function testSquare(): void
     {
         $this->assertSame(10000, (new SvgBox(100, 100))->square());
         $this->assertSame(2500, (new SvgBox(50, 50))->square());
         $this->assertSame(45000, SvgBox::createTypeNone()->square());
     }
 
-    public function testToString()
+    public function testToString(): void
     {
         $this->assertSame('100x100 px', (string) SvgBox::createTypeAbsolute(100, 100));
         $this->assertSame('50x50 px', (string) SvgBox::createTypeAbsolute(50, 50));
@@ -118,7 +118,7 @@ class SvgBoxTest extends TestCase
         $this->assertSame('undefined', (string) SvgBox::createTypeNone());
     }
 
-    public function testWiden()
+    public function testWiden(): void
     {
         $this->assertEquals(
             new SvgBox(200, 200),
@@ -134,7 +134,7 @@ class SvgBoxTest extends TestCase
         );
     }
 
-    public function testHeighten()
+    public function testHeighten(): void
     {
         $this->assertEquals(
             new SvgBox(200, 200),

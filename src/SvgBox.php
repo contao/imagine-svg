@@ -30,12 +30,7 @@ class SvgBox implements BoxInterface
      */
     private $box;
 
-    /**
-     * @param int $width
-     * @param int $height
-     * @param int $type
-     */
-    public function __construct($width, $height, $type = self::TYPE_ABSOLUTE)
+    public function __construct(int $width, int $height, int $type = self::TYPE_ABSOLUTE)
     {
         if (!\in_array($type, [self::TYPE_ABSOLUTE, self::TYPE_ASPECT_RATIO, self::TYPE_NONE], true)) {
             throw new \InvalidArgumentException(sprintf('Invalid SvgBox type "%s", must be one of the %s::TYPE_* constants.', $type, __CLASS__));
@@ -53,7 +48,7 @@ class SvgBox implements BoxInterface
     /**
      * {@inheritdoc}
      */
-    public function __toString()
+    public function __toString(): string
     {
         if (self::TYPE_NONE === $this->type) {
             return 'undefined';
@@ -65,32 +60,17 @@ class SvgBox implements BoxInterface
         return (string) $this->box;
     }
 
-    /**
-     * @param int $width
-     * @param int $height
-     *
-     * @return SvgBox
-     */
-    public static function createTypeAbsolute($width, $height)
+    public static function createTypeAbsolute(int $width, int $height): self
     {
         return new self($width, $height);
     }
 
-    /**
-     * @param int $width
-     * @param int $height
-     *
-     * @return SvgBox
-     */
-    public static function createTypeAspectRatio($width, $height)
+    public static function createTypeAspectRatio(int $width, int $height): self
     {
         return new self($width, $height, self::TYPE_ASPECT_RATIO);
     }
 
-    /**
-     * @return SvgBox
-     */
-    public static function createTypeNone()
+    public static function createTypeNone(): self
     {
         return new self(0, 0, self::TYPE_NONE);
     }
@@ -98,7 +78,7 @@ class SvgBox implements BoxInterface
     /**
      * @return int one of the SvgBox::TYPE_* constants
      */
-    public function getType()
+    public function getType(): int
     {
         return $this->type;
     }
@@ -106,7 +86,7 @@ class SvgBox implements BoxInterface
     /**
      * {@inheritdoc}
      */
-    public function getWidth()
+    public function getWidth(): int
     {
         return $this->box->getWidth();
     }
@@ -114,7 +94,7 @@ class SvgBox implements BoxInterface
     /**
      * {@inheritdoc}
      */
-    public function getHeight()
+    public function getHeight(): int
     {
         return $this->box->getHeight();
     }
@@ -122,7 +102,7 @@ class SvgBox implements BoxInterface
     /**
      * {@inheritdoc}
      */
-    public function scale($ratio)
+    public function scale($ratio): self
     {
         $box = $this->box->scale($ratio);
 
@@ -132,7 +112,7 @@ class SvgBox implements BoxInterface
     /**
      * {@inheritdoc}
      */
-    public function increase($size)
+    public function increase($size): self
     {
         $box = $this->box->increase($size);
 
@@ -142,7 +122,7 @@ class SvgBox implements BoxInterface
     /**
      * {@inheritdoc}
      */
-    public function contains(BoxInterface $box, PointInterface $start = null)
+    public function contains(BoxInterface $box, PointInterface $start = null): bool
     {
         return $this->box->contains($box, $start);
     }
@@ -150,7 +130,7 @@ class SvgBox implements BoxInterface
     /**
      * {@inheritdoc}
      */
-    public function square()
+    public function square(): int
     {
         return $this->box->square();
     }
@@ -158,7 +138,7 @@ class SvgBox implements BoxInterface
     /**
      * {@inheritdoc}
      */
-    public function widen($width)
+    public function widen($width): self
     {
         $box = $this->box->widen($width);
 
@@ -168,7 +148,7 @@ class SvgBox implements BoxInterface
     /**
      * {@inheritdoc}
      */
-    public function heighten($height)
+    public function heighten($height): self
     {
         $box = $this->box->heighten($height);
 

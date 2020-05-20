@@ -55,12 +55,12 @@ class ImagineTest extends TestCase
         }
     }
 
-    public function testInstantiation()
+    public function testInstantiation(): void
     {
         $this->assertInstanceOf('Contao\ImagineSvg\Imagine', $this->imagine);
     }
 
-    public function testCreate()
+    public function testCreate(): void
     {
         $image = $this->imagine->create(new Box(100, 100));
         $svg = $image->getDomDocument()->documentElement;
@@ -82,7 +82,7 @@ class ImagineTest extends TestCase
         $this->assertFalse($svg->hasAttribute('height'));
     }
 
-    public function testCreateWithColor()
+    public function testCreateWithColor(): void
     {
         $color = $this->createMock(ColorInterface::class);
 
@@ -91,7 +91,7 @@ class ImagineTest extends TestCase
         $this->imagine->create(new Box(100, 100), $color);
     }
 
-    public function testOpen()
+    public function testOpen(): void
     {
         $path = $this->rootDir;
 
@@ -153,7 +153,7 @@ class ImagineTest extends TestCase
         unlink($path.'.svgz');
     }
 
-    public function testLoad()
+    public function testLoad(): void
     {
         $xml = '<?xml version="1.0"?>'
             .'<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100" height="100"></svg>'
@@ -180,21 +180,21 @@ class ImagineTest extends TestCase
         $image->save();
     }
 
-    public function testLoadInvalidSvg()
+    public function testLoadInvalidSvg(): void
     {
         $this->expectException(RuntimeException::class);
 
         $this->imagine->load('<?xml version="1.0"?><notasvg/>');
     }
 
-    public function testLoadInvalidXml()
+    public function testLoadInvalidXml(): void
     {
         $this->expectException(RuntimeException::class);
 
         $this->imagine->load('<?xml version="1.0"?><svg><invalid>');
     }
 
-    public function testRead()
+    public function testRead(): void
     {
         $xml = '<?xml version="1.0"?>'
             .'<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100" height="100"></svg>'
@@ -229,7 +229,7 @@ class ImagineTest extends TestCase
         $image->save();
     }
 
-    public function testReadInvalidResource()
+    public function testReadInvalidResource(): void
     {
         $this->expectException(InvalidArgumentException::class);
 
@@ -237,15 +237,11 @@ class ImagineTest extends TestCase
         $this->imagine->read('not a resource');
     }
 
-    public function testFont()
+    public function testFont(): void
     {
         $color = $this->createMock(ColorInterface::class);
 
-        $this->expectException(RuntimeException::class);
-
-        if (class_exists(NotSupportedException::class)) {
-            $this->expectException(NotSupportedException::class);
-        }
+        $this->expectException(NotSupportedException::class);
 
         $this->imagine->font($this->rootDir, 10, $color);
     }

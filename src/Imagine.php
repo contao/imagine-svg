@@ -15,6 +15,7 @@ use Imagine\Exception\NotSupportedException;
 use Imagine\Exception\RuntimeException;
 use Imagine\Image\AbstractImagine;
 use Imagine\Image\BoxInterface;
+use Imagine\Image\FontInterface;
 use Imagine\Image\Metadata\MetadataBag;
 use Imagine\Image\Palette\Color\ColorInterface;
 
@@ -23,7 +24,7 @@ class Imagine extends AbstractImagine
     /**
      * {@inheritdoc}
      */
-    public function create(BoxInterface $size, ColorInterface $color = null)
+    public function create(BoxInterface $size, ColorInterface $color = null): Image
     {
         if (null !== $color) {
             throw new InvalidArgumentException('Imagine SVG does not support colors');
@@ -50,7 +51,7 @@ class Imagine extends AbstractImagine
     /**
      * {@inheritdoc}
      */
-    public function open($path)
+    public function open($path): Image
     {
         $path = $this->checkPath($path);
         $data = @file_get_contents($path);
@@ -65,7 +66,7 @@ class Imagine extends AbstractImagine
     /**
      * {@inheritdoc}
      */
-    public function load($string)
+    public function load($string): Image
     {
         return $this->doLoad($string, new MetadataBag());
     }
@@ -73,7 +74,7 @@ class Imagine extends AbstractImagine
     /**
      * {@inheritdoc}
      */
-    public function read($resource)
+    public function read($resource): Image
     {
         if (!\is_resource($resource)) {
             throw new InvalidArgumentException('Variable does not contain a stream resource');
@@ -91,23 +92,15 @@ class Imagine extends AbstractImagine
     /**
      * {@inheritdoc}
      */
-    public function font($file, $size, ColorInterface $color)
+    public function font($file, $size, ColorInterface $color): FontInterface
     {
-        if (class_exists(NotSupportedException::class)) {
-            throw new NotSupportedException('This method is not implemented');
-        }
-
-        throw new RuntimeException('This method is not implemented');
+        throw new NotSupportedException('This method is not implemented');
     }
 
     /**
      * Returns an Image instance from an SVG string.
-     *
-     * @param string $data
-     *
-     * @return Image
      */
-    private function doLoad($data, MetadataBag $metadata)
+    private function doLoad(string $data, MetadataBag $metadata): Image
     {
         if (0 === strncmp($data, hex2bin('1F8B'), 2)) {
             $data = gzdecode($data);

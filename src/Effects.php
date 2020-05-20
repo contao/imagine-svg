@@ -19,7 +19,7 @@ use Imagine\Utils\Matrix;
 
 class Effects implements EffectsInterface
 {
-    const SVG_FILTER_ID_PREFIX = 'svgImagineFilterV1_';
+    private const SVG_FILTER_ID_PREFIX = 'svgImagineFilterV1_';
 
     /**
      * @var \DOMDocument
@@ -34,7 +34,7 @@ class Effects implements EffectsInterface
     /**
      * {@inheritdoc}
      */
-    public function gamma($correction)
+    public function gamma($correction): self
     {
         $gamma = (float) $correction;
 
@@ -59,7 +59,7 @@ class Effects implements EffectsInterface
     /**
      * {@inheritdoc}
      */
-    public function negative()
+    public function negative(): self
     {
         $this->addFilterElement('feColorMatrix', [
             'type' => 'matrix',
@@ -77,7 +77,7 @@ class Effects implements EffectsInterface
     /**
      * {@inheritdoc}
      */
-    public function grayscale()
+    public function grayscale(): self
     {
         $this->addFilterElement('feColorMatrix', [
             'type' => 'saturate',
@@ -90,7 +90,7 @@ class Effects implements EffectsInterface
     /**
      * {@inheritdoc}
      */
-    public function colorize(ColorInterface $color)
+    public function colorize(ColorInterface $color): self
     {
         if (!$color instanceof RGB) {
             throw new NotSupportedException('Colorize with non-rgb color is not supported');
@@ -112,7 +112,7 @@ class Effects implements EffectsInterface
     /**
      * {@inheritdoc}
      */
-    public function sharpen()
+    public function sharpen(): self
     {
         $this->addFilterElement('feConvolveMatrix', [
             'kernelUnitLength' => '1',
@@ -129,7 +129,7 @@ class Effects implements EffectsInterface
     /**
      * {@inheritdoc}
      */
-    public function blur($sigma = 1)
+    public function blur($sigma = 1): self
     {
         $deviation = (float) $sigma;
 
@@ -147,7 +147,7 @@ class Effects implements EffectsInterface
     /**
      * {@inheritdoc}
      */
-    public function brightness($brightness)
+    public function brightness($brightness): self
     {
         $intercept = ((int) $brightness) / 100;
 
@@ -172,7 +172,7 @@ class Effects implements EffectsInterface
     /**
      * {@inheritdoc}
      */
-    public function convolve(Matrix $matrix)
+    public function convolve(Matrix $matrix): self
     {
         $attributes = [
             'kernelMatrix' => implode(' ', array_map(
@@ -197,10 +197,8 @@ class Effects implements EffectsInterface
 
     /**
      * Create and add a new filter element.
-     *
-     * @param string $name
      */
-    private function addFilterElement($name, array $attributes)
+    private function addFilterElement(string $name, array $attributes): void
     {
         $attributes['color-interpolation-filters'] = 'sRGB';
 
@@ -209,10 +207,8 @@ class Effects implements EffectsInterface
 
     /**
      * Get the main filter element or create it if none is present.
-     *
-     * @return \DOMElement
      */
-    private function getSvgFilter()
+    private function getSvgFilter(): \DOMElement
     {
         $svg = $this->document->documentElement;
         $filter = null;
@@ -250,7 +246,7 @@ class Effects implements EffectsInterface
     /**
      * Add a group element that wraps all contents.
      */
-    private function wrapSvg()
+    private function wrapSvg(): void
     {
         $svg = $this->document->documentElement;
         $group = $this->document->createElement('g');
@@ -264,12 +260,8 @@ class Effects implements EffectsInterface
 
     /**
      * Create element with the specified attributes.
-     *
-     * @param string $name
-     *
-     * @return \DOMElement
      */
-    private function createElement($name, array $attributes)
+    private function createElement(string $name, array $attributes): \DOMElement
     {
         $filter = $this->document->createElement($name);
 
@@ -285,11 +277,9 @@ class Effects implements EffectsInterface
     }
 
     /**
-     * @param number $number
-     *
-     * @return string
+     * @param int|float $number
      */
-    private function numberToString($number)
+    private function numberToString($number): string
     {
         return rtrim(rtrim(sprintf('%.7F', $number), '0'), '.');
     }

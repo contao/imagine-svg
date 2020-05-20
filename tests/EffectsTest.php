@@ -23,12 +23,12 @@ use PHPUnit\Framework\TestCase;
 
 class EffectsTest extends TestCase
 {
-    public function testInstantiation()
+    public function testInstantiation(): void
     {
         $this->assertInstanceOf('Contao\ImagineSvg\Effects', new Effects(new \DOMDocument()));
     }
 
-    public function testGamma()
+    public function testGamma(): void
     {
         $dom = (new Imagine())->create(SvgBox::createTypeNone())->getDomDocument();
         $effects = new Effects($dom);
@@ -62,12 +62,12 @@ class EffectsTest extends TestCase
         $effects->gamma(0);
     }
 
-    public function testGammaWithLocale()
+    public function testGammaWithLocale(): void
     {
         $this->executeTestWithLocale('testGamma');
     }
 
-    public function testNegative()
+    public function testNegative(): void
     {
         $dom = (new Imagine())->create(SvgBox::createTypeNone())->getDomDocument();
         $effects = new Effects($dom);
@@ -91,7 +91,7 @@ class EffectsTest extends TestCase
         ], preg_split('/\s+/', $filter->firstChild->getAttribute('values')));
     }
 
-    public function testGrayscale()
+    public function testGrayscale(): void
     {
         $dom = (new Imagine())->create(SvgBox::createTypeNone())->getDomDocument();
         $effects = new Effects($dom);
@@ -109,7 +109,7 @@ class EffectsTest extends TestCase
         $this->assertSame('0', $filter->firstChild->getAttribute('values'));
     }
 
-    public function testColorize()
+    public function testColorize(): void
     {
         $dom = (new Imagine())->create(SvgBox::createTypeNone())->getDomDocument();
         $effects = new Effects($dom);
@@ -141,7 +141,7 @@ class EffectsTest extends TestCase
         $effects->colorize($this->createMock(ColorInterface::class));
     }
 
-    public function testSharpen()
+    public function testSharpen(): void
     {
         $dom = (new Imagine())->create(SvgBox::createTypeNone())->getDomDocument();
         $effects = new Effects($dom);
@@ -165,7 +165,7 @@ class EffectsTest extends TestCase
         ], preg_split('/\s+/', $filter->firstChild->getAttribute('kernelMatrix')));
     }
 
-    public function testBlur()
+    public function testBlur(): void
     {
         $dom = (new Imagine())->create(SvgBox::createTypeNone())->getDomDocument();
         $effects = new Effects($dom);
@@ -193,12 +193,12 @@ class EffectsTest extends TestCase
         $effects->blur(0);
     }
 
-    public function testBlurWithLocale()
+    public function testBlurWithLocale(): void
     {
         $this->executeTestWithLocale('testBlur');
     }
 
-    public function testBrightness()
+    public function testBrightness(): void
     {
         $dom = (new Imagine())->create(SvgBox::createTypeNone())->getDomDocument();
         $effects = new Effects($dom);
@@ -238,12 +238,12 @@ class EffectsTest extends TestCase
         $effects->brightness(101);
     }
 
-    public function testBrightnessWithLocale()
+    public function testBrightnessWithLocale(): void
     {
         $this->executeTestWithLocale('testBrightness');
     }
 
-    public function testConvolve()
+    public function testConvolve(): void
     {
         if (!class_exists(Matrix::class)) {
             $this->markTestSkipped('Effects::convolve() in only available since Imagine 1.0');
@@ -293,12 +293,12 @@ class EffectsTest extends TestCase
         $this->assertEmpty($filter->firstChild->getAttribute('order'));
     }
 
-    public function testConvolveWithLocale()
+    public function testConvolveWithLocale(): void
     {
         $this->executeTestWithLocale('testConvolve');
     }
 
-    public function testMultipleFilters()
+    public function testMultipleFilters(): void
     {
         $image = (new Imagine())->create(SvgBox::createTypeNone());
 
@@ -341,10 +341,7 @@ class EffectsTest extends TestCase
         $this->assertSame('url(#differentId)', $g->getAttribute('filter'));
     }
 
-    /**
-     * @param string $methodName
-     */
-    private function executeTestWithLocale($methodName)
+    private function executeTestWithLocale(string $methodName): void
     {
         $locale = setlocale(LC_NUMERIC, 0);
         if (false === $locale) {
