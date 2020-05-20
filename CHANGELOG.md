@@ -4,6 +4,11 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+ * Increase required PHP version to 7.2.
+ * Increase required imagine/imagine version to 1.0.
+
+## [Unreleased]
+
  * Don’t throw exceptions for LIBXML warnings. [#13]
  * Fix bug with viewBox computation.
  * Use NotSupportedException if available. [#15]
