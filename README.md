@@ -53,19 +53,19 @@ from other implementations. You can check the return value like in this example:
 
 ```php
 use Contao\ImagineSvg\Imagine;
-use Contao\ImagineSvg\RelativeBoxInterface;
-use Contao\ImagineSvg\UndefinedBoxInterface;
+use Contao\ImagineSvg\SvgBox;
 
 $imagine = new Imagine();
 $size = $imagine->open('/path/to/image.svg')->getSize();
 
-if ($size instanceof UndefinedBoxInterface) {
+if (SvgBox::TYPE_NONE === $size->getType()) {
     // The image has no defined size
-} elseif ($size instanceof RelativeBoxInterface) {
+} elseif (SvgBox::TYPE_ASPECT_RATIO === $size->getType()) {
     // The image has a relative size, $size->getWidth() and $size->getHeight()
     // should be treated as an aspect ratio
 } else {
     // The image has a defined size like a regular image
+    // $size->getType() would return SvgBox::TYPE_ABSOLUTE in this case
 }
 ```
 
