@@ -8,7 +8,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
  * Increase required imagine/imagine version to 1.0.
  * Remove UndefinedBox and RelativeBox.
 
-## [Unreleased]
+## [0.2.3] (2020-05-21)
 
  * Don’t throw exceptions for LIBXML warnings. [#13]
  * Fix bug with viewBox computation.
@@ -58,7 +58,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
  * Initial release
 
-[Unreleased]: https://github.com/contao/imagine-svg/compare/0.2.2...HEAD
+[Unreleased]: https://github.com/contao/imagine-svg/compare/0.2.3...HEAD
+[0.2.3]: https://github.com/contao/imagine-svg/compare/0.2.2...0.2.3
 [0.2.2]: https://github.com/contao/imagine-svg/compare/0.2.1...0.2.2
 [0.2.1]: https://github.com/contao/imagine-svg/compare/0.2.0...0.2.1
 [0.2.0]: https://github.com/contao/imagine-svg/compare/0.1.5...0.2.0
