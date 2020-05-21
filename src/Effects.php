@@ -99,9 +99,9 @@ class Effects implements EffectsInterface
         $this->addFilterElement('feColorMatrix', [
             'type' => 'matrix',
             'values' => implode(' ', [
-                '1 0 0 0 '.json_encode($color->getRed() / 255),
-                '0 1 0 0 '.json_encode($color->getGreen() / 255),
-                '0 0 1 0 '.json_encode($color->getBlue() / 255),
+                '1 0 0 0 '.$this->numberToString($color->getRed() / 255),
+                '0 1 0 0 '.$this->numberToString($color->getGreen() / 255),
+                '0 0 1 0 '.$this->numberToString($color->getBlue() / 255),
                 '0 0 0 1 0',
             ]),
         ]);
@@ -138,7 +138,7 @@ class Effects implements EffectsInterface
         }
 
         $this->addFilterElement('feGaussianBlur', [
-            'stdDeviation' => json_encode($deviation),
+            'stdDeviation' => $this->numberToString($deviation),
         ]);
 
         return $this;
