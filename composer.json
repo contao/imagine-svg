@@ -19,6 +19,11 @@
         "phpunit/phpunit": "^8.5.4",
         "symfony/filesystem": "^5.0"
     },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    },
     "autoload": {
         "psr-4": {
             "Contao\\ImagineSvg\\": "src/"
