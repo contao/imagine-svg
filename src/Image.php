@@ -181,7 +181,7 @@ class Image extends AbstractImage
         } elseif ($extension = pathinfo($path, \PATHINFO_EXTENSION)) {
             $format = $extension;
         } else {
-            $originalPath = isset($this->metadata['filepath']) ? $this->metadata['filepath'] : null;
+            $originalPath = $this->metadata['filepath'] ?? null;
             $format = pathinfo($originalPath, \PATHINFO_EXTENSION);
         }
 
@@ -300,8 +300,8 @@ class Image extends AbstractImage
         }
 
         $viewBox = preg_split('/[\s,]+/', $svg->getAttribute('viewBox') ?: '');
-        $viewBoxWidth = isset($viewBox[2]) ? (float) $viewBox[2] : 0;
-        $viewBoxHeight = isset($viewBox[3]) ? (float) $viewBox[3] : 0;
+        $viewBoxWidth = (float) ($viewBox[2] ?? 0);
+        $viewBoxHeight = (float) ($viewBox[3] ?? 0);
 
         // Missing width/height and viewBox
         if ($viewBoxWidth <= 0 || $viewBoxHeight <= 0) {
