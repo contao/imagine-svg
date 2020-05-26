@@ -458,7 +458,7 @@ class Image extends AbstractImage
         $unit = substr($size, -2);
 
         if (is_numeric($value) && isset($map[$unit])) {
-            $size = $value * $map[$unit];
+            $size = ((float) $value) * $map[$unit];
         }
 
         if (is_numeric($size)) {

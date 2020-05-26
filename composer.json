@@ -16,7 +16,9 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.14",
+        "phpstan/phpstan": "^0.12",
         "phpunit/phpunit": "^8.5.4",
+        "slam/phpstan-extensions": "^5.0",
         "symfony/filesystem": "^5.0"
     },
     "extra": {

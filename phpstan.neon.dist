@@ -1,0 +1,14 @@
+includes:
+    - vendor/phpstan/phpstan-phpunit/extension.neon
+    - vendor/phpstan/phpstan-phpunit/rules.neon
+    - vendor/phpstan/phpstan-symfony/extension.neon
+    - vendor/phpstan/phpstan-symfony/rules.neon
+
+rules:
+    - TheCodingMachine\PHPStan\Rules\Exceptions\ThrowMustBundlePreviousExceptionRule
+
+parameters:
+    ignoreErrors:
+        -
+            message: '#undefined method DOMNode::((has|get|set)Attribute|getElementsByTagName)\(\)#'
+            path: tests/EffectsTest.php

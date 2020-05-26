@@ -217,6 +217,7 @@ class Effects implements EffectsInterface
 
         if (
             1 === $svg->childNodes->length
+            && $svg->firstChild instanceof \DOMElement
             && 'g' === $svg->firstChild->nodeName
             && preg_match(
                 '/^url\(#('.self::SVG_FILTER_ID_PREFIX.'[0-9a-f]{16})\)$/',
@@ -226,9 +227,9 @@ class Effects implements EffectsInterface
         ) {
             $id = $matches[1];
         } else {
-            $this->wrapSvg();
+            $group = $this->wrapSvg();
             $id = self::SVG_FILTER_ID_PREFIX.bin2hex(substr(hash('sha256', $this->document->saveXML()), 0, 8));
-            $svg->firstChild->setAttribute('filter', 'url(#'.$id.')');
+            $group->setAttribute('filter', 'url(#'.$id.')');
         }
 
         /** @var \DOMElement $element */
@@ -248,7 +249,7 @@ class Effects implements EffectsInterface
     /**
      * Add a group element that wraps all contents.
      */
-    private function wrapSvg(): void
+    private function wrapSvg(): \DOMElement
     {
         $svg = $this->document->documentElement;
         $group = $this->document->createElement('g');
@@ -258,6 +259,8 @@ class Effects implements EffectsInterface
         }
 
         $svg->appendChild($group);
+
+        return $group;
     }
 
     /**
