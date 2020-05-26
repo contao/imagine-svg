@@ -105,13 +105,13 @@ class Image extends AbstractImage
         $this->fixViewBox();
 
         $svg = $this->document->documentElement;
-        $svg->setAttribute('x', -$start->getX());
-        $svg->setAttribute('y', -$start->getY());
+        $svg->setAttribute('x', (string) (-$start->getX()));
+        $svg->setAttribute('y', (string) (-$start->getY()));
 
         $svgWrap = $this->document->createElementNS('http://www.w3.org/2000/svg', 'svg');
         $svgWrap->setAttribute('version', '1.1');
-        $svgWrap->setAttribute('width', $size->getWidth());
-        $svgWrap->setAttribute('height', $size->getHeight());
+        $svgWrap->setAttribute('width', (string) $size->getWidth());
+        $svgWrap->setAttribute('height', (string) $size->getHeight());
         $svgWrap->appendChild($svg);
 
         $this->document->appendChild($svgWrap);
@@ -149,8 +149,8 @@ class Image extends AbstractImage
 
         $this->fixViewBox();
 
-        $this->document->documentElement->setAttribute('width', $size->getWidth());
-        $this->document->documentElement->setAttribute('height', $size->getHeight());
+        $this->document->documentElement->setAttribute('width', (string) $size->getWidth());
+        $this->document->documentElement->setAttribute('height', (string) $size->getHeight());
 
         return $this;
     }
@@ -182,7 +182,7 @@ class Image extends AbstractImage
             $format = $extension;
         } else {
             $originalPath = $this->metadata['filepath'] ?? null;
-            $format = pathinfo($originalPath, \PATHINFO_EXTENSION);
+            $format = isset($originalPath) ? pathinfo($originalPath, \PATHINFO_EXTENSION) : null;
         }
 
         if (!$format) {
@@ -310,12 +310,12 @@ class Image extends AbstractImage
 
         // Fixed width and viewBox
         if ($width) {
-            return SvgBox::createTypeAbsolute($width, $width / $viewBoxWidth * $viewBoxHeight);
+            return SvgBox::createTypeAbsolute($width, (int) round($width / $viewBoxWidth * $viewBoxHeight));
         }
 
         // Fixed height and viewBox
         if ($height) {
-            return SvgBox::createTypeAbsolute($height / $viewBoxHeight * $viewBoxWidth, $height);
+            return SvgBox::createTypeAbsolute((int) round($height / $viewBoxHeight * $viewBoxWidth), $height);
         }
 
         // Normalize floating point values
@@ -328,7 +328,7 @@ class Image extends AbstractImage
         }
 
         // Missing width/height, returning relative dimensions from viewBox
-        return SvgBox::createTypeAspectRatio(round($viewBoxWidth), round($viewBoxHeight));
+        return SvgBox::createTypeAspectRatio((int) round($viewBoxWidth), (int) round($viewBoxHeight));
     }
 
     /**

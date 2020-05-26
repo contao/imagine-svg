@@ -346,7 +346,7 @@ class ImageTest extends TestCase
         $this->assertSame(100, $image->getSize()->getWidth());
         $this->assertSame(100, $image->getSize()->getHeight());
 
-        $svg->setAttribute('height', 50);
+        $svg->setAttribute('height', '50');
 
         $this->assertSame(SvgBox::TYPE_ABSOLUTE, $image->getSize()->getType());
         $this->assertSame(100, $image->getSize()->getWidth());
@@ -359,7 +359,7 @@ class ImageTest extends TestCase
         $this->assertSame(100, $image->getSize()->getWidth());
         $this->assertSame(50, $image->getSize()->getHeight());
 
-        $svg->setAttribute('height', 200);
+        $svg->setAttribute('height', '200');
         $svg->removeAttribute('width');
 
         $this->assertSame(SvgBox::TYPE_ABSOLUTE, $image->getSize()->getType());
@@ -388,14 +388,14 @@ class ImageTest extends TestCase
         $this->assertSame(300, $image->getSize()->getWidth());
         $this->assertSame(150, $image->getSize()->getHeight());
 
-        $svg->setAttribute('width', 100);
+        $svg->setAttribute('width', '100');
 
         $this->assertSame(SvgBox::TYPE_NONE, $image->getSize()->getType());
         $this->assertSame(300, $image->getSize()->getWidth());
         $this->assertSame(150, $image->getSize()->getHeight());
 
         $svg->removeAttribute('width');
-        $svg->setAttribute('height', 100);
+        $svg->setAttribute('height', '100');
 
         $this->assertSame(SvgBox::TYPE_NONE, $image->getSize()->getType());
         $this->assertSame(300, $image->getSize()->getWidth());

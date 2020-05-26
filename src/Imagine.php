@@ -37,8 +37,8 @@ class Imagine extends AbstractImagine
         $svg->setAttribute('version', '1.1');
 
         if (!$size instanceof SvgBox || SvgBox::TYPE_ABSOLUTE === $size->getType()) {
-            $svg->setAttribute('width', $size->getWidth());
-            $svg->setAttribute('height', $size->getHeight());
+            $svg->setAttribute('width', (string) $size->getWidth());
+            $svg->setAttribute('height', (string) $size->getHeight());
         }
 
         if (!$size instanceof SvgBox || SvgBox::TYPE_NONE !== $size->getType()) {
