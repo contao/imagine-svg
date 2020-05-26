@@ -383,13 +383,13 @@ class Image extends AbstractImage
         $unit = substr($size, -2);
 
         if (is_numeric($value) && isset($map[$unit])) {
-            $size = ((float) $value) * $map[$unit];
+            $pixelValue = ((float) $value) * $map[$unit];
+        } elseif (is_numeric($size)) {
+            $pixelValue = (float) $size;
+        } else {
+            $pixelValue = 0;
         }
 
-        if (is_numeric($size)) {
-            return (int) round($size);
-        }
-
-        return 0;
+        return (int) round($pixelValue);
     }
 }
