@@ -38,20 +38,14 @@ class ImageTest extends TestCase
      */
     private $rootDir;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
         $this->rootDir = __DIR__.'/tmp';
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
 
@@ -375,7 +369,7 @@ class ImageTest extends TestCase
         $svg->setAttribute('viewBox', '0 0 1 0.5');
 
         $this->assertSame(SvgBox::TYPE_ASPECT_RATIO, $image->getSize()->getType());
-        $this->assertSame(2, $image->getSize()->getWidth() / $image->getSize()->getHeight());
+        $this->assertSame(2.0, (float) ($image->getSize()->getWidth() / $image->getSize()->getHeight()));
 
         $svg->setAttribute('viewBox', '0 0 0.001 0.000333');
 
@@ -403,12 +397,9 @@ class ImageTest extends TestCase
     }
 
     /**
-     * @param string $value
-     * @param int    $expected
-     *
      * @dataProvider getGetSizePixelValues
      */
-    public function testGetSizePixelValues($value, $expected): void
+    public function testGetSizePixelValues(string $value, ?int $expected): void
     {
         $imagine = new Imagine();
         $image = $imagine->create(new Box(100, 100));

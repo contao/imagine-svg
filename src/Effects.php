@@ -33,9 +33,6 @@ class Effects implements EffectsInterface
         $this->document = $document;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function gamma($correction): self
     {
         $gamma = (float) $correction;
@@ -58,9 +55,6 @@ class Effects implements EffectsInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function negative(): self
     {
         $this->addFilterElement('feColorMatrix', [
@@ -76,9 +70,6 @@ class Effects implements EffectsInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function grayscale(): self
     {
         $this->addFilterElement('feColorMatrix', [
@@ -89,9 +80,6 @@ class Effects implements EffectsInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function colorize(ColorInterface $color): self
     {
         if (!$color instanceof RGB) {
@@ -111,9 +99,6 @@ class Effects implements EffectsInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function sharpen(): self
     {
         $this->addFilterElement('feConvolveMatrix', [
@@ -128,9 +113,6 @@ class Effects implements EffectsInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function blur($sigma = 1): self
     {
         $deviation = (float) $sigma;
@@ -146,9 +128,6 @@ class Effects implements EffectsInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function brightness($brightness): self
     {
         $intercept = ((int) $brightness) / 100;
@@ -171,9 +150,6 @@ class Effects implements EffectsInterface
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function convolve(Matrix $matrix): self
     {
         $attributes = [

@@ -16,10 +16,17 @@
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.14",
+        "contao/easy-coding-standard": "^1.0",
         "phpstan/phpstan": "^0.12",
+        "phpstan/phpstan-phpunit": "^0.12.8",
+        "phpstan/phpstan-symfony": "^0.12.6",
         "phpunit/phpunit": "^8.5.4",
+        "psalm/plugin-phpunit": "^0.9",
+        "psalm/plugin-symfony": "^1.0",
         "slam/phpstan-extensions": "^5.0",
-        "symfony/filesystem": "^5.0"
+        "symfony/filesystem": "^5.0",
+        "symfony/http-client": "^5.0",
+        "vimeo/psalm": "^3.9"
     },
     "extra": {
         "branch-alias": {
@@ -35,5 +42,25 @@
         "psr-4": {
             "Contao\\ImagineSvg\\Tests\\": "tests/"
         }
+    },
+    "scripts": {
+        "all": [
+            "@unit-tests",
+            "@cs-fixer",
+            "@phpstan",
+            "@psalm"
+        ],
+        "cs-fixer": [
+            "vendor/bin/ecs check src tests --config vendor/contao/easy-coding-standard/config/default.yaml --fix --ansi"
+        ],
+        "phpstan": [
+            "vendor/bin/phpstan analyze src tests --level=4 --memory-limit=1G --ansi"
+        ],
+        "psalm": [
+            "vendor/bin/psalm --no-suggestions --threads=4"
+        ],
+        "unit-tests": [
+            "vendor/bin/phpunit --colors=always"
+        ]
     }
 }

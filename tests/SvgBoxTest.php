@@ -61,15 +61,15 @@ class SvgBoxTest extends TestCase
 
     public function testScale(): void
     {
-        $this->assertEquals(
+        $this->assertSameBox(
             new SvgBox(200, 200),
             (new SvgBox(100, 100))->scale(2)
         );
-        $this->assertEquals(
+        $this->assertSameBox(
             SvgBox::createTypeAspectRatio(200, 200),
             SvgBox::createTypeAspectRatio(100, 100)->scale(2)
         );
-        $this->assertEquals(
+        $this->assertSameBox(
             SvgBox::createTypeNone(),
             SvgBox::createTypeNone()->scale(2)
         );
@@ -77,15 +77,15 @@ class SvgBoxTest extends TestCase
 
     public function testIncrease(): void
     {
-        $this->assertEquals(
+        $this->assertSameBox(
             new SvgBox(200, 200),
             (new SvgBox(100, 100))->increase(100)
         );
-        $this->assertEquals(
+        $this->assertSameBox(
             SvgBox::createTypeAspectRatio(200, 200),
             SvgBox::createTypeAspectRatio(100, 100)->increase(100)
         );
-        $this->assertEquals(
+        $this->assertSameBox(
             SvgBox::createTypeNone(),
             SvgBox::createTypeNone()->increase(100)
         );
@@ -122,15 +122,15 @@ class SvgBoxTest extends TestCase
 
     public function testWiden(): void
     {
-        $this->assertEquals(
+        $this->assertSameBox(
             new SvgBox(200, 200),
             (new SvgBox(100, 100))->widen(200)
         );
-        $this->assertEquals(
+        $this->assertSameBox(
             SvgBox::createTypeAspectRatio(200, 200),
             SvgBox::createTypeAspectRatio(100, 100)->widen(200)
         );
-        $this->assertEquals(
+        $this->assertSameBox(
             SvgBox::createTypeNone(),
             SvgBox::createTypeNone()->widen(200)
         );
@@ -138,17 +138,24 @@ class SvgBoxTest extends TestCase
 
     public function testHeighten(): void
     {
-        $this->assertEquals(
+        $this->assertSameBox(
             new SvgBox(200, 200),
             (new SvgBox(100, 100))->heighten(200)
         );
-        $this->assertEquals(
+        $this->assertSameBox(
             SvgBox::createTypeAspectRatio(200, 200),
             SvgBox::createTypeAspectRatio(100, 100)->heighten(200)
         );
-        $this->assertEquals(
+        $this->assertSameBox(
             SvgBox::createTypeNone(),
             SvgBox::createTypeNone()->heighten(200)
         );
+    }
+
+    private function assertSameBox(SvgBox $expected, SvgBox $actual, string $message = ''): void
+    {
+        $this->assertSame($expected->getWidth(), $actual->getWidth(), $message);
+        $this->assertSame($expected->getHeight(), $actual->getHeight(), $message);
+        $this->assertSame($expected->getType(), $actual->getType(), $message);
     }
 }

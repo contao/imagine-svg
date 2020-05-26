@@ -34,10 +34,7 @@ class ImagineTest extends TestCase
      */
     private $rootDir;
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setUp(): void
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -45,10 +42,7 @@ class ImagineTest extends TestCase
         $this->rootDir = __DIR__.'/tmp';
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function tearDown(): void
+    protected function tearDown(): void
     {
         parent::tearDown();
 
@@ -231,6 +225,9 @@ class ImagineTest extends TestCase
         $image->save();
     }
 
+    /**
+     * @psalm-suppress InvalidArgument
+     */
     public function testReadInvalidResource(): void
     {
         $this->expectException(InvalidArgumentException::class);

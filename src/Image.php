@@ -48,9 +48,6 @@ class Image extends AbstractImage
         $this->palette = new RGB();
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function __toString(): string
     {
         return $this->get('svg');
@@ -73,17 +70,11 @@ class Image extends AbstractImage
         return $this->document;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function copy(): self
     {
         return new self(clone $this->document, clone $this->metadata);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function crop(PointInterface $start, BoxInterface $size): self
     {
         $currentSize = $this->getSize();
@@ -120,17 +111,11 @@ class Image extends AbstractImage
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function paste(ImageInterface $image, PointInterface $start, $alpha = 100): self
     {
         throw new NotSupportedException('This method is not implemented');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function resize(BoxInterface $size, $filter = ImageInterface::FILTER_UNDEFINED): self
     {
         if (ImageInterface::FILTER_UNDEFINED !== $filter) {
@@ -155,17 +140,11 @@ class Image extends AbstractImage
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function rotate($angle, ColorInterface $background = null): self
     {
         throw new NotSupportedException('This method is not implemented');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function save($path = null, array $options = []): self
     {
         if (null === $path && isset($this->metadata['filepath'])) {
@@ -198,9 +177,6 @@ class Image extends AbstractImage
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function show($format, array $options = []): self
     {
         $image = $this->get($format, $options);
@@ -216,9 +192,6 @@ class Image extends AbstractImage
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function get($format, array $options = []): string
     {
         $format = strtolower($format);
@@ -238,25 +211,16 @@ class Image extends AbstractImage
         return $xml;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function flipHorizontally(): self
     {
         throw new NotSupportedException('This method is not implemented');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function flipVertically(): self
     {
         throw new NotSupportedException('This method is not implemented');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function strip(): self
     {
         $xPath = new \DOMXPath($this->document);
@@ -268,25 +232,16 @@ class Image extends AbstractImage
         return $this;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function draw(): DrawerInterface
     {
         throw new NotSupportedException('This method is not implemented');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function effects(): Effects
     {
         return new Effects($this->document);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getSize(): SvgBox
     {
         $svg = $this->document->documentElement;
@@ -331,81 +286,51 @@ class Image extends AbstractImage
         return SvgBox::createTypeAspectRatio((int) round($viewBoxWidth), (int) round($viewBoxHeight));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function applyMask(ImageInterface $mask): self
     {
         throw new NotSupportedException('This method is not implemented');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function fill(FillInterface $fill): self
     {
         throw new NotSupportedException('This method is not implemented');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function mask(): self
     {
         throw new NotSupportedException('This method is not implemented');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function histogram(): array
     {
         throw new NotSupportedException('This method is not implemented');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function getColorAt(PointInterface $point): ColorInterface
     {
         throw new NotSupportedException('This method is not implemented');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function layers(): LayersInterface
     {
         throw new NotSupportedException('This method is not implemented');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function interlace($scheme): self
     {
         throw new NotSupportedException('This method is not implemented');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function palette(): PaletteInterface
     {
         return $this->palette;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function profile(ProfileInterface $profile): self
     {
         throw new NotSupportedException('This method is not implemented');
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function usePalette(PaletteInterface $palette): self
     {
         if (!$palette instanceof RGB) {

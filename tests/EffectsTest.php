@@ -346,11 +346,14 @@ class EffectsTest extends TestCase
     private function executeTestWithLocale(string $methodName): void
     {
         $locale = setlocale(LC_NUMERIC, 0);
+
         if (false === $locale) {
             $this->markTestSkipped('Your platform does not support locales.');
         }
+
         try {
             $requiredLocales = ['de_DE.UTF-8', 'de_DE.UTF8', 'de_DE.utf-8', 'de_DE.utf8', 'German_Germany.1252'];
+
             if (false === setlocale(LC_NUMERIC, $requiredLocales)) {
                 $this->markTestSkipped('Could not set any of required locales: '.implode(', ', $requiredLocales));
             }

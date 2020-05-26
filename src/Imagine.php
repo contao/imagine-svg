@@ -23,9 +23,6 @@ use Imagine\Image\Palette\Color\ColorInterface;
 
 class Imagine extends AbstractImagine
 {
-    /**
-     * {@inheritdoc}
-     */
     public function create(BoxInterface $size, ColorInterface $color = null): Image
     {
         if (null !== $color) {
@@ -50,9 +47,6 @@ class Imagine extends AbstractImagine
         return new Image($document, new MetadataBag());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function open($path): Image
     {
         $path = $this->checkPath($path);
@@ -65,17 +59,11 @@ class Imagine extends AbstractImagine
         return $this->doLoad($data, new MetadataBag(['filepath' => $path]));
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function load($string): Image
     {
         return $this->doLoad($string, new MetadataBag());
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function read($resource): Image
     {
         if (!\is_resource($resource)) {
@@ -91,9 +79,6 @@ class Imagine extends AbstractImagine
         return $this->load($content);
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function font($file, $size, ColorInterface $color): FontInterface
     {
         throw new NotSupportedException('This method is not implemented');
