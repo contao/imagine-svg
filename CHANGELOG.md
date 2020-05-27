@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
  * Increase required imagine/imagine version to 1.0.
  * Remove UndefinedBox and RelativeBox.
  * Support PHP version 8.0. [#19]
+ * Improve aspect ratio computation. [#21]
 
 ## [0.2.3] (2020-05-21)
 
@@ -71,6 +72,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 [0.1.1]: https://github.com/contao/imagine-svg/compare/0.1.0...0.1.1
 [0.1.0]: https://github.com/contao/imagine-svg/commits/0.1.0
 
+[#21]: https://github.com/contao/imagine-svg/issues/21
 [#19]: https://github.com/contao/imagine-svg/issues/19
 [#15]: https://github.com/contao/imagine-svg/issues/15
 [#14]: https://github.com/contao/imagine-svg/issues/14

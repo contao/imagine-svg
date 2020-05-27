@@ -363,18 +363,12 @@ class ImageTest extends TestCase
         $svg->removeAttribute('height');
 
         $this->assertSame(SvgBox::TYPE_ASPECT_RATIO, $image->getSize()->getType());
-        $this->assertSame(200, $image->getSize()->getWidth());
-        $this->assertSame(100, $image->getSize()->getHeight());
+        $this->assertSame(2.0, (float) ($image->getSize()->getWidth() / $image->getSize()->getHeight()));
 
         $svg->setAttribute('viewBox', '0 0 1 0.5');
 
         $this->assertSame(SvgBox::TYPE_ASPECT_RATIO, $image->getSize()->getType());
         $this->assertSame(2.0, (float) ($image->getSize()->getWidth() / $image->getSize()->getHeight()));
-
-        $svg->setAttribute('viewBox', '0 0 0.001 0.000333');
-
-        $this->assertSame(SvgBox::TYPE_ASPECT_RATIO, $image->getSize()->getType());
-        $this->assertSame(1 / 0.333, $image->getSize()->getWidth() / $image->getSize()->getHeight());
 
         $svg->removeAttribute('viewBox');
 
@@ -394,6 +388,38 @@ class ImageTest extends TestCase
         $this->assertSame(SvgBox::TYPE_NONE, $image->getSize()->getType());
         $this->assertSame(300, $image->getSize()->getWidth());
         $this->assertSame(150, $image->getSize()->getHeight());
+    }
+
+    /**
+     * @dataProvider getGetSizeAspectRatio
+     */
+    public function testGetSizeAspectRatio(string $viewBox, float $ratio): void
+    {
+        $imagine = new Imagine();
+        $image = $imagine->create(SvgBox::createTypeNone());
+        $svg = $image->getDomDocument()->documentElement;
+
+        $svg->setAttribute('viewBox', $viewBox);
+
+        $this->assertSame(SvgBox::TYPE_ASPECT_RATIO, $image->getSize()->getType());
+        $this->assertSame($ratio, (float) ($image->getSize()->getWidth() / $image->getSize()->getHeight()));
+    }
+
+    public function getGetSizeAspectRatio(): array
+    {
+        return [
+            ['0 0 1024 768', 4 / 3],
+            ['0 0 1920 1080', 16 / 9],
+            ['0 0 13456 7569', 16 / 9],
+            ['0 0 0.001 0.000333', 1 / 0.333],
+            ['0 0 1.777777777777777777777777777777777777777777777 1', 16 / 9],
+            ['0 0 .1777777777777777777777777777777777777777777777 .1', 16 / 9],
+            ['0 0 .0000001777777777777777777777777777777777777777 .0000001', 16 / 9],
+            ['0 0 1777777777777777777777777777777777777777 1000000000000000000000000000000000000000', 16 / 9],
+            ['0 0 1.77777777777777777e50 1e50', 16 / 9],
+            ['0 0 1.77777777777777777e-50 1e-50', 16 / 9],
+            ['0 0 10e5 10e4', 10.0 / 1],
+        ];
     }
 
     /**

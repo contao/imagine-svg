@@ -273,17 +273,11 @@ class Image extends AbstractImage
             return SvgBox::createTypeAbsolute((int) round($height / $viewBoxHeight * $viewBoxWidth), $height);
         }
 
-        // Normalize floating point values
-        if (
-            $viewBoxWidth < 1000
-            && (round($viewBoxWidth) !== $viewBoxWidth || round($viewBoxHeight) !== $viewBoxHeight)
-        ) {
-            $viewBoxHeight = 1000 / $viewBoxWidth * $viewBoxHeight;
-            $viewBoxWidth = 1000;
-        }
+        // Normalize floating point values to integer ratio
+        [$viewBoxWidth, $viewBoxHeight] = $this->normalizeRatio($viewBoxWidth, $viewBoxHeight);
 
         // Missing width/height, returning relative dimensions from viewBox
-        return SvgBox::createTypeAspectRatio((int) round($viewBoxWidth), (int) round($viewBoxHeight));
+        return SvgBox::createTypeAspectRatio($viewBoxWidth, $viewBoxHeight);
     }
 
     public function applyMask(ImageInterface $mask): self
@@ -340,6 +334,41 @@ class Image extends AbstractImage
         $this->palette = $palette;
 
         return $this;
+    }
+
+    /**
+     * @return array<int>
+     */
+    private function normalizeRatio(float $a, float $b): array
+    {
+        if ((float) (int) $a !== $a || (float) (int) $b !== $b) {
+            $maxDecimals = max($this->getFloatMultiplier($a), $this->getFloatMultiplier($b));
+            $a *= 10 ** $maxDecimals;
+            $b *= 10 ** $maxDecimals;
+
+            while ($a > PHP_INT_MAX || $b > PHP_INT_MAX) {
+                $a /= 10;
+                $b /= 10;
+            }
+        }
+
+        $divisor = $this->getGreatestCommonDivisor((int) round($a), (int) round($b));
+
+        return [(int) ((int) $a / $divisor), (int) ((int) $b / $divisor)];
+    }
+
+    private function getFloatMultiplier(float $number): int
+    {
+        return ini_get('precision') - 1 - (int) explode('e', sprintf('%.0e', $number))[1];
+    }
+
+    private function getGreatestCommonDivisor(int $a, int $b): int
+    {
+        if (0 === $b) {
+            return $a;
+        }
+
+        return $this->getGreatestCommonDivisor($b, $a % $b);
     }
 
     /**
