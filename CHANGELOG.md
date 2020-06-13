@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [Unreleased]
 
 
+## [1.0.0] (2020-06-13)
+
 ## [1.0.0-RC1] (2020-05-27)
 
  * Increase required PHP version to 7.2.
@@ -63,7 +65,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
  * Initial release
 
-[Unreleased]: https://github.com/contao/imagine-svg/compare/1.0.0-RC1...HEAD
+[Unreleased]: https://github.com/contao/imagine-svg/compare/1.0.0...HEAD
+[1.0.0]: https://github.com/contao/imagine-svg/compare/1.0.0-RC1...1.0.0
 [1.0.0-RC1]: https://github.com/contao/imagine-svg/compare/0.2.3...1.0.0-RC1
 [0.2.3]: https://github.com/contao/imagine-svg/compare/0.2.2...0.2.3
 [0.2.2]: https://github.com/contao/imagine-svg/compare/0.2.1...0.2.2
