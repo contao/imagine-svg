@@ -391,6 +391,29 @@ class ImageTest extends TestCase
     }
 
     /**
+     * @dataProvider getImageWithoutWidth
+     */
+    public function testGetImageWithoutWidth(string $viewBox, int $width, int $height): void
+    {
+        $imagine = new Imagine();
+        $image = $imagine->create(SvgBox::createTypeNone());
+        $svg = $image->getDomDocument()->documentElement;
+
+        $svg->setAttribute('viewBox', $viewBox);
+
+        $this->assertSame(SvgBox::TYPE_ASPECT_RATIO, $image->getSize()->getType());
+        $this->assertSame($width, $image->getSize()->getWidth());
+        $this->assertSame($height, $image->getSize()->getHeight());
+    }
+
+    public function getImageWithoutWidth(): array
+    {
+        return [
+            ['0 0 1024 768', 1024, 768],
+        ];
+    }
+
+    /**
      * @dataProvider getGetSizeAspectRatio
      */
     public function testGetSizeAspectRatio(string $viewBox, float $ratio): void

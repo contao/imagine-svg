@@ -352,23 +352,12 @@ class Image extends AbstractImage
             }
         }
 
-        $divisor = $this->getGreatestCommonDivisor((int) round($a), (int) round($b));
-
-        return [(int) ((int) $a / $divisor), (int) ((int) $b / $divisor)];
+        return [(int) $a, (int) $b];
     }
 
     private function getFloatMultiplier(float $number): int
     {
         return ini_get('precision') - 1 - (int) explode('e', sprintf('%.0e', $number))[1];
-    }
-
-    private function getGreatestCommonDivisor(int $a, int $b): int
-    {
-        if (0 === $b) {
-            return $a;
-        }
-
-        return $this->getGreatestCommonDivisor($b, $a % $b);
     }
 
     /**
