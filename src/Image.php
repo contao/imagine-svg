@@ -341,34 +341,11 @@ class Image extends AbstractImage
      */
     private function normalizeRatio(float $a, float $b): array
     {
-        if ((float) (int) $a !== $a || (float) (int) $b !== $b) {
-            $maxDecimals = max($this->getFloatMultiplier($a), $this->getFloatMultiplier($b));
-            $a *= 10 ** $maxDecimals;
-            $b *= 10 ** $maxDecimals;
-
-            while ($a > PHP_INT_MAX || $b > PHP_INT_MAX) {
-                $a /= 10;
-                $b /= 10;
-            }
+        if ($a < $b) {
+            return [(int) round($a * 65535 / $b), 65535];
         }
 
-        $divisor = $this->getGreatestCommonDivisor((int) round($a), (int) round($b));
-
-        return [(int) ((int) $a / $divisor), (int) ((int) $b / $divisor)];
-    }
-
-    private function getFloatMultiplier(float $number): int
-    {
-        return ini_get('precision') - 1 - (int) explode('e', sprintf('%.0e', $number))[1];
-    }
-
-    private function getGreatestCommonDivisor(int $a, int $b): int
-    {
-        if (0 === $b) {
-            return $a;
-        }
-
-        return $this->getGreatestCommonDivisor($b, $a % $b);
+        return [65535, (int) round($b * 65535 / $a)];
     }
 
     /**
