@@ -9,6 +9,3 @@ rules:
 
 parameters:
     ignoreErrors:
-        -
-            message: '#undefined method DOMNode::((has|get|set)Attribute|getElementsByTagName)\(\)#'
-            path: tests/EffectsTest.php

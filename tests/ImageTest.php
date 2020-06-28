@@ -363,12 +363,12 @@ class ImageTest extends TestCase
         $svg->removeAttribute('height');
 
         $this->assertSame(SvgBox::TYPE_ASPECT_RATIO, $image->getSize()->getType());
-        $this->assertSame(2.0, (float) ($image->getSize()->getWidth() / $image->getSize()->getHeight()));
+        $this->assertSame(2.0, round($image->getSize()->getWidth() / $image->getSize()->getHeight(), 4));
 
         $svg->setAttribute('viewBox', '0 0 1 0.5');
 
         $this->assertSame(SvgBox::TYPE_ASPECT_RATIO, $image->getSize()->getType());
-        $this->assertSame(2.0, (float) ($image->getSize()->getWidth() / $image->getSize()->getHeight()));
+        $this->assertSame(2.0, round($image->getSize()->getWidth() / $image->getSize()->getHeight(), 4));
 
         $svg->removeAttribute('viewBox');
 
@@ -402,7 +402,7 @@ class ImageTest extends TestCase
         $svg->setAttribute('viewBox', $viewBox);
 
         $this->assertSame(SvgBox::TYPE_ASPECT_RATIO, $image->getSize()->getType());
-        $this->assertSame($ratio, (float) ($image->getSize()->getWidth() / $image->getSize()->getHeight()));
+        $this->assertSame(round($ratio, 3), round($image->getSize()->getWidth() / $image->getSize()->getHeight(), 3));
     }
 
     public function getGetSizeAspectRatio(): array
@@ -418,7 +418,7 @@ class ImageTest extends TestCase
             ['0 0 1777777777777777777777777777777777777777 1000000000000000000000000000000000000000', 16 / 9],
             ['0 0 1.77777777777777777e50 1e50', 16 / 9],
             ['0 0 1.77777777777777777e-50 1e-50', 16 / 9],
-            ['0 0 10e5 10e4', 10.0 / 1],
+            ['0 0 13e5 10e4', 13.0 / 1],
         ];
     }
 
