@@ -138,7 +138,7 @@ class ImageTest extends TestCase
         $this->assertSame(SvgBox::TYPE_ASPECT_RATIO, $image->getSize()->getType());
         $this->assertSame('100', $image->getDomDocument()->documentElement->firstChild->getAttribute('width'));
 
-        $image->crop(new Point(0, 0), new Box($image->getSize()->getWidth() / 2, $image->getSize()->getHeight() / 2));
+        $image->crop(new Point(0, 0), new Box(round($image->getSize()->getWidth() / 2), round($image->getSize()->getHeight() / 2)));
         $this->assertSame(SvgBox::TYPE_ABSOLUTE, $image->getSize()->getType());
         $this->assertSame($image->getSize()->getWidth(), (int) round($image->getDomDocument()->documentElement->firstChild->getAttribute('width') / 2));
 
