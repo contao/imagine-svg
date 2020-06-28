@@ -120,6 +120,30 @@ class ImageTest extends TestCase
         $image->crop(new Point(0, 0), new Box(50, 50));
         $this->assertSame(SvgBox::TYPE_ABSOLUTE, $image->getSize()->getType());
 
+        $image->crop(new Point(10, 20), SvgBox::createTypeNone());
+        $this->assertSame(SvgBox::TYPE_NONE, $image->getSize()->getType());
+        $this->assertSame('-10', $image->getDomDocument()->documentElement->firstChild->getAttribute('x'));
+        $this->assertSame('-20', $image->getDomDocument()->documentElement->firstChild->getAttribute('y'));
+
+        $image->crop(new Point(0, 0), SvgBox::createTypeAspectRatio(1600, 900));
+        $this->assertSame(SvgBox::TYPE_ASPECT_RATIO, $image->getSize()->getType());
+        $this->assertSame(round(16 / 9, 4), round($image->getSize()->getWidth() / $image->getSize()->getHeight(), 4));
+
+        $image->crop(new Point(0, 0), SvgBox::createTypeAspectRatio($image->getSize()->getHeight(), $image->getSize()->getHeight()));
+        $this->assertSame(SvgBox::TYPE_ASPECT_RATIO, $image->getSize()->getType());
+        $this->assertSame($image->getSize()->getWidth(), $image->getSize()->getHeight());
+
+        $image = $imagine->create(new Box(100, 100));
+        $image->crop(new Point(0, 0), SvgBox::createTypeAspectRatio(50, 50));
+        $this->assertSame(SvgBox::TYPE_ASPECT_RATIO, $image->getSize()->getType());
+        $this->assertSame('100', $image->getDomDocument()->documentElement->firstChild->getAttribute('width'));
+
+        $image->crop(new Point(0, 0), new Box($image->getSize()->getWidth() / 2, $image->getSize()->getHeight() / 2));
+        $this->assertSame(SvgBox::TYPE_ABSOLUTE, $image->getSize()->getType());
+        $this->assertSame($image->getSize()->getWidth(), (int) round($image->getDomDocument()->documentElement->firstChild->getAttribute('width') / 2));
+
+        $image = $imagine->create(new Box(50, 50));
+
         $this->expectException(OutOfBoundsException::class);
 
         $image->crop(new Point(60, 60), new Box(50, 50));
@@ -196,6 +220,43 @@ class ImageTest extends TestCase
             $image->getDomDocument()->documentElement->getAttribute('viewBox'),
             'Viewbox should not get modified if only one dimension is set'
         );
+
+        $image->resize(SvgBox::createTypeAspectRatio(1, 1));
+
+        $this->assertSame(SvgBox::TYPE_ASPECT_RATIO, $image->getSize()->getType());
+        $this->assertSame($image->getSize()->getWidth(), $image->getSize()->getHeight());
+
+        $image->resize(SvgBox::createTypeAspectRatio(16, 9));
+
+        $this->assertSame(SvgBox::TYPE_ASPECT_RATIO, $image->getSize()->getType());
+
+        $this->assertSame(
+            round(16 / 9, 4),
+            round($image->getDomDocument()->documentElement->firstChild->getAttribute('width') / $image->getDomDocument()->documentElement->firstChild->getAttribute('height'), 4),
+            'Aspect ratio should match the specified size'
+        );
+
+        $this->assertSame(
+            round(16 / 9, 4),
+            round($image->getSize()->getWidth() / $image->getSize()->getHeight(), 4),
+            'Aspect ratio should match the specified size'
+        );
+
+        $this->assertSame(
+            '',
+            $image->getDomDocument()->documentElement->getAttribute('width'),
+            'Width attribute should not be set for aspect ratio resizes'
+        );
+
+        $this->assertSame(
+            '',
+            $image->getDomDocument()->documentElement->getAttribute('height'),
+            'Height attribute should not be set for aspect ratio resizes'
+        );
+
+        $image->resize(SvgBox::createTypeNone());
+
+        $this->assertSame(SvgBox::TYPE_NONE, $image->getSize()->getType());
 
         $this->expectException(InvalidArgumentException::class);
 

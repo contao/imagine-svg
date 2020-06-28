@@ -26,6 +26,7 @@ use Imagine\Image\Metadata\MetadataBag;
 use Imagine\Image\Palette\Color\ColorInterface;
 use Imagine\Image\Palette\PaletteInterface;
 use Imagine\Image\Palette\RGB;
+use Imagine\Image\Point;
 use Imagine\Image\PointInterface;
 use Imagine\Image\ProfileInterface;
 
@@ -78,13 +79,18 @@ class Image extends AbstractImage
     public function crop(PointInterface $start, BoxInterface $size): self
     {
         $currentSize = $this->getSize();
+        $newSizeType = $size instanceof SvgBox ? $size->getType() : SvgBox::TYPE_ABSOLUTE;
 
-        if (!$start->in($currentSize)) {
+        if (
+            SvgBox::TYPE_NONE !== $newSizeType
+            && SvgBox::TYPE_NONE !== $currentSize->getType()
+            && !$currentSize->contains($size, $start)
+        ) {
             throw new OutOfBoundsException('Crop coordinates must start at minimum 0, 0 position from top left corner, crop height and width '.'must be positive integers and must not exceed the current image borders');
         }
 
         if (
-            SvgBox::TYPE_ASPECT_RATIO !== $currentSize->getType()
+            $currentSize->getType() === $newSizeType
             && 0 === $start->getX()
             && 0 === $start->getY()
             && $size->getWidth() === $currentSize->getWidth()
@@ -93,11 +99,24 @@ class Image extends AbstractImage
             return $this; // skip crop if the size didn't change
         }
 
+        if (
+            SvgBox::TYPE_NONE !== $newSizeType
+            && SvgBox::TYPE_NONE !== $currentSize->getType()
+        ) {
+            $this->resize(SvgBox::createTypeAbsolute($currentSize->getWidth(), $currentSize->getHeight()));
+        }
+
         $this->fixViewBox();
 
         $svg = $this->document->documentElement;
-        $svg->setAttribute('x', (string) (-$start->getX()));
-        $svg->setAttribute('y', (string) (-$start->getY()));
+
+        if (0 === $start->getX() && 0 === $start->getY()) {
+            $svg->removeAttribute('x');
+            $svg->removeAttribute('y');
+        } else {
+            $svg->setAttribute('x', (string) (-$start->getX()));
+            $svg->setAttribute('y', (string) (-$start->getY()));
+        }
 
         $svgWrap = $this->document->createElementNS('http://www.w3.org/2000/svg', 'svg');
         $svgWrap->setAttribute('version', '1.1');
@@ -107,6 +126,15 @@ class Image extends AbstractImage
 
         $this->document->appendChild($svgWrap);
         $this->fixViewBox();
+
+        if (SvgBox::TYPE_ABSOLUTE !== $newSizeType) {
+            $svgWrap->removeAttribute('width');
+            $svgWrap->removeAttribute('height');
+        }
+
+        if (SvgBox::TYPE_NONE === $newSizeType) {
+            $svgWrap->removeAttribute('viewBox');
+        }
 
         return $this;
     }
@@ -123,9 +151,10 @@ class Image extends AbstractImage
         }
 
         $currentSize = $this->getSize();
+        $newSizeType = $size instanceof SvgBox ? $size->getType() : SvgBox::TYPE_ABSOLUTE;
 
         if (
-            SvgBox::TYPE_ASPECT_RATIO !== $currentSize->getType()
+            $currentSize->getType() === $newSizeType
             && $size->getWidth() === $currentSize->getWidth()
             && $size->getHeight() === $currentSize->getHeight()
         ) {
@@ -134,10 +163,72 @@ class Image extends AbstractImage
 
         $this->fixViewBox();
 
-        $this->document->documentElement->setAttribute('width', (string) $size->getWidth());
-        $this->document->documentElement->setAttribute('height', (string) $size->getHeight());
+        if (SvgBox::TYPE_ABSOLUTE === $newSizeType) {
+            $this->document->documentElement->setAttribute('width', (string) $size->getWidth());
+            $this->document->documentElement->setAttribute('height', (string) $size->getHeight());
+        } elseif (SvgBox::TYPE_ASPECT_RATIO === $newSizeType) {
+            if (
+                (int) round($currentSize->getWidth() / $currentSize->getHeight() * $size->getHeight()) === $size->getWidth()
+                || (int) round($size->getWidth() / $size->getHeight() * $currentSize->getHeight()) === $currentSize->getWidth()
+            ) {
+                $this->document->documentElement->removeAttribute('width');
+                $this->document->documentElement->removeAttribute('height');
+            } else {
+                $this->document->documentElement->setAttribute('width', (string) $size->getWidth());
+                $this->document->documentElement->setAttribute('height', (string) $size->getHeight());
+                $this->crop(new Point(0, 0), $size);
+            }
+        } else {
+            $this->document->documentElement->removeAttribute('width');
+            $this->document->documentElement->removeAttribute('height');
+            $this->document->documentElement->removeAttribute('viewBox');
+        }
 
         return $this;
+    }
+
+    public function thumbnail(BoxInterface $size, $settings = ImageInterface::THUMBNAIL_INSET, $filter = ImageInterface::FILTER_UNDEFINED): self
+    {
+        $newSizeType = $size instanceof SvgBox ? $size->getType() : SvgBox::TYPE_ABSOLUTE;
+
+        if (SvgBox::TYPE_ABSOLUTE === $newSizeType && SvgBox::TYPE_ABSOLUTE === $this->getSize()->getType()) {
+            return parent::thumbnail($size, $settings, $filter);
+        }
+
+        $thumb = $settings & ImageInterface::THUMBNAIL_FLAG_NOCLONE ? $this : $this->copy();
+        $settings &= ~ImageInterface::THUMBNAIL_FLAG_NOCLONE;
+
+        if (
+            SvgBox::TYPE_ASPECT_RATIO === $newSizeType
+            && ($settings & ImageInterface::THUMBNAIL_OUTBOUND)
+        ) {
+            $thumb->thumbnail(
+                SvgBox::createTypeAbsolute($size->getWidth(), $size->getHeight()),
+                $settings,
+                $filter
+            );
+
+            return $thumb->resize($size);
+        }
+
+        if (
+            SvgBox::TYPE_ABSOLUTE === $newSizeType
+            && SvgBox::TYPE_ASPECT_RATIO === $thumb->getSize()->getType()
+        ) {
+            $thumb->resize(
+                SvgBox::createTypeAbsolute($thumb->getSize()->getWidth(), $thumb->getSize()->getHeight())
+            );
+
+            return $thumb->thumbnail($size, $settings, $filter);
+        }
+
+        if (SvgBox::TYPE_ASPECT_RATIO === $newSizeType) {
+            return $thumb->resize(
+                SvgBox::createTypeAspectRatio($thumb->getSize()->getWidth(), $thumb->getSize()->getHeight())
+            );
+        }
+
+        return $thumb->resize($size);
     }
 
     public function rotate($angle, ColorInterface $background = null): self
