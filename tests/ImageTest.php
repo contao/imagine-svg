@@ -405,6 +405,9 @@ class ImageTest extends TestCase
         $this->assertSame(round($ratio, 3), round($image->getSize()->getWidth() / $image->getSize()->getHeight(), 3));
     }
 
+    /**
+     * @return array<array<string|float>>
+     */
     public function getGetSizeAspectRatio(): array
     {
         return [
@@ -443,6 +446,9 @@ class ImageTest extends TestCase
         }
     }
 
+    /**
+     * @return array<string,array<string|float|int|null>>
+     */
     public function getGetSizePixelValues(): array
     {
         return [
@@ -513,6 +519,9 @@ class ImageTest extends TestCase
         $this->assertSame($expected, $image->get('svg'));
     }
 
+    /**
+     * @return array<string,array<string>>
+     */
     public function getStrip(): array
     {
         return [

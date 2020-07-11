@@ -41,6 +41,9 @@ class Image extends AbstractImage
      */
     private $palette;
 
+    /**
+     * @param MetadataBag<mixed> $metadata
+     */
     public function __construct(\DOMDocument $document, MetadataBag $metadata)
     {
         $this->document = $document;
@@ -145,6 +148,9 @@ class Image extends AbstractImage
         throw new NotSupportedException('This method is not implemented');
     }
 
+    /**
+     * @param array<string,string> $options
+     */
     public function save($path = null, array $options = []): self
     {
         if (null === $path && isset($this->metadata['filepath'])) {
@@ -177,6 +183,9 @@ class Image extends AbstractImage
         return $this;
     }
 
+    /**
+     * @param array<string,string> $options
+     */
     public function show($format, array $options = []): self
     {
         $image = $this->get($format, $options);
@@ -192,6 +201,9 @@ class Image extends AbstractImage
         return $this;
     }
 
+    /**
+     * @param array<string,string> $options
+     */
     public function get($format, array $options = []): string
     {
         $format = strtolower($format);
@@ -305,6 +317,9 @@ class Image extends AbstractImage
         throw new NotSupportedException('This method is not implemented');
     }
 
+    /**
+     * @return LayersInterface<ImageInterface>
+     */
     public function layers(): LayersInterface
     {
         throw new NotSupportedException('This method is not implemented');
