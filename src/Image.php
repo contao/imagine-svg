@@ -42,7 +42,8 @@ class Image extends AbstractImage
     private $palette;
 
     /**
-     * @param MetadataBag<mixed> $metadata
+     * @phpstan-param MetadataBag<mixed> $metadata
+     * @psalm-param MetadataBag $metadata
      */
     public function __construct(\DOMDocument $document, MetadataBag $metadata)
     {
@@ -149,7 +150,8 @@ class Image extends AbstractImage
     }
 
     /**
-     * @param array<string,string> $options
+     * @phpstan-param array<string,string> $options
+     * @psalm-param array $options
      */
     public function save($path = null, array $options = []): self
     {
@@ -184,7 +186,8 @@ class Image extends AbstractImage
     }
 
     /**
-     * @param array<string,string> $options
+     * @phpstan-param array<string,string> $options
+     * @psalm-param array $options
      */
     public function show($format, array $options = []): self
     {
@@ -202,7 +205,8 @@ class Image extends AbstractImage
     }
 
     /**
-     * @param array<string,string> $options
+     * @phpstan-param array<string,string> $options
+     * @psalm-param array $options
      */
     public function get($format, array $options = []): string
     {
@@ -318,7 +322,8 @@ class Image extends AbstractImage
     }
 
     /**
-     * @return LayersInterface<ImageInterface>
+     * @phpstan-return LayersInterface<ImageInterface>
+     * @psalm-return LayersInterface
      */
     public function layers(): LayersInterface
     {
