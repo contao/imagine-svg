@@ -367,7 +367,7 @@ class ImageTest extends TestCase
 
         $svg->setAttribute('viewBox', '0 0 1 0.5');
 
-        $this->assertSame(SvgBox::TYPE_ASPECT_RATIO, $image->getSize()->getType());
+        $this->assertSame(0 + SvgBox::TYPE_ASPECT_RATIO, $image->getSize()->getType());
         $this->assertSame(2.0, round($image->getSize()->getWidth() / $image->getSize()->getHeight(), 4));
 
         $svg->removeAttribute('viewBox');
@@ -378,14 +378,14 @@ class ImageTest extends TestCase
 
         $svg->setAttribute('width', '100');
 
-        $this->assertSame(SvgBox::TYPE_NONE, $image->getSize()->getType());
+        $this->assertSame(0 + SvgBox::TYPE_NONE, $image->getSize()->getType());
         $this->assertSame(300, $image->getSize()->getWidth());
         $this->assertSame(150, $image->getSize()->getHeight());
 
         $svg->removeAttribute('width');
         $svg->setAttribute('height', '100');
 
-        $this->assertSame(SvgBox::TYPE_NONE, $image->getSize()->getType());
+        $this->assertSame(0 + SvgBox::TYPE_NONE, $image->getSize()->getType());
         $this->assertSame(300, $image->getSize()->getWidth());
         $this->assertSame(150, $image->getSize()->getHeight());
     }
