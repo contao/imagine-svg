@@ -263,6 +263,121 @@ class ImageTest extends TestCase
         $image->resize(new Box(25, 25), ImageInterface::FILTER_POINT);
     }
 
+    public function testThumbnail(): void
+    {
+        $imagine = new Imagine();
+        $image = $imagine->create(new Box(100, 100));
+
+        $this->assertSame(100, $image->getSize()->getWidth());
+        $this->assertSame(100, $image->getSize()->getHeight());
+
+        $resized = $image->thumbnail(new Box(100, 50));
+
+        $this->assertSame(50, $resized->getSize()->getWidth());
+        $this->assertSame(50, $resized->getSize()->getHeight());
+        $this->assertNotSame($image, $resized, 'Should not return itself');
+
+        $image->getDomDocument()->documentElement->removeAttribute('viewBox');
+        $image->getDomDocument()->documentElement->setAttribute('width', '50px');
+        $image->getDomDocument()->documentElement->setAttribute('height', '3.125em');
+        $resized = $image->thumbnail(new Box(100, 100), ImageInterface::THUMBNAIL_FLAG_UPSCALE | ImageInterface::THUMBNAIL_FLAG_NOCLONE);
+
+        $this->assertSame(100, $image->getSize()->getWidth());
+        $this->assertSame(100, $image->getSize()->getHeight());
+        $this->assertSame($image, $resized, 'Should not return itself');
+
+        $this->assertSame(
+            '0 0 50 50',
+            $image->getDomDocument()->documentElement->getAttribute('viewBox'),
+            'Viewbox should get fixed'
+        );
+
+        $image->getDomDocument()->documentElement->removeAttribute('width');
+        $image->getDomDocument()->documentElement->removeAttribute('height');
+        $image->getDomDocument()->documentElement->setAttribute('viewBox', '0 0 100 100');
+        $image->thumbnail(new Box(100, 100), ImageInterface::THUMBNAIL_FLAG_NOCLONE);
+
+        $this->assertSame(100, $image->getSize()->getWidth());
+        $this->assertSame(100, $image->getSize()->getHeight());
+
+        $this->assertSame(
+            '100',
+            $image->getDomDocument()->documentElement->getAttribute('width'),
+            'Relative dimensions should get absolute'
+        );
+
+        $this->assertSame(
+            '100',
+            $image->getDomDocument()->documentElement->getAttribute('height'),
+            'Relative dimensions should get absolute'
+        );
+
+        $image->getDomDocument()->documentElement->removeAttribute('viewBox');
+        $this->assertSame($image, $image->thumbnail(new Box(100, 100), ImageInterface::THUMBNAIL_FLAG_NOCLONE));
+
+        $this->assertSame(100, $image->getSize()->getWidth());
+        $this->assertSame(100, $image->getSize()->getHeight());
+
+        $this->assertSame(
+            '',
+            $image->getDomDocument()->documentElement->getAttribute('viewBox'),
+            'Viewbox should not get modified if no resize is necessary'
+        );
+
+        $image->getDomDocument()->documentElement->removeAttribute('height');
+        $this->assertSame($image, $image->thumbnail(new Box(200, 200), ImageInterface::THUMBNAIL_FLAG_NOCLONE));
+
+        $this->assertSame(200, $image->getSize()->getWidth());
+        $this->assertSame(200, $image->getSize()->getHeight());
+
+        $this->assertSame(
+            '',
+            $image->getDomDocument()->documentElement->getAttribute('viewBox'),
+            'Viewbox should not get modified if only one dimension is set'
+        );
+
+        $image->thumbnail(SvgBox::createTypeAspectRatio(1, 1), ImageInterface::THUMBNAIL_FLAG_NOCLONE);
+
+        $this->assertSame(SvgBox::TYPE_ASPECT_RATIO, $image->getSize()->getType());
+        $this->assertSame($image->getSize()->getWidth(), $image->getSize()->getHeight());
+
+        $image->thumbnail(SvgBox::createTypeAspectRatio(16, 9), ImageInterface::THUMBNAIL_FLAG_NOCLONE | ImageInterface::THUMBNAIL_OUTBOUND);
+
+        $this->assertSame(SvgBox::TYPE_ASPECT_RATIO, $image->getSize()->getType());
+
+        $this->assertSame(
+            round(1 / 1, 4),
+            round($image->getDomDocument()->documentElement->firstChild->getAttribute('width') / $image->getDomDocument()->documentElement->firstChild->getAttribute('height'), 4),
+            'Aspect ratio should match the specified size'
+        );
+
+        $this->assertSame(
+            round(16 / 9, 4),
+            round($image->getSize()->getWidth() / $image->getSize()->getHeight(), 4),
+            'Aspect ratio should match the specified size'
+        );
+
+        $this->assertSame(
+            '',
+            $image->getDomDocument()->documentElement->getAttribute('width'),
+            'Width attribute should not be set for aspect ratio resizes'
+        );
+
+        $this->assertSame(
+            '',
+            $image->getDomDocument()->documentElement->getAttribute('height'),
+            'Height attribute should not be set for aspect ratio resizes'
+        );
+
+        $image->thumbnail(SvgBox::createTypeNone(), ImageInterface::THUMBNAIL_FLAG_NOCLONE);
+
+        $this->assertSame(SvgBox::TYPE_NONE, $image->getSize()->getType());
+
+        $this->expectException(InvalidArgumentException::class);
+
+        $image->thumbnail(new Box(25, 25), ImageInterface::THUMBNAIL_FLAG_NOCLONE, ImageInterface::FILTER_POINT);
+    }
+
     public function testSave(): void
     {
         $path = $this->rootDir;

@@ -196,7 +196,7 @@ class Image extends AbstractImage
         }
 
         $thumb = $settings & ImageInterface::THUMBNAIL_FLAG_NOCLONE ? $this : $this->copy();
-        $settings &= ~ImageInterface::THUMBNAIL_FLAG_NOCLONE;
+        $settings |= ImageInterface::THUMBNAIL_FLAG_NOCLONE;
 
         if (
             SvgBox::TYPE_ASPECT_RATIO === $newSizeType
@@ -208,7 +208,7 @@ class Image extends AbstractImage
                 $filter
             );
 
-            return $thumb->resize($size);
+            return $thumb->resize($size, $filter);
         }
 
         if (
@@ -216,7 +216,8 @@ class Image extends AbstractImage
             && SvgBox::TYPE_ASPECT_RATIO === $thumb->getSize()->getType()
         ) {
             $thumb->resize(
-                SvgBox::createTypeAbsolute($thumb->getSize()->getWidth(), $thumb->getSize()->getHeight())
+                SvgBox::createTypeAbsolute($thumb->getSize()->getWidth(), $thumb->getSize()->getHeight()),
+                $filter
             );
 
             return $thumb->thumbnail($size, $settings, $filter);
@@ -224,11 +225,12 @@ class Image extends AbstractImage
 
         if (SvgBox::TYPE_ASPECT_RATIO === $newSizeType) {
             return $thumb->resize(
-                SvgBox::createTypeAspectRatio($thumb->getSize()->getWidth(), $thumb->getSize()->getHeight())
+                SvgBox::createTypeAspectRatio($thumb->getSize()->getWidth(), $thumb->getSize()->getHeight()),
+                $filter
             );
         }
 
-        return $thumb->resize($size);
+        return $thumb->resize($size, $filter);
     }
 
     public function rotate($angle, ColorInterface $background = null): self
