@@ -12,7 +12,7 @@
     "require": {
         "php": "^7.2 || ^8.0",
         "ext-dom": "*",
-        "imagine/imagine": "^1.0"
+        "imagine/imagine": "^1.1"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "^2.14",
