@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [Unreleased]
 
  * Fix small pixel values for aspect ratio size. [#24]
+ * Fix `crop()`, `resize()` and `thumbnail()` for aspect ratio images. [#25]
 
 ## [1.0.0] (2020-06-13)
 
@@ -80,6 +81,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 [0.1.1]: https://github.com/contao/imagine-svg/compare/0.1.0...0.1.1
 [0.1.0]: https://github.com/contao/imagine-svg/commits/0.1.0
 
+[#25]: https://github.com/contao/imagine-svg/issues/25
 [#24]: https://github.com/contao/imagine-svg/issues/24
 [#21]: https://github.com/contao/imagine-svg/issues/21
 [#19]: https://github.com/contao/imagine-svg/issues/19
