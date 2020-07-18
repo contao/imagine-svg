@@ -63,7 +63,7 @@ jobs:
 
             - name: Analyze the code
               run: |
-                  vendor/bin/phpstan analyse src tests --level=4 --no-progress
+                  vendor/bin/phpstan analyse src tests --level=6 --no-progress
                   vendor/bin/psalm --no-suggestions --threads=4 --no-progress
 
     tests:

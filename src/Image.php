@@ -42,6 +42,10 @@ class Image extends AbstractImage
      */
     private $palette;
 
+    /**
+     * @phpstan-param MetadataBag<mixed> $metadata
+     * @psalm-param MetadataBag $metadata
+     */
     public function __construct(\DOMDocument $document, MetadataBag $metadata)
     {
         $this->document = $document;
@@ -238,6 +242,10 @@ class Image extends AbstractImage
         throw new NotSupportedException('This method is not implemented');
     }
 
+    /**
+     * @phpstan-param array<string,string> $options
+     * @psalm-param array $options
+     */
     public function save($path = null, array $options = []): self
     {
         if (null === $path && isset($this->metadata['filepath'])) {
@@ -270,6 +278,10 @@ class Image extends AbstractImage
         return $this;
     }
 
+    /**
+     * @phpstan-param array<string,string> $options
+     * @psalm-param array $options
+     */
     public function show($format, array $options = []): self
     {
         $image = $this->get($format, $options);
@@ -285,6 +297,10 @@ class Image extends AbstractImage
         return $this;
     }
 
+    /**
+     * @phpstan-param array<string,string> $options
+     * @psalm-param array $options
+     */
     public function get($format, array $options = []): string
     {
         $format = strtolower($format);
@@ -398,6 +414,10 @@ class Image extends AbstractImage
         throw new NotSupportedException('This method is not implemented');
     }
 
+    /**
+     * @phpstan-return LayersInterface<ImageInterface>
+     * @psalm-return LayersInterface
+     */
     public function layers(): LayersInterface
     {
         throw new NotSupportedException('This method is not implemented');

@@ -54,7 +54,7 @@
             "vendor/bin/ecs check src tests --config vendor/contao/easy-coding-standard/config/default.yaml --fix --ansi"
         ],
         "phpstan": [
-            "vendor/bin/phpstan analyze src tests --level=4 --memory-limit=1G --ansi"
+            "vendor/bin/phpstan analyze src tests --level=6 --memory-limit=1G --ansi"
         ],
         "psalm": [
             "vendor/bin/psalm --no-suggestions --threads=4"

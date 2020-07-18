@@ -115,7 +115,7 @@ class EffectsTest extends TestCase
     {
         $dom = (new Imagine())->create(SvgBox::createTypeNone())->getDomDocument();
         $effects = new Effects($dom);
-        $color = new ColorRgb(new PaletteRgb(), [255, 127.5, 63.75], 100);
+        $color = new ColorRgb(new PaletteRgb(), [255, 51, 85], 100);
 
         $this->assertSame($effects, $effects->colorize($color));
         $this->assertTrue($dom->documentElement->firstChild->hasAttribute('filter'));
@@ -127,16 +127,16 @@ class EffectsTest extends TestCase
         $this->assertSame($filterId, $filter->getAttribute('id'));
         $this->assertSame('feColorMatrix', $filter->firstChild->nodeName);
         $this->assertSame('matrix', $filter->firstChild->getAttribute('type'));
-        $this->assertSame('1 0 0 0 1 0 1 0 0 0.5 0 0 1 0 0.25 0 0 0 1 0', $filter->firstChild->getAttribute('values'));
+        $this->assertSame('1 0 0 0 1 0 1 0 0 0.2 0 0 1 0 0.3333333 0 0 0 1 0', $filter->firstChild->getAttribute('values'));
 
-        $color = new ColorRgb(new PaletteRgb(), [63.75, 255, 127.5], 100);
+        $color = new ColorRgb(new PaletteRgb(), [51, 255, 85], 100);
         $effects->colorize($color);
 
         $this->assertSame('url(#'.$filterId.')', $dom->documentElement->firstChild->getAttribute('filter'));
         $this->assertSame(2, $filter->childNodes->length);
         $this->assertSame('feColorMatrix', $filter->lastChild->nodeName);
         $this->assertSame('matrix', $filter->lastChild->getAttribute('type'));
-        $this->assertSame('1 0 0 0 0.25 0 1 0 0 1 0 0 1 0 0.5 0 0 0 1 0', $filter->lastChild->getAttribute('values'));
+        $this->assertSame('1 0 0 0 0.2 0 1 0 0 1 0 0 1 0 0.3333333 0 0 0 1 0', $filter->lastChild->getAttribute('values'));
 
         $this->expectException(NotSupportedException::class);
 
@@ -172,7 +172,7 @@ class EffectsTest extends TestCase
         $dom = (new Imagine())->create(SvgBox::createTypeNone())->getDomDocument();
         $effects = new Effects($dom);
 
-        $this->assertSame($effects, $effects->blur(' 1.50'));
+        $this->assertSame($effects, $effects->blur(1.5));
         $this->assertTrue($dom->documentElement->firstChild->hasAttribute('filter'));
 
         /** @var \DOMElement $filter */
@@ -345,7 +345,7 @@ class EffectsTest extends TestCase
 
     private function executeTestWithLocale(string $methodName): void
     {
-        $locale = setlocale(LC_NUMERIC, 0);
+        $locale = setlocale(LC_NUMERIC, '0');
 
         if (false === $locale) {
             $this->markTestSkipped('Your platform does not support locales.');
