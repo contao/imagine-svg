@@ -27,7 +27,7 @@ class EffectsTest extends TestCase
 {
     public function testInstantiation(): void
     {
-        $this->assertInstanceOf('Contao\ImagineSvg\Effects', new Effects(new \DOMDocument()));
+        $this->assertInstanceOf(Effects::class, new Effects(new \DOMDocument()));
     }
 
     public function testGamma(): void

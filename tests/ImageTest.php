@@ -56,7 +56,7 @@ class ImageTest extends TestCase
 
     public function testInstantiation(): void
     {
-        $this->assertInstanceOf('Contao\ImagineSvg\Image', new Image(new \DOMDocument(), new MetadataBag()));
+        $this->assertInstanceOf(Image::class, new Image(new \DOMDocument(), new MetadataBag()));
     }
 
     public function testGetDomDocument(): void
@@ -138,7 +138,7 @@ class ImageTest extends TestCase
         $this->assertSame(SvgBox::TYPE_ASPECT_RATIO, $image->getSize()->getType());
         $this->assertSame('100', $image->getDomDocument()->documentElement->firstChild->getAttribute('width'));
 
-        $image->crop(new Point(0, 0), new Box(round($image->getSize()->getWidth() / 2), round($image->getSize()->getHeight() / 2)));
+        $image->crop(new Point(0, 0), new Box((int) round($image->getSize()->getWidth() / 2), (int) round($image->getSize()->getHeight() / 2)));
         $this->assertSame(SvgBox::TYPE_ABSOLUTE, $image->getSize()->getType());
         $this->assertSame($image->getSize()->getWidth(), (int) round($image->getDomDocument()->documentElement->firstChild->getAttribute('width') / 2));
 

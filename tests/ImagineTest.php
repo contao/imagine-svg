@@ -12,12 +12,14 @@ declare(strict_types=1);
 
 namespace Contao\ImagineSvg\Tests;
 
+use Contao\ImagineSvg\Image;
 use Contao\ImagineSvg\Imagine;
 use Contao\ImagineSvg\SvgBox;
 use Imagine\Exception\InvalidArgumentException;
 use Imagine\Exception\NotSupportedException;
 use Imagine\Exception\RuntimeException;
 use Imagine\Image\Box;
+use Imagine\Image\ImageInterface;
 use Imagine\Image\Palette\Color\ColorInterface;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
@@ -53,7 +55,7 @@ class ImagineTest extends TestCase
 
     public function testInstantiation(): void
     {
-        $this->assertInstanceOf('Contao\ImagineSvg\Imagine', $this->imagine);
+        $this->assertInstanceOf(Imagine::class, $this->imagine);
     }
 
     public function testCreate(): void
@@ -61,8 +63,8 @@ class ImagineTest extends TestCase
         $image = $this->imagine->create(new Box(100, 100));
         $svg = $image->getDomDocument()->documentElement;
 
-        $this->assertInstanceOf('Contao\ImagineSvg\Image', $image);
-        $this->assertInstanceOf('Imagine\Image\ImageInterface', $image);
+        $this->assertInstanceOf(Image::class, $image);
+        $this->assertInstanceOf(ImageInterface::class, $image);
 
         $this->assertSame('svg', $svg->tagName);
         $this->assertSame('1.1', $svg->getAttribute('version'));
@@ -103,8 +105,8 @@ class ImagineTest extends TestCase
 
         $image = $this->imagine->open($path.'.svg');
 
-        $this->assertInstanceOf('Contao\ImagineSvg\Image', $image);
-        $this->assertInstanceOf('Imagine\Image\ImageInterface', $image);
+        $this->assertInstanceOf(Image::class, $image);
+        $this->assertInstanceOf(ImageInterface::class, $image);
 
         $this->assertSame(100, $image->getSize()->getWidth());
         $this->assertSame(100, $image->getSize()->getHeight());
@@ -118,8 +120,8 @@ class ImagineTest extends TestCase
 
         $image = $this->imagine->open($path.'.svgz');
 
-        $this->assertInstanceOf('Contao\ImagineSvg\Image', $image);
-        $this->assertInstanceOf('Imagine\Image\ImageInterface', $image);
+        $this->assertInstanceOf(Image::class, $image);
+        $this->assertInstanceOf(ImageInterface::class, $image);
 
         $this->assertSame(100, $image->getSize()->getWidth());
         $this->assertSame(100, $image->getSize()->getHeight());
@@ -133,8 +135,8 @@ class ImagineTest extends TestCase
 
         $image = $this->imagine->open($path);
 
-        $this->assertInstanceOf('Contao\ImagineSvg\Image', $image);
-        $this->assertInstanceOf('Imagine\Image\ImageInterface', $image);
+        $this->assertInstanceOf(Image::class, $image);
+        $this->assertInstanceOf(ImageInterface::class, $image);
 
         $this->assertSame(100, $image->getSize()->getWidth());
         $this->assertSame(100, $image->getSize()->getHeight());
@@ -157,16 +159,16 @@ class ImagineTest extends TestCase
 
         $image = $this->imagine->load($xml);
 
-        $this->assertInstanceOf('Contao\ImagineSvg\Image', $image);
-        $this->assertInstanceOf('Imagine\Image\ImageInterface', $image);
+        $this->assertInstanceOf(Image::class, $image);
+        $this->assertInstanceOf(ImageInterface::class, $image);
 
         $this->assertSame(100, $image->getSize()->getWidth());
         $this->assertSame(100, $image->getSize()->getHeight());
 
         $image = $this->imagine->load(gzencode($xml));
 
-        $this->assertInstanceOf('Contao\ImagineSvg\Image', $image);
-        $this->assertInstanceOf('Imagine\Image\ImageInterface', $image);
+        $this->assertInstanceOf(Image::class, $image);
+        $this->assertInstanceOf(ImageInterface::class, $image);
 
         $this->assertSame(100, $image->getSize()->getWidth());
         $this->assertSame(100, $image->getSize()->getHeight());
@@ -202,8 +204,8 @@ class ImagineTest extends TestCase
 
         $image = $this->imagine->read($stream);
 
-        $this->assertInstanceOf('Contao\ImagineSvg\Image', $image);
-        $this->assertInstanceOf('Imagine\Image\ImageInterface', $image);
+        $this->assertInstanceOf(Image::class, $image);
+        $this->assertInstanceOf(ImageInterface::class, $image);
 
         $this->assertSame(100, $image->getSize()->getWidth());
         $this->assertSame(100, $image->getSize()->getHeight());
@@ -214,8 +216,8 @@ class ImagineTest extends TestCase
 
         $image = $this->imagine->read($stream);
 
-        $this->assertInstanceOf('Contao\ImagineSvg\Image', $image);
-        $this->assertInstanceOf('Imagine\Image\ImageInterface', $image);
+        $this->assertInstanceOf(Image::class, $image);
+        $this->assertInstanceOf(ImageInterface::class, $image);
 
         $this->assertSame(100, $image->getSize()->getWidth());
         $this->assertSame(100, $image->getSize()->getHeight());

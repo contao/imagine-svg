@@ -25,7 +25,6 @@
         "psalm/plugin-symfony": "^1.0",
         "slam/phpstan-extensions": "^5.0",
         "symfony/filesystem": "^5.0",
-        "symfony/http-client": "^5.0",
         "vimeo/psalm": "^3.9"
     },
     "extra": {
