@@ -98,8 +98,11 @@ class Imagine extends AbstractImagine
 
         $internalErrors = libxml_use_internal_errors(true);
         libxml_clear_errors();
+        $disableEntities = null;
 
-        $disableEntities = LIBXML_VERSION < 20900 ? libxml_disable_entity_loader() : true;
+        if (LIBXML_VERSION < 20900) {
+            $disableEntities = libxml_disable_entity_loader();
+        }
 
         $document = new \DOMDocument();
         $document->loadXML($data, LIBXML_NONET);
