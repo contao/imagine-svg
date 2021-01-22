@@ -234,7 +234,7 @@ class ImagineTest extends TestCase
     {
         $this->expectException(InvalidArgumentException::class);
 
-        /* @phpstan-ignore-next-line */
+        /** @phpstan-ignore-next-line */
         $this->imagine->read('not a resource');
     }
 

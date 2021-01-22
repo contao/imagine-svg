@@ -45,7 +45,7 @@
             "@psalm"
         ],
         "cs-fixer": [
-            "vendor/bin/ecs check src tests --config vendor/contao/easy-coding-standard/config/default.yaml --fix --ansi"
+            "vendor/bin/ecs check src tests --config vendor/contao/easy-coding-standard/config/default.php --fix --ansi"
         ],
         "phpstan": [
             "vendor/bin/phpstan analyze src tests --level=6 --memory-limit=1G --ansi"
