@@ -19,7 +19,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 7.3
+                  php-version: 7.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
                   tools: prestissimo, flex
                   coverage: none
@@ -47,7 +47,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 7.3
+                  php-version: 7.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
                   tools: prestissimo, flex
                   coverage: none
@@ -59,7 +59,7 @@ jobs:
               run: composer install --no-interaction --no-suggest
 
             - name: Check the coding style
-              run: vendor/bin/ecs check src tests --config vendor/contao/easy-coding-standard/config/default.yaml --no-progress-bar --ansi
+              run: vendor/bin/ecs check src tests --config vendor/contao/easy-coding-standard/config/default.php --no-progress-bar --ansi
 
             - name: Analyze the code
               run: |
@@ -122,7 +122,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 7.3
+                  php-version: 7.2
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
                   tools: prestissimo, flex
                   coverage: none
@@ -144,7 +144,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 7.3
+                  php-version: 7.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
                   ini-values: memory_limit=1G
                   tools: prestissimo, flex

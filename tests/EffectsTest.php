@@ -89,7 +89,7 @@ class EffectsTest extends TestCase
             '-1', '0', '0', '0', '1',
             '0', '-1', '0', '0', '1',
             '0', '0', '-1', '0', '1',
-            '0', '0',  '0', '1', '0',
+            '0', '0', '0', '1', '0',
         ], preg_split('/\s+/', $filter->firstChild->getAttribute('values')));
     }
 
@@ -162,7 +162,7 @@ class EffectsTest extends TestCase
 
         $this->assertSame([
             '-0.02', '-0.12', '-0.02',
-            '-0.12',  '1.56', '-0.12',
+            '-0.12', '1.56', '-0.12',
             '-0.02', '-0.12', '-0.02',
         ], preg_split('/\s+/', $filter->firstChild->getAttribute('kernelMatrix')));
     }
