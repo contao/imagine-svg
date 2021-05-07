@@ -44,7 +44,7 @@ class Image extends AbstractImage
 
     /**
      * @phpstan-param MetadataBag<mixed> $metadata
-     * @psalm-param MetadataBag $metadata
+     * @psalm-param MetadataBag          $metadata
      */
     public function __construct(\DOMDocument $document, MetadataBag $metadata)
     {
@@ -90,7 +90,7 @@ class Image extends AbstractImage
             && SvgBox::TYPE_NONE !== $currentSize->getType()
             && !$currentSize->contains($size, $start)
         ) {
-            throw new OutOfBoundsException('Crop coordinates must start at minimum 0, 0 position from top left corner, crop height and width '.'must be positive integers and must not exceed the current image borders');
+            throw new OutOfBoundsException('Crop coordinates must start at minimum 0, 0 position from top left corner, crop height and width ' . 'must be positive integers and must not exceed the current image borders');
         }
 
         if (
@@ -118,14 +118,14 @@ class Image extends AbstractImage
             $svg->removeAttribute('x');
             $svg->removeAttribute('y');
         } else {
-            $svg->setAttribute('x', (string) (-$start->getX()));
-            $svg->setAttribute('y', (string) (-$start->getY()));
+            $svg->setAttribute('x', (string)(-$start->getX()));
+            $svg->setAttribute('y', (string)(-$start->getY()));
         }
 
         $svgWrap = $this->document->createElementNS('http://www.w3.org/2000/svg', 'svg');
         $svgWrap->setAttribute('version', '1.1');
-        $svgWrap->setAttribute('width', (string) $size->getWidth());
-        $svgWrap->setAttribute('height', (string) $size->getHeight());
+        $svgWrap->setAttribute('width', (string)$size->getWidth());
+        $svgWrap->setAttribute('height', (string)$size->getHeight());
         $svgWrap->appendChild($svg);
 
         $this->document->appendChild($svgWrap);
@@ -168,18 +168,18 @@ class Image extends AbstractImage
         $this->fixViewBox();
 
         if (SvgBox::TYPE_ABSOLUTE === $newSizeType) {
-            $this->document->documentElement->setAttribute('width', (string) $size->getWidth());
-            $this->document->documentElement->setAttribute('height', (string) $size->getHeight());
+            $this->document->documentElement->setAttribute('width', (string)$size->getWidth());
+            $this->document->documentElement->setAttribute('height', (string)$size->getHeight());
         } elseif (SvgBox::TYPE_ASPECT_RATIO === $newSizeType) {
             if (
-                (int) round($currentSize->getWidth() / $currentSize->getHeight() * $size->getHeight()) === $size->getWidth()
-                || (int) round($size->getWidth() / $size->getHeight() * $currentSize->getHeight()) === $currentSize->getWidth()
+                (int)round($currentSize->getWidth() / $currentSize->getHeight() * $size->getHeight()) === $size->getWidth()
+                || (int)round($size->getWidth() / $size->getHeight() * $currentSize->getHeight()) === $currentSize->getWidth()
             ) {
                 $this->document->documentElement->removeAttribute('width');
                 $this->document->documentElement->removeAttribute('height');
             } else {
-                $this->document->documentElement->setAttribute('width', (string) $size->getWidth());
-                $this->document->documentElement->setAttribute('height', (string) $size->getHeight());
+                $this->document->documentElement->setAttribute('width', (string)$size->getWidth());
+                $this->document->documentElement->setAttribute('height', (string)$size->getHeight());
                 $this->crop(new Point(0, 0), $size);
             }
         } else {
@@ -191,8 +191,11 @@ class Image extends AbstractImage
         return $this;
     }
 
-    public function thumbnail(BoxInterface $size, $settings = ImageInterface::THUMBNAIL_INSET, $filter = ImageInterface::FILTER_UNDEFINED): self
-    {
+    public function thumbnail(
+        BoxInterface $size,
+        $settings = ImageInterface::THUMBNAIL_INSET,
+        $filter = ImageInterface::FILTER_UNDEFINED
+    ): self {
         $newSizeType = $size instanceof SvgBox ? $size->getType() : SvgBox::TYPE_ABSOLUTE;
 
         if (SvgBox::TYPE_ABSOLUTE === $newSizeType && SvgBox::TYPE_ABSOLUTE === $this->getSize()->getType()) {
@@ -244,7 +247,7 @@ class Image extends AbstractImage
 
     /**
      * @phpstan-param array<string,string> $options
-     * @psalm-param array $options
+     * @psalm-param array                  $options
      */
     public function save($path = null, array $options = []): self
     {
@@ -272,7 +275,7 @@ class Image extends AbstractImage
         $image = $this->get($format, $options);
 
         if (!file_put_contents($path, $image)) {
-            throw new RuntimeException('Unable to save image to '.$path);
+            throw new RuntimeException('Unable to save image to ' . $path);
         }
 
         return $this;
@@ -280,7 +283,7 @@ class Image extends AbstractImage
 
     /**
      * @phpstan-param array<string,string> $options
-     * @psalm-param array $options
+     * @psalm-param array                  $options
      */
     public function show($format, array $options = []): self
     {
@@ -299,7 +302,7 @@ class Image extends AbstractImage
 
     /**
      * @phpstan-param array<string,string> $options
-     * @psalm-param array $options
+     * @psalm-param array                  $options
      */
     public function get($format, array $options = []): string
     {
@@ -308,7 +311,8 @@ class Image extends AbstractImage
         $supported = ['svg', 'svgz'];
 
         if (!\in_array($format, $supported, true)) {
-            throw new InvalidArgumentException(sprintf('Saving image in "%s" format is not supported, please use one of the following extensions: "%s"', $format, implode('", "', $supported)));
+            throw new InvalidArgumentException(sprintf('Saving image in "%s" format is not supported, please use one of the following extensions: "%s"',
+                $format, implode('", "', $supported)));
         }
 
         $xml = $this->document->saveXML();
@@ -363,9 +367,7 @@ class Image extends AbstractImage
             return SvgBox::createTypeAbsolute($width, $height);
         }
 
-        $viewBox = preg_split('/[\s,]+/', $svg->getAttribute('viewBox') ?: '');
-        $viewBoxWidth = (float) ($viewBox[2] ?? 0);
-        $viewBoxHeight = (float) ($viewBox[3] ?? 0);
+        [$viewBoxWidth, $viewBoxHeight] = $this->getViewboxDimensions($svg);
 
         // Missing width/height and viewBox
         if ($viewBoxWidth <= 0 || $viewBoxHeight <= 0) {
@@ -374,12 +376,12 @@ class Image extends AbstractImage
 
         // Fixed width and viewBox
         if ($width) {
-            return SvgBox::createTypeAbsolute($width, (int) round($width / $viewBoxWidth * $viewBoxHeight));
+            return SvgBox::createTypeAbsolute($width, (int)round($width / $viewBoxWidth * $viewBoxHeight));
         }
 
         // Fixed height and viewBox
         if ($height) {
-            return SvgBox::createTypeAbsolute((int) round($height / $viewBoxHeight * $viewBoxWidth), $height);
+            return SvgBox::createTypeAbsolute((int)round($height / $viewBoxHeight * $viewBoxWidth), $height);
         }
 
         // Normalize floating point values to integer ratio
@@ -455,10 +457,10 @@ class Image extends AbstractImage
     private function normalizeRatio(float $a, float $b): array
     {
         if ($a < $b) {
-            return [(int) round($a * 65535 / $b), 65535];
+            return [(int)round($a * 65535 / $b), 65535];
         }
 
-        return [65535, (int) round($b * 65535 / $a)];
+        return [65535, (int)round($b * 65535 / $a)];
     }
 
     /**
@@ -476,7 +478,7 @@ class Image extends AbstractImage
         $height = $this->getPixelValue($svg->getAttribute('height'));
 
         if ($width && $height) {
-            $svg->setAttribute('viewBox', '0 0 '.$width.' '.$height);
+            $svg->setAttribute('viewBox', '0 0 ' . $width . ' ' . $height);
         }
     }
 
@@ -502,13 +504,38 @@ class Image extends AbstractImage
         $unit = substr($size, -2);
 
         if (is_numeric($value) && isset($map[$unit])) {
-            $pixelValue = ((float) $value) * $map[$unit];
+            $pixelValue = ((float)$value) * $map[$unit];
         } elseif (is_numeric($size)) {
-            $pixelValue = (float) $size;
+            $pixelValue = (float)$size;
         } else {
             $pixelValue = 0;
         }
 
-        return (int) round($pixelValue);
+        return (int)round($pixelValue);
+    }
+
+    public function setSizefromViewbox(): void
+    {
+        $svg = $this->document->documentElement;
+
+        [$viewBoxWidth, $viewBoxHeight] = $this->getViewboxDimensions($svg);
+        $viewBoxHeight = round($viewBoxHeight);
+        $viewBoxWidth = round($viewBoxWidth);
+        $svg->setAttribute('width', (string)$viewBoxWidth);
+        $svg->setAttribute('heigth', (string)$viewBoxHeight);
+    }
+
+    /**
+     * @param \DOMElement $svg
+     *
+     * @return float[]
+     */
+    public function getViewboxDimensions(\DOMElement $svg): array
+    {
+        $viewBox = preg_split('/[\s,]+/', $svg->getAttribute('viewBox') ?: '');
+        $viewBoxWidth = (float)($viewBox[2] ?? 0);
+        $viewBoxHeight = (float)($viewBox[3] ?? 0);
+
+        return array($viewBoxWidth, $viewBoxHeight);
     }
 }
