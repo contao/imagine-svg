@@ -15,17 +15,18 @@
         "imagine/imagine": "^1.1"
     },
     "require-dev": {
-        "friendsofphp/php-cs-fixer": "^2.14",
-        "contao/easy-coding-standard": "^1.0",
+        "contao/easy-coding-standard": "^3.0",
+        "contao/test-case": "^4.4",
         "phpstan/phpstan": "^0.12",
         "phpstan/phpstan-phpunit": "^0.12.8",
         "phpstan/phpstan-symfony": "^0.12.6",
         "phpunit/phpunit": "^8.5.4",
-        "psalm/plugin-phpunit": "^0.9",
-        "psalm/plugin-symfony": "^1.0",
+        "psalm/plugin-phpunit": "^0.15",
+        "psalm/plugin-symfony": "^2.0",
         "slam/phpstan-extensions": "^5.0",
         "symfony/filesystem": "^5.0",
-        "vimeo/psalm": "^3.9"
+        "thecodingmachine/phpstan-strict-rules": "^0.12",
+        "vimeo/psalm": "^4.1"
     },
     "autoload": {
         "psr-4": {

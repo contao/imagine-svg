@@ -258,11 +258,11 @@ class Image extends AbstractImage
 
         if (isset($options['format'])) {
             $format = $options['format'];
-        } elseif ($extension = pathinfo($path, \PATHINFO_EXTENSION)) {
+        } elseif ($extension = pathinfo($path, PATHINFO_EXTENSION)) {
             $format = $extension;
         } else {
             $originalPath = $this->metadata['filepath'] ?? null;
-            $format = isset($originalPath) ? pathinfo($originalPath, \PATHINFO_EXTENSION) : null;
+            $format = isset($originalPath) ? pathinfo($originalPath, PATHINFO_EXTENSION) : null;
         }
 
         if (!$format) {

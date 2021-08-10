@@ -199,7 +199,7 @@ class Effects implements EffectsInterface
             && 'g' === $svg->firstChild->nodeName
             && preg_match(
                 '/^url\(#('.self::SVG_FILTER_ID_PREFIX.'[0-9a-f]{16})\)$/',
-                (string) $svg->firstChild->getAttribute('filter'),
+                $svg->firstChild->getAttribute('filter'),
                 $matches
             )
         ) {
