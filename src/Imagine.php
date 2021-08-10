@@ -96,6 +96,10 @@ class Imagine extends AbstractImagine
             $data = gzdecode($data);
         }
 
+        if ('' === $data) {
+            throw new RuntimeException('An image can not be created from the empty string');
+        }
+
         $internalErrors = libxml_use_internal_errors(true);
         libxml_clear_errors();
         $disableEntities = null;
