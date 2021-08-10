@@ -4,6 +4,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ## [Unreleased]
 
+ * Fix bug with empty SVG files. [#33]
 
 ## [1.0.2] (2020-10-31)
 
@@ -90,6 +91,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 [0.1.1]: https://github.com/contao/imagine-svg/compare/0.1.0...0.1.1
 [0.1.0]: https://github.com/contao/imagine-svg/commits/0.1.0
 
+[#33]: https://github.com/contao/imagine-svg/issues/33
 [#28]: https://github.com/contao/imagine-svg/issues/28
 [#25]: https://github.com/contao/imagine-svg/issues/25
 [#24]: https://github.com/contao/imagine-svg/issues/24

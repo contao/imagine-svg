@@ -178,18 +178,31 @@ class ImagineTest extends TestCase
         $image->save();
     }
 
-    public function testLoadInvalidSvg(): void
+    /**
+     * @dataProvider getInvalidSvgs
+     */
+    public function testLoadInvalidSvg(string $svgSource): void
     {
         $this->expectException(RuntimeException::class);
 
-        $this->imagine->load('<?xml version="1.0"?><notasvg/>');
+        $this->imagine->load($svgSource);
     }
 
-    public function testLoadInvalidXml(): void
+    /**
+     * @return \Generator<array<string>>
+     */
+    public function getInvalidSvgs(): \Generator
     {
-        $this->expectException(RuntimeException::class);
-
-        $this->imagine->load('<?xml version="1.0"?><svg><invalid>');
+        yield ['<?xml version="1.0"?><notasvg/>'];
+        yield ['<?xml version="1.0"?><svg><invalid>'];
+        yield ['not an xml'];
+        yield ["<?xml version=\"1.0\"?><svg>invalid \x80 UTF-8</svg>"];
+        yield ["<?xml version=\"1.0\"?><svg>invalid \0 UTF-8</svg>"];
+        yield [''];
+        yield [' '];
+        yield ["\t"];
+        yield ["\n"];
+        yield ["\0"];
     }
 
     public function testRead(): void
