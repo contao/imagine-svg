@@ -176,7 +176,7 @@ class Effects implements EffectsInterface
     /**
      * Create and add a new filter element.
      *
-     * @param array<string|int,string|array<string|array>> $attributes
+     * @param array<string|int,string|array<string|array<string>>> $attributes
      */
     private function addFilterElement(string $name, array $attributes): void
     {
@@ -244,7 +244,7 @@ class Effects implements EffectsInterface
     /**
      * Create element with the specified attributes.
      *
-     * @param array<string|int,string|array<string|array>> $attributes
+     * @param array<string|int,string|array<string|array<string>>> $attributes
      */
     private function createElement(string $name, array $attributes): \DOMElement
     {

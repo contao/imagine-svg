@@ -17,15 +17,15 @@
     "require-dev": {
         "contao/easy-coding-standard": "^3.0",
         "contao/test-case": "^4.4",
-        "phpstan/phpstan": "^0.12",
-        "phpstan/phpstan-phpunit": "^0.12.8",
-        "phpstan/phpstan-symfony": "^0.12.6",
+        "phpstan/phpstan": "^1.0",
+        "phpstan/phpstan-phpunit": "^1.0",
+        "phpstan/phpstan-symfony": "^1.0",
         "phpunit/phpunit": "^8.5.4",
         "psalm/plugin-phpunit": "^0.15",
         "psalm/plugin-symfony": "^2.0",
-        "slam/phpstan-extensions": "^5.0",
+        "slam/phpstan-extensions": "^6.0",
         "symfony/filesystem": "^5.0",
-        "thecodingmachine/phpstan-strict-rules": "^0.12",
+        "thecodingmachine/phpstan-strict-rules": "^1.0",
         "vimeo/psalm": "^4.1"
     },
     "autoload": {
@@ -57,5 +57,10 @@
         "unit-tests": [
             "vendor/bin/phpunit --colors=always"
         ]
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
     }
 }
