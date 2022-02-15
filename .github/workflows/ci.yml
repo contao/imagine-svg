@@ -19,7 +19,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.0
+                  php-version: 7.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
                   tools: prestissimo, flex
                   coverage: none
@@ -28,7 +28,9 @@ jobs:
               uses: actions/checkout@v2
 
             - name: Install the dependencies
-              run: composer install --no-interaction --no-suggest
+              run: |
+                  composer remove slam/phpstan-extensions contao/easy-coding-standard --dev --no-update
+                  composer install --no-interaction --no-suggest
 
             - name: Generate the coverage report
               run: phpdbg -qrr vendor/bin/phpunit --coverage-clover=clover.xml  --colors=always
