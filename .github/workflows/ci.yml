@@ -19,7 +19,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 7.4
+                  php-version: 8.0
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
                   tools: prestissimo, flex
                   coverage: none
@@ -137,7 +137,9 @@ jobs:
               uses: actions/checkout@v2
 
             - name: Install the dependencies
-              run: composer update --prefer-lowest --prefer-stable --no-interaction --no-suggest
+              run: |
+                  composer remove slam/phpstan-extensions contao/easy-coding-standard --dev --no-update
+                  composer update --prefer-lowest --prefer-stable --no-interaction --no-suggest
 
             - name: Run the unit tests
               run: vendor/bin/phpunit --colors=always
@@ -149,7 +151,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php: [7.2, 7.3, 7.4, 8.0]
+                php: [7.2, 7.3, 7.4, 8.0, 8.1]
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -167,7 +169,9 @@ jobs:
               uses: actions/checkout@v2
 
             - name: Install the dependencies
-              run: composer install --no-interaction --no-suggest --no-progress
+              run: |
+                  composer remove slam/phpstan-extensions contao/easy-coding-standard --dev --no-update
+                  composer install --no-interaction --no-suggest --no-progress
 
             - name: Run the unit tests
               run: vendor/bin/phpunit.bat --colors=always
