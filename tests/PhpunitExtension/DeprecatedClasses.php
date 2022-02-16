@@ -23,12 +23,12 @@ final class DeprecatedClasses extends DeprecatedClassesPhpunitExtension
 
         if (\PHP_VERSION_ID >= 80100) {
             $deprecations[MetadataBag::class] = [
-                '%s::offsetExists%s#[ReturnTypeWillChange]%s',
-                '%s::offsetGet%s#[ReturnTypeWillChange]%s',
-                '%s::offsetSet%s#[ReturnTypeWillChange]%s',
-                '%s::offsetUnset%s#[ReturnTypeWillChange]%s',
-                '%s::getIterator%s#[ReturnTypeWillChange]%s',
-                '%s::count%s#[ReturnTypeWillChange]%s',
+                '%s::offsetExists%s#[\ReturnTypeWillChange]%s',
+                '%s::offsetGet%s#[\ReturnTypeWillChange]%s',
+                '%s::offsetSet%s#[\ReturnTypeWillChange]%s',
+                '%s::offsetUnset%s#[\ReturnTypeWillChange]%s',
+                '%s::getIterator%s#[\ReturnTypeWillChange]%s',
+                '%s::count%s#[\ReturnTypeWillChange]%s',
             ];
         }
 
