@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\ImagineSvg\Tests\PhpunitExtension;
 
+use Composer\InstalledVersions;
+use Composer\Semver\VersionParser;
 use Contao\TestCase\DeprecatedClassesPhpunitExtension;
 use Imagine\Image\Metadata\MetadataBag;
 
@@ -21,7 +23,7 @@ final class DeprecatedClasses extends DeprecatedClassesPhpunitExtension
     {
         $deprecations = [];
 
-        if (\PHP_VERSION_ID >= 80100) {
+        if (\PHP_VERSION_ID >= 80100 && InstalledVersions::satisfies(new VersionParser(), 'imagine/imagine', '<1.3')) {
             $deprecations[MetadataBag::class] = [
                 '%s::offsetExists%s#[\ReturnTypeWillChange]%s',
                 '%s::offsetGet%s#[\ReturnTypeWillChange]%s',
