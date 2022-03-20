@@ -232,7 +232,7 @@ class ImageTest extends TestCase
 
         $this->assertSame(
             round(16 / 9, 4),
-            round($image->getDomDocument()->documentElement->firstChild->getAttribute('width') / $image->getDomDocument()->documentElement->firstChild->getAttribute('height'), 4),
+            round((float) $image->getDomDocument()->documentElement->firstChild->getAttribute('width') / (float) $image->getDomDocument()->documentElement->firstChild->getAttribute('height'), 4),
             'Aspect ratio should match the specified size'
         );
 
@@ -347,7 +347,7 @@ class ImageTest extends TestCase
 
         $this->assertSame(
             round(1 / 1, 4),
-            round($image->getDomDocument()->documentElement->firstChild->getAttribute('width') / $image->getDomDocument()->documentElement->firstChild->getAttribute('height'), 4),
+            round((float) $image->getDomDocument()->documentElement->firstChild->getAttribute('width') / (float) $image->getDomDocument()->documentElement->firstChild->getAttribute('height'), 4),
             'Aspect ratio should match the specified size'
         );
 
