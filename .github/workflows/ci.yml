@@ -75,7 +75,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php: [7.2, 7.3, 7.4, 8.0, 8.1]
+                php: [7.2, 7.3, 7.4, 8.0, 8.1, 8.2]
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -96,15 +96,15 @@ jobs:
             - name: Run the unit tests
               run: vendor/bin/phpunit --colors=always
 
-    php82:
-        name: PHP 8.2
+    php83:
+        name: PHP 8.3
         runs-on: ubuntu-latest
         if: github.event_name != 'push'
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.2
+                  php-version: 8.3
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
                   tools: prestissimo, flex
                   coverage: none
@@ -113,7 +113,7 @@ jobs:
               uses: actions/checkout@v2
 
             - name: Install the dependencies
-              run: composer update --no-interaction --no-suggest --ignore-platform-req=php
+              run: composer update --no-interaction --no-suggest --ignore-platform-req=php+
 
             - name: Run the unit tests
               run: vendor/bin/phpunit --colors=always
@@ -153,7 +153,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php: [7.2, 7.3, 7.4, 8.0, 8.1]
+                php: [7.2, 7.3, 7.4, 8.0, 8.1, 8.2]
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
