@@ -1,7 +1,7 @@
 Contao Imagine SVG library
 ==========================
 
-[![](https://img.shields.io/github/workflow/status/contao/imagine-svg/CI/1.x.svg?style=flat-square)](https://github.com/contao/imagine-svg/actions?query=branch%3A1.x)
+[![](https://img.shields.io/github/actions/workflow/status/contao/imagine-svg/ci.yml?branch=1.x&style=flat-square)](https://github.com/contao/imagine-svg/actions?query=branch%3A1.x)
 [![](https://img.shields.io/codecov/c/github/contao/imagine-svg/1.x.svg?style=flat-square)](https://codecov.io/gh/contao/imagine-svg)
 [![](https://img.shields.io/packagist/v/contao/imagine-svg.svg?style=flat-square)](https://packagist.org/packages/contao/imagine-svg)
 [![](https://img.shields.io/packagist/dt/contao/imagine-svg.svg?style=flat-square)](https://packagist.org/packages/contao/imagine-svg)
