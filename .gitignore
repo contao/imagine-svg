@@ -2,6 +2,10 @@
 /composer.lock
 /vendor/
 
+# Composer bin
+/tools/*/composer.lock
+/tools/*/vendor
+
 # PhpUnit
 /phpunit.xml
 /.phpunit.result.cache
