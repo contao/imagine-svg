@@ -341,6 +341,40 @@ class EffectsTest extends TestCase
         $this->assertSame(1, $filter->childNodes->length);
         $this->assertSame(2, $dom->getElementsByTagName('g')->length);
         $this->assertSame('url(#differentId)', $g->getAttribute('filter'));
+
+        $this->assertSame(
+            implode(
+                '',
+                [
+                    '<?xml version="1.0"?>',
+                    "\n",
+                    '<svg xmlns="http://www.w3.org/2000/svg" version="1.1">',
+                    '<g filter="url(#svgImagineFilterV1_6437663136623533)">',
+                    '<filter id="svgImagineFilterV1_6437663136623533">',
+                    '<feColorMatrix type="saturate" values="0" color-interpolation-filters="sRGB"/>',
+                    '</filter>',
+                    '<g filter="url(#differentId)">',
+                    '<filter id="svgImagineFilterV1_6334646239396237">',
+                    '<feComponentTransfer color-interpolation-filters="sRGB">',
+                    '<feFuncR type="gamma" exponent="0.6666667"/>',
+                    '<feFuncG type="gamma" exponent="0.6666667"/>',
+                    '<feFuncB type="gamma" exponent="0.6666667"/>',
+                    '</feComponentTransfer>',
+                    '<feColorMatrix type="matrix" values="-1 0 0 0 1 0 -1 0 0 1 0 0 -1 0 1 0 0  0 1 0" color-interpolation-filters="sRGB"/>',
+                    '<feColorMatrix type="saturate" values="0" color-interpolation-filters="sRGB"/>',
+                    '<feColorMatrix type="matrix" values="1 0 0 0 1 0 1 0 0 0 0 0 1 0 0 0 0 0 1 0" color-interpolation-filters="sRGB"/>',
+                    '<feConvolveMatrix kernelUnitLength="1" kernelMatrix="-0.02 -0.12 -0.02 -0.12  1.56 -0.12 -0.02 -0.12 -0.02" color-interpolation-filters="sRGB"/>',
+                    '<feGaussianBlur stdDeviation="2" color-interpolation-filters="sRGB"/>',
+                    '</filter>',
+                    '<path/>',
+                    '</g>',
+                    '</g>',
+                    '</svg>',
+                    "\n",
+                ]
+            ),
+            $image->get('svg')
+        );
     }
 
     private function executeTestWithLocale(string $methodName): void

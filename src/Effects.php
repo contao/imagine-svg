@@ -211,13 +211,13 @@ class Effects implements EffectsInterface
         }
 
         /** @var \DOMElement $element */
-        foreach ($this->document->getElementsByTagName('filter') as $element) {
+        foreach ($this->document->getElementsByTagNameNS($svg->namespaceURI, 'filter') as $element) {
             if ($element->getAttribute('id') === $id) {
                 return $element;
             }
         }
 
-        $filter = $this->document->createElement('filter');
+        $filter = $this->document->createElementNS($svg->namespaceURI, 'filter');
         $filter->setAttribute('id', $id);
         $svg->firstChild->insertBefore($filter, $svg->firstChild->firstChild);
 
@@ -230,7 +230,7 @@ class Effects implements EffectsInterface
     private function wrapSvg(): \DOMElement
     {
         $svg = $this->document->documentElement;
-        $group = $this->document->createElement('g');
+        $group = $this->document->createElementNS($svg->namespaceURI, 'g');
 
         while ($svg->firstChild) {
             $group->appendChild($svg->firstChild);
@@ -248,7 +248,7 @@ class Effects implements EffectsInterface
      */
     private function createElement(string $name, array $attributes): \DOMElement
     {
-        $filter = $this->document->createElement($name);
+        $filter = $this->document->createElementNS($this->document->documentElement->namespaceURI, $name);
 
         foreach ($attributes as $key => $value) {
             if (\is_string($key)) {
