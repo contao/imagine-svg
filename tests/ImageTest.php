@@ -702,16 +702,16 @@ class ImageTest extends TestCase
     {
         return [
             'Comment' => [
-                "<?xml version=\"1.0\"?>\n<svg><!-- comment --></svg>\n",
-                "<?xml version=\"1.0\"?>\n<svg/>\n",
+                "<?xml version=\"1.0\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\"><!-- comment --></svg>\n",
+                "<?xml version=\"1.0\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\"/>\n",
             ],
             'Multiple comments' => [
-                "<?xml version=\"1.0\"?><!-- comment -->\n<!-- comment --><svg><!-- comment --></svg><!-- comment -->\n",
-                "<?xml version=\"1.0\"?>\n<svg/>\n",
+                "<?xml version=\"1.0\"?><!-- comment -->\n<!-- comment --><svg xmlns=\"http://www.w3.org/2000/svg\"><!-- comment --></svg><!-- comment -->\n",
+                "<?xml version=\"1.0\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\"/>\n",
             ],
             'Complex comments' => [
-                "<?xml version=\"1.0\"?>\n<svg><!-- <!- -> -> \n</svg>\n  --></svg>\n",
-                "<?xml version=\"1.0\"?>\n<svg/>\n",
+                "<?xml version=\"1.0\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\"><!-- <!- -> -> \n</svg>\n  --></svg>\n",
+                "<?xml version=\"1.0\"?>\n<svg xmlns=\"http://www.w3.org/2000/svg\"/>\n",
             ],
         ];
     }

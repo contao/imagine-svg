@@ -194,15 +194,18 @@ class ImagineTest extends TestCase
     public function getInvalidSvgs(): \Generator
     {
         yield ['<?xml version="1.0"?><notasvg/>'];
-        yield ['<?xml version="1.0"?><svg><invalid>'];
+        yield ['<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg"><invalid>'];
         yield ['not an xml'];
-        yield ["<?xml version=\"1.0\"?><svg>invalid \x80 UTF-8</svg>"];
-        yield ["<?xml version=\"1.0\"?><svg>invalid \0 UTF-8</svg>"];
+        yield ["<?xml version=\"1.0\"?><svg xmlns=\"http://www.w3.org/2000/svg\">invalid \x80 UTF-8</svg>"];
+        yield ["<?xml version=\"1.0\"?><svg xmlns=\"http://www.w3.org/2000/svg\">invalid \0 UTF-8</svg>"];
         yield [''];
         yield [' '];
         yield ["\t"];
         yield ["\n"];
         yield ["\0"];
+        yield ['<?xml version="1.0"?><svg>no xmlns</svg>'];
+        yield ['<?xml version="1.0"?><svg xmlns="https://example.com">wrong xmlns</svg>'];
+        yield ['<?xml version="1.0"?><SVG xmlns="http://www.w3.org/2000/svg">uppercase tagname</SVG>'];
     }
 
     public function testRead(): void

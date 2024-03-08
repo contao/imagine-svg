@@ -125,8 +125,11 @@ class Imagine extends AbstractImagine
             }
         }
 
-        if ('svg' !== strtolower($document->documentElement->tagName)) {
-            throw new RuntimeException('An image could not be created from the given input');
+        if (
+            'svg' !== $document->documentElement->tagName
+            || 'http://www.w3.org/2000/svg' !== $document->documentElement->namespaceURI
+        ) {
+            throw new RuntimeException(sprintf('An image could not be created from the given input, tag name "%s", namespace "%s"', $document->documentElement->tagName, $document->documentElement->namespaceURI));
         }
 
         return new Image($document, $metadata);
