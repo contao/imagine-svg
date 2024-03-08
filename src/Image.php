@@ -75,9 +75,9 @@ class Image extends AbstractImage
         return $this->document;
     }
 
-    public function copy(): self
+    public function copy()
     {
-        return new self(clone $this->document, clone $this->metadata);
+        return clone $this;
     }
 
     public function crop(PointInterface $start, BoxInterface $size): self

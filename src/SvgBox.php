@@ -16,6 +16,9 @@ use Imagine\Image\Box;
 use Imagine\Image\BoxInterface;
 use Imagine\Image\PointInterface;
 
+/**
+ * @final
+ */
 class SvgBox implements BoxInterface
 {
     public const TYPE_ABSOLUTE = 0;
