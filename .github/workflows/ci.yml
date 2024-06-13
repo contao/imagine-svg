@@ -21,23 +21,25 @@ jobs:
               with:
                   php-version: 7.4
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
-                  tools: prestissimo, flex
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v2
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Install the dependencies
-              run: composer install --no-interaction --no-suggest
+              uses: ramsey/composer-install@v3
 
             - name: Generate the coverage report
               run: phpdbg -qrr vendor/bin/phpunit --coverage-clover=clover.xml  --colors=always
 
             - name: Upload the coverage report
-              uses: codecov/codecov-action@v1
+              uses: codecov/codecov-action@v4
               with:
-                  file: ./clover.xml
+                  files: ./clover.xml
                   fail_ci_if_error: true
+                  token: ${{ secrets.CODECOV_TOKEN }}
 
     coding-style:
         name: Coding Style
@@ -49,19 +51,28 @@ jobs:
               with:
                   php-version: 8.0
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
-                  tools: prestissimo, flex
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v2
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Install the dependencies
-              run: |
-                  composer install --no-interaction --no-suggest --no-progress
-                  composer bin all install --no-interaction --no-progress
+              uses: ramsey/composer-install@v3
+
+            - name: Install ECS
+              uses: ramsey/composer-install@v3
+              with:
+                  working-directory: tools/ecs
 
             - name: Check the coding style
               run: tools/ecs/vendor/bin/ecs check src tests --config tools/ecs/config/default.php --no-progress-bar --ansi
+
+            - name: Install PHPStan
+              uses: ramsey/composer-install@v3
+              with:
+                  working-directory: tools/phpstan
 
             - name: Analyze the code
               run: tools/phpstan/vendor/bin/phpstan analyse --no-progress
@@ -73,28 +84,30 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php: [7.2, 7.3, 7.4, 8.0, 8.1, 8.2]
+                php: [7.2, 7.3, 7.4, 8.0, 8.1, 8.2, 8.3]
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: ${{ matrix.php }}
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
-                  tools: prestissimo, flex
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v2
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Install the dependencies
-              run: composer install --no-interaction --no-suggest
+              uses: ramsey/composer-install@v3
 
             - name: Run the unit tests
               run: vendor/bin/phpunit --colors=always
 
-    php83:
-        name: PHP 8.3
+    nightly:
+        name: PHP 8.4
         runs-on: ubuntu-latest
+        continue-on-error: true
         if: github.event_name != 'push'
         steps:
             - name: Setup PHP
@@ -102,14 +115,17 @@ jobs:
               with:
                   php-version: 8.3
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
-                  tools: prestissimo, flex
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v2
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Install the dependencies
-              run: composer update --no-interaction --no-suggest --ignore-platform-req=php+
+              uses: ramsey/composer-install@v3
+              with:
+                  composer-options: --ignore-platform-req=php+
 
             - name: Run the unit tests
               run: vendor/bin/phpunit --colors=always
@@ -128,14 +144,17 @@ jobs:
               with:
                   php-version: ${{ matrix.php }}
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
-                  tools: prestissimo, flex
                   coverage: none
 
             - name: Checkout
-              uses: actions/checkout@v2
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Install the dependencies
-              run: composer update --prefer-lowest --prefer-stable --no-interaction --no-suggest
+              uses: ramsey/composer-install@v3
+              with:
+                  dependency-versions: lowest
 
             - name: Run the unit tests
               run: vendor/bin/phpunit --colors=always
@@ -147,7 +166,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php: [7.2, 7.3, 7.4, 8.0, 8.1, 8.2]
+                php: [7.2, 7.3, 7.4, 8.0, 8.1, 8.2, 8.3]
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -155,17 +174,18 @@ jobs:
                   php-version: ${{ matrix.php }}
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
                   ini-values: memory_limit=1G
-                  tools: prestissimo, flex
                   coverage: none
 
             - name: Adjust the Git autocrlf setting
               run: git config --global core.autocrlf false
 
             - name: Checkout
-              uses: actions/checkout@v2
+              uses: actions/checkout@v4
+              with:
+                  show-progress: false
 
             - name: Install the dependencies
-              run: composer install --no-interaction --no-suggest --no-progress
+              uses: ramsey/composer-install@v3
 
             - name: Run the unit tests
               run: vendor/bin/phpunit.bat --colors=always
