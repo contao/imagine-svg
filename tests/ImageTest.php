@@ -258,9 +258,8 @@ class ImageTest extends TestCase
 
         $this->assertSame(SvgBox::TYPE_NONE, $image->getSize()->getType());
 
-        $this->expectException(InvalidArgumentException::class);
-
-        $image->resize(new Box(25, 25), ImageInterface::FILTER_POINT);
+        // Unsupported filters should not throw, same behavior as GD
+        $image->resize(new Box(25, 25), ImageInterface::FILTER_LANCZOS);
     }
 
     public function testThumbnail(): void
@@ -373,8 +372,7 @@ class ImageTest extends TestCase
 
         $this->assertSame(SvgBox::TYPE_NONE, $image->getSize()->getType());
 
-        $this->expectException(InvalidArgumentException::class);
-
+        // Unsupported filters should not throw, same behavior as GD
         $image->thumbnail(new Box(25, 25), ImageInterface::THUMBNAIL_FLAG_NOCLONE, ImageInterface::FILTER_POINT);
     }
 

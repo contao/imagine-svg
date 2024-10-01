@@ -150,10 +150,6 @@ class Image extends AbstractImage
 
     public function resize(BoxInterface $size, $filter = ImageInterface::FILTER_UNDEFINED): self
     {
-        if (ImageInterface::FILTER_UNDEFINED !== $filter) {
-            throw new InvalidArgumentException('Unsupported filter type, SVG only supports ImageInterface::FILTER_UNDEFINED filter');
-        }
-
         $currentSize = $this->getSize();
         $newSizeType = $size instanceof SvgBox ? $size->getType() : SvgBox::TYPE_ABSOLUTE;
 
