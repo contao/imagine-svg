@@ -5,6 +5,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [Unreleased]
 
  * Correctly handle XML namespaces. [#39]
+ * Do not throw exceptions for invalid resize filters. [#42]
 
 ## [1.0.3] (2021-08-10)
 
@@ -96,6 +97,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 [0.1.1]: https://github.com/contao/imagine-svg/compare/0.1.0...0.1.1
 [0.1.0]: https://github.com/contao/imagine-svg/commits/0.1.0
 
+[#42]: https://github.com/contao/imagine-svg/issues/42
 [#39]: https://github.com/contao/imagine-svg/issues/39
 [#33]: https://github.com/contao/imagine-svg/issues/33
 [#28]: https://github.com/contao/imagine-svg/issues/28
