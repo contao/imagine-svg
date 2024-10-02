@@ -23,7 +23,7 @@ use Imagine\Image\Palette\Color\ColorInterface;
 
 class Imagine extends AbstractImagine
 {
-    public function create(BoxInterface $size, ColorInterface $color = null): Image
+    public function create(BoxInterface $size, ?ColorInterface $color = null): Image
     {
         if (null !== $color) {
             throw new InvalidArgumentException('Imagine SVG does not support colors');

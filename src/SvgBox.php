@@ -110,7 +110,7 @@ class SvgBox implements BoxInterface
         return new self($box->getWidth(), $box->getHeight(), $this->type);
     }
 
-    public function contains(BoxInterface $box, PointInterface $start = null): bool
+    public function contains(BoxInterface $box, ?PointInterface $start = null): bool
     {
         return $this->box->contains($box, $start);
     }

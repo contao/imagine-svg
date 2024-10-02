@@ -237,7 +237,7 @@ class Image extends AbstractImage
         return $thumb->resize($size, $filter);
     }
 
-    public function rotate($angle, ColorInterface $background = null): self
+    public function rotate($angle, ?ColorInterface $background = null): self
     {
         throw new NotSupportedException('This method is not implemented');
     }
