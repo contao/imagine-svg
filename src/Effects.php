@@ -38,7 +38,7 @@ class Effects implements EffectsInterface
         $gamma = (float) $correction;
 
         if ($gamma <= 0) {
-            throw new InvalidArgumentException(sprintf('Invalid gamma correction value %s, must be a positive float or integer', var_export($correction, true)));
+            throw new InvalidArgumentException(\sprintf('Invalid gamma correction value %s, must be a positive float or integer', var_export($correction, true)));
         }
 
         $funcAttributes = [
@@ -59,12 +59,15 @@ class Effects implements EffectsInterface
     {
         $this->addFilterElement('feColorMatrix', [
             'type' => 'matrix',
-            'values' => implode(' ', [
-                '-1 0 0 0 1',
-                '0 -1 0 0 1',
-                '0 0 -1 0 1',
-                '0 0  0 1 0',
-            ]),
+            'values' => implode(
+                ' ',
+                [
+                    '-1 0 0 0 1',
+                    '0 -1 0 0 1',
+                    '0 0 -1 0 1',
+                    '0 0  0 1 0',
+                ],
+            ),
         ]);
 
         return $this;
@@ -88,12 +91,15 @@ class Effects implements EffectsInterface
 
         $this->addFilterElement('feColorMatrix', [
             'type' => 'matrix',
-            'values' => implode(' ', [
-                '1 0 0 0 '.$this->numberToString($color->getRed() / 255),
-                '0 1 0 0 '.$this->numberToString($color->getGreen() / 255),
-                '0 0 1 0 '.$this->numberToString($color->getBlue() / 255),
-                '0 0 0 1 0',
-            ]),
+            'values' => implode(
+                ' ',
+                [
+                    '1 0 0 0 '.$this->numberToString($color->getRed() / 255),
+                    '0 1 0 0 '.$this->numberToString($color->getGreen() / 255),
+                    '0 0 1 0 '.$this->numberToString($color->getBlue() / 255),
+                    '0 0 0 1 0',
+                ],
+            ),
         ]);
 
         return $this;
@@ -103,11 +109,14 @@ class Effects implements EffectsInterface
     {
         $this->addFilterElement('feConvolveMatrix', [
             'kernelUnitLength' => '1',
-            'kernelMatrix' => implode(' ', [
-                '-0.02 -0.12 -0.02',
-                '-0.12  1.56 -0.12',
-                '-0.02 -0.12 -0.02',
-            ]),
+            'kernelMatrix' => implode(
+                ' ',
+                [
+                    '-0.02 -0.12 -0.02',
+                    '-0.12  1.56 -0.12',
+                    '-0.02 -0.12 -0.02',
+                ],
+            ),
         ]);
 
         return $this;
@@ -118,7 +127,7 @@ class Effects implements EffectsInterface
         $deviation = (float) $sigma;
 
         if ($deviation <= 0) {
-            throw new InvalidArgumentException(sprintf('Invalid sigma %s, must be a positive float or integer', var_export($sigma, true)));
+            throw new InvalidArgumentException(\sprintf('Invalid sigma %s, must be a positive float or integer', var_export($sigma, true)));
         }
 
         $this->addFilterElement('feGaussianBlur', [
@@ -133,7 +142,7 @@ class Effects implements EffectsInterface
         $intercept = ((int) $brightness) / 100;
 
         if ($intercept < -1 || $intercept > 1) {
-            throw new InvalidArgumentException(sprintf('Invalid brightness value %s, must be between -100 and 100', var_export($brightness, true)));
+            throw new InvalidArgumentException(\sprintf('Invalid brightness value %s, must be between -100 and 100', var_export($brightness, true)));
         }
 
         $funcAttributes = [
@@ -155,7 +164,7 @@ class Effects implements EffectsInterface
         $attributes = [
             'kernelMatrix' => implode(' ', array_map(
                 [$this, 'numberToString'],
-                $matrix->getValueList()
+                $matrix->getValueList(),
             )),
             'kernelUnitLength' => '1',
         ];
@@ -176,7 +185,7 @@ class Effects implements EffectsInterface
     /**
      * Create and add a new filter element.
      *
-     * @param array<string|int,string|array<string|array<string>>> $attributes
+     * @param array<string|int, string|array<string|array<string>>> $attributes
      */
     private function addFilterElement(string $name, array $attributes): void
     {
@@ -200,7 +209,7 @@ class Effects implements EffectsInterface
             && preg_match(
                 '/^url\(#('.self::SVG_FILTER_ID_PREFIX.'[0-9a-f]{16})\)$/',
                 $svg->firstChild->getAttribute('filter'),
-                $matches
+                $matches,
             )
         ) {
             $id = $matches[1];
@@ -244,7 +253,7 @@ class Effects implements EffectsInterface
     /**
      * Create element with the specified attributes.
      *
-     * @param array<string|int,string|array<string|array<string>>> $attributes
+     * @param array<string|int, string|array<string|array<string>>> $attributes
      */
     private function createElement(string $name, array $attributes): \DOMElement
     {
@@ -266,6 +275,6 @@ class Effects implements EffectsInterface
      */
     private function numberToString($number): string
     {
-        return rtrim(rtrim(sprintf('%.7F', $number), '0'), '.');
+        return rtrim(rtrim(\sprintf('%.7F', $number), '0'), '.');
     }
 }

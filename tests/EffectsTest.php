@@ -85,12 +85,15 @@ class EffectsTest extends TestCase
         $this->assertSame('feColorMatrix', $filter->firstChild->nodeName);
         $this->assertSame('matrix', $filter->firstChild->getAttribute('type'));
 
-        $this->assertSame([
-            '-1', '0', '0', '0', '1',
-            '0', '-1', '0', '0', '1',
-            '0', '0', '-1', '0', '1',
-            '0', '0', '0', '1', '0',
-        ], preg_split('/\s+/', $filter->firstChild->getAttribute('values')));
+        $this->assertSame(
+            [
+                '-1', '0', '0', '0', '1',
+                '0', '-1', '0', '0', '1',
+                '0', '0', '-1', '0', '1',
+                '0', '0', '0', '1', '0',
+            ],
+            preg_split('/\s+/', $filter->firstChild->getAttribute('values')),
+        );
     }
 
     public function testGrayscale(): void
@@ -160,11 +163,14 @@ class EffectsTest extends TestCase
 
         $this->assertSame('1', $filter->firstChild->getAttribute('kernelUnitLength'));
 
-        $this->assertSame([
-            '-0.02', '-0.12', '-0.02',
-            '-0.12', '1.56', '-0.12',
-            '-0.02', '-0.12', '-0.02',
-        ], preg_split('/\s+/', $filter->firstChild->getAttribute('kernelMatrix')));
+        $this->assertSame(
+            [
+                '-0.02', '-0.12', '-0.02',
+                '-0.12', '1.56', '-0.12',
+                '-0.02', '-0.12', '-0.02',
+            ],
+            preg_split('/\s+/', $filter->firstChild->getAttribute('kernelMatrix')),
+        );
     }
 
     public function testBlur(): void
@@ -266,7 +272,7 @@ class EffectsTest extends TestCase
         $this->assertSame('1', $filter->firstChild->getAttribute('kernelUnitLength'));
         $this->assertSame(
             ['-1.9', '0.02', '-1', '-1', '10', '-1', '-1', '-3.12', '0'],
-            preg_split('/\s+/', $filter->firstChild->getAttribute('kernelMatrix'))
+            preg_split('/\s+/', $filter->firstChild->getAttribute('kernelMatrix')),
         );
         $this->assertEmpty($filter->firstChild->getAttribute('divisor'));
         $this->assertEmpty($filter->firstChild->getAttribute('order'));
@@ -279,7 +285,7 @@ class EffectsTest extends TestCase
         $this->assertSame('1', $filter->lastChild->getAttribute('kernelUnitLength'));
         $this->assertSame(
             ['-1', '-1', '-1', '-1', '-1', '-1', '-1', '9', '0', '0', '0', '0', '0', '0', '0'],
-            preg_split('/\s+/', $filter->lastChild->getAttribute('kernelMatrix'))
+            preg_split('/\s+/', $filter->lastChild->getAttribute('kernelMatrix')),
         );
         $this->assertSame('1', $filter->lastChild->getAttribute('divisor'));
         $this->assertSame('5 3', $filter->lastChild->getAttribute('order'));
@@ -289,7 +295,7 @@ class EffectsTest extends TestCase
         $this->assertSame('1', $filter->lastChild->getAttribute('kernelUnitLength'));
         $this->assertSame(
             ['0', '0', '0', '0', '0', '0', '0', '0', '0'],
-            preg_split('/\s+/', $filter->lastChild->getAttribute('kernelMatrix'))
+            preg_split('/\s+/', $filter->lastChild->getAttribute('kernelMatrix')),
         );
         $this->assertEmpty($filter->lastChild->getAttribute('divisor'));
         $this->assertEmpty($filter->firstChild->getAttribute('order'));
@@ -371,9 +377,9 @@ class EffectsTest extends TestCase
                     '</g>',
                     '</svg>',
                     "\n",
-                ]
+                ],
             ),
-            $image->get('svg')
+            $image->get('svg'),
         );
     }
 

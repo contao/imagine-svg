@@ -63,15 +63,15 @@ class SvgBoxTest extends TestCase
     {
         $this->assertSameBox(
             new SvgBox(200, 200),
-            (new SvgBox(100, 100))->scale(2)
+            (new SvgBox(100, 100))->scale(2),
         );
         $this->assertSameBox(
             SvgBox::createTypeAspectRatio(200, 200),
-            SvgBox::createTypeAspectRatio(100, 100)->scale(2)
+            SvgBox::createTypeAspectRatio(100, 100)->scale(2),
         );
         $this->assertSameBox(
             SvgBox::createTypeNone(),
-            SvgBox::createTypeNone()->scale(2)
+            SvgBox::createTypeNone()->scale(2),
         );
     }
 
@@ -79,15 +79,15 @@ class SvgBoxTest extends TestCase
     {
         $this->assertSameBox(
             new SvgBox(200, 200),
-            (new SvgBox(100, 100))->increase(100)
+            (new SvgBox(100, 100))->increase(100),
         );
         $this->assertSameBox(
             SvgBox::createTypeAspectRatio(200, 200),
-            SvgBox::createTypeAspectRatio(100, 100)->increase(100)
+            SvgBox::createTypeAspectRatio(100, 100)->increase(100),
         );
         $this->assertSameBox(
             SvgBox::createTypeNone(),
-            SvgBox::createTypeNone()->increase(100)
+            SvgBox::createTypeNone()->increase(100),
         );
     }
 
@@ -124,15 +124,15 @@ class SvgBoxTest extends TestCase
     {
         $this->assertSameBox(
             new SvgBox(200, 200),
-            (new SvgBox(100, 100))->widen(200)
+            (new SvgBox(100, 100))->widen(200),
         );
         $this->assertSameBox(
             SvgBox::createTypeAspectRatio(200, 200),
-            SvgBox::createTypeAspectRatio(100, 100)->widen(200)
+            SvgBox::createTypeAspectRatio(100, 100)->widen(200),
         );
         $this->assertSameBox(
             SvgBox::createTypeNone(),
-            SvgBox::createTypeNone()->widen(200)
+            SvgBox::createTypeNone()->widen(200),
         );
     }
 
@@ -140,15 +140,15 @@ class SvgBoxTest extends TestCase
     {
         $this->assertSameBox(
             new SvgBox(200, 200),
-            (new SvgBox(100, 100))->heighten(200)
+            (new SvgBox(100, 100))->heighten(200),
         );
         $this->assertSameBox(
             SvgBox::createTypeAspectRatio(200, 200),
-            SvgBox::createTypeAspectRatio(100, 100)->heighten(200)
+            SvgBox::createTypeAspectRatio(100, 100)->heighten(200),
         );
         $this->assertSameBox(
             SvgBox::createTypeNone(),
-            SvgBox::createTypeNone()->heighten(200)
+            SvgBox::createTypeNone()->heighten(200),
         );
     }
 

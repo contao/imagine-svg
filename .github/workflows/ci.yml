@@ -16,26 +16,27 @@ jobs:
         runs-on: ubuntu-latest
         if: github.event_name != 'schedule'
         steps:
-            - name: Setup PHP
+            - name: Set up PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 7.4
-                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
-                  coverage: none
+                  php-version: 8.3
+                  extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, mysqli, pcre, pdo_mysql, zlib
+                  coverage: pcov
 
             - name: Checkout
-              uses: actions/checkout@v4
+              uses: actions/checkout@v6
               with:
                   show-progress: false
+                  persist-credentials: false
 
             - name: Install the dependencies
               uses: ramsey/composer-install@v3
 
             - name: Generate the coverage report
-              run: phpdbg -qrr vendor/bin/phpunit --coverage-clover=clover.xml  --colors=always
+              run: php -d pcov.enabled=1 vendor/bin/phpunit --coverage-clover=clover.xml
 
             - name: Upload the coverage report
-              uses: codecov/codecov-action@v4
+              uses: codecov/codecov-action@v5
               with:
                   files: ./clover.xml
                   fail_ci_if_error: true
@@ -49,7 +50,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.0
+                  php-version: 8.5
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo, zlib
                   coverage: none
 
@@ -64,18 +65,18 @@ jobs:
             - name: Install ECS
               uses: ramsey/composer-install@v3
               with:
-                  working-directory: tools/ecs
+                  working-directory: vendor-bin/ecs
 
             - name: Check the coding style
-              run: tools/ecs/vendor/bin/ecs check src tests --config tools/ecs/config/default.php --no-progress-bar --ansi
+              run: vendor-bin/ecs/vendor/bin/ecs check --config vendor-bin/ecs/config/default.php --no-progress-bar --ansi
 
             - name: Install PHPStan
               uses: ramsey/composer-install@v3
               with:
-                  working-directory: tools/phpstan
+                  working-directory: vendor-bin/phpstan
 
             - name: Analyze the code
-              run: tools/phpstan/vendor/bin/phpstan analyse --no-progress
+              run: vendor-bin/phpstan/vendor/bin/phpstan analyse --no-progress
 
     tests:
         name: PHP ${{ matrix.php }}
@@ -84,7 +85,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php: [7.2, 7.3, 7.4, 8.0, 8.1, 8.2, 8.3]
+                php: [8.1, 8.2, 8.3, 8.4, 8.5]
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -105,7 +106,7 @@ jobs:
               run: vendor/bin/phpunit --colors=always
 
     nightly:
-        name: PHP 8.4
+        name: PHP 8.6
         runs-on: ubuntu-latest
         continue-on-error: true
         if: github.event_name != 'push'
@@ -113,7 +114,7 @@ jobs:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
-                  php-version: 8.3
+                  php-version: 8.6
                   extensions: dom, fileinfo, filter, gd, hash, intl, json, mbstring, pcre, pdo_mysql, zlib
                   coverage: none
 
@@ -137,7 +138,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php: [7.2, 7.4, 8.0]
+                php: [8.1, 8.4, 8.5]
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
@@ -166,7 +167,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php: [7.2, 7.3, 7.4, 8.0, 8.1, 8.2, 8.3]
+                php: [8.1, 8.2, 8.3, 8.4, 8.5]
         steps:
             - name: Setup PHP
               uses: shivammathur/setup-php@v2

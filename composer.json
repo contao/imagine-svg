@@ -10,15 +10,14 @@
         }
     ],
     "require": {
-        "php": "^7.2 || ^8.0",
+        "php": "^8.1",
         "ext-dom": "*",
         "imagine/imagine": "^1.1"
     },
     "require-dev": {
         "bamarni/composer-bin-plugin": "^1.8",
         "composer/semver": "^3.3",
-        "contao/test-case": "^4.4",
-        "phpunit/phpunit": "^8.5.4",
+        "phpunit/phpunit": "^9.6.31",
         "symfony/filesystem": "^5.0"
     },
     "autoload": {
@@ -34,7 +33,7 @@
     "extra": {
         "bamarni-bin": {
             "bin-links": false,
-            "target-directory": "tools"
+            "forward-command": false
         }
     },
     "scripts": {
@@ -43,8 +42,8 @@
             "@cs-fixer",
             "@phpstan"
         ],
-        "cs-fixer": "@php tools/ecs/vendor/bin/ecs check src tests tools/ecs/config --config tools/ecs/config/default.php --fix --ansi",
-        "phpstan": "@php tools/phpstan/vendor/bin/phpstan analyze --ansi",
+        "cs-fixer": "@php vendor-bin/ecs/vendor/bin/ecs check --config=vendor-bin/ecs/config/default.php --fix --ansi",
+        "phpstan": "@php vendor-bin/phpstan/vendor/bin/phpstan analyze --ansi",
         "unit-tests": "@php vendor/bin/phpunit --colors=always"
     },
     "config": {

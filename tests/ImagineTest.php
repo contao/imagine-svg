@@ -98,8 +98,7 @@ class ImagineTest extends TestCase
         }
 
         $xml = '<?xml version="1.0"?>'
-            .'<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100" height="100"></svg>'
-        ;
+            .'<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100" height="100"></svg>';
 
         file_put_contents($path.'.svg', $xml);
 
@@ -154,8 +153,7 @@ class ImagineTest extends TestCase
     public function testLoad(): void
     {
         $xml = '<?xml version="1.0"?>'
-            .'<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100" height="100"></svg>'
-        ;
+            .'<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100" height="100"></svg>';
 
         $image = $this->imagine->load($xml);
 
@@ -191,7 +189,7 @@ class ImagineTest extends TestCase
     /**
      * @return \Generator<array<string>>
      */
-    public function getInvalidSvgs(): \Generator
+    public static function getInvalidSvgs(): iterable
     {
         yield ['<?xml version="1.0"?><notasvg/>'];
         yield ['<?xml version="1.0"?><svg xmlns="http://www.w3.org/2000/svg"><invalid>'];
@@ -211,8 +209,7 @@ class ImagineTest extends TestCase
     public function testRead(): void
     {
         $xml = '<?xml version="1.0"?>'
-            .'<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100" height="100"></svg>'
-        ;
+            .'<svg xmlns="http://www.w3.org/2000/svg" version="1.1" width="100" height="100"></svg>';
 
         $stream = fopen('php://temp', 'rb+');
         fwrite($stream, $xml);

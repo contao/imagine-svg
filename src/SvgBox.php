@@ -22,7 +22,9 @@ use Imagine\Image\PointInterface;
 class SvgBox implements BoxInterface
 {
     public const TYPE_ABSOLUTE = 0;
+
     public const TYPE_ASPECT_RATIO = 1;
+
     public const TYPE_NONE = 2;
 
     /**
@@ -38,7 +40,7 @@ class SvgBox implements BoxInterface
     public function __construct(int $width, int $height, int $type = self::TYPE_ABSOLUTE)
     {
         if (!\in_array($type, [self::TYPE_ABSOLUTE, self::TYPE_ASPECT_RATIO, self::TYPE_NONE], true)) {
-            throw new \InvalidArgumentException(sprintf('Invalid SvgBox type "%s", must be one of the %s::TYPE_* constants.', $type, self::class));
+            throw new \InvalidArgumentException(\sprintf('Invalid SvgBox type "%s", must be one of the %s::TYPE_* constants.', $type, self::class));
         }
 
         $this->type = $type;
@@ -57,7 +59,7 @@ class SvgBox implements BoxInterface
         }
 
         if (self::TYPE_ASPECT_RATIO === $this->type) {
-            return sprintf('%dx%d', $this->box->getWidth(), $this->box->getHeight());
+            return \sprintf('%dx%d', $this->box->getWidth(), $this->box->getHeight());
         }
 
         return (string) $this->box;
@@ -110,7 +112,7 @@ class SvgBox implements BoxInterface
         return new self($box->getWidth(), $box->getHeight(), $this->type);
     }
 
-    public function contains(BoxInterface $box, ?PointInterface $start = null): bool
+    public function contains(BoxInterface $box, PointInterface|null $start = null): bool
     {
         return $this->box->contains($box, $start);
     }
