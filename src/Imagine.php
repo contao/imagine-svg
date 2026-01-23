@@ -12,6 +12,8 @@ declare(strict_types=1);
 
 namespace Contao\ImagineSvg;
 
+use Imagine\Driver\Info;
+use Imagine\Driver\InfoProvider;
 use Imagine\Exception\InvalidArgumentException;
 use Imagine\Exception\NotSupportedException;
 use Imagine\Exception\RuntimeException;
@@ -21,8 +23,18 @@ use Imagine\Image\FontInterface;
 use Imagine\Image\Metadata\MetadataBag;
 use Imagine\Image\Palette\Color\ColorInterface;
 
-class Imagine extends AbstractImagine
+class Imagine extends AbstractImagine implements InfoProvider
 {
+    public function __construct()
+    {
+        static::getDriverInfo()->checkVersionIsSupported();
+    }
+
+    public static function getDriverInfo($required = true): Info|null
+    {
+        return DriverInfo::get($required);
+    }
+
     public function create(BoxInterface $size, ColorInterface|null $color = null): Image
     {
         if (null !== $color) {

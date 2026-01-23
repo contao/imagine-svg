@@ -5,6 +5,8 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ## [Unreleased]
 
  * Increase required PHP version to 8.1.
+ * Increase required imagine/imagine version to 1.5.
+ * Implement `Imagine\Driver\InfoProvider` interface.
 
 ## [1.0.4] (2024-10-02)
 
