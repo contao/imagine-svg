@@ -12,15 +12,19 @@ declare(strict_types=1);
 
 namespace Contao\ImagineSvg\Tests;
 
+use Contao\ImagineSvg\DriverInfo;
 use Contao\ImagineSvg\Image;
 use Contao\ImagineSvg\Imagine;
 use Contao\ImagineSvg\SvgBox;
+use Imagine\Driver\Info;
 use Imagine\Exception\InvalidArgumentException;
 use Imagine\Exception\NotSupportedException;
 use Imagine\Exception\RuntimeException;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
+use Imagine\Image\Palette\CMYK;
 use Imagine\Image\Palette\Color\ColorInterface;
+use Imagine\Image\Palette\RGB;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -258,5 +262,53 @@ class ImagineTest extends TestCase
         $this->expectException(NotSupportedException::class);
 
         $this->imagine->font($this->rootDir, 10, $color);
+    }
+
+    public function testInfoProvider(): void
+    {
+        $driverInfo = Imagine::getDriverInfo();
+
+        $this->assertInstanceOf(DriverInfo::class, $driverInfo);
+
+        $driverInfo->checkVersionIsSupported();
+
+        $this->assertSame(['svg', 'svgz'], $driverInfo->getSupportedFormats()->getAllIDs());
+        $this->assertTrue($driverInfo->isFormatSupported('SVG'));
+        $this->assertTrue($driverInfo->isFormatSupported('SVGZ'));
+
+        $this->assertSame('image/svg+xml', $driverInfo->getSupportedFormats()->find('svg')->getMimeType());
+        $this->assertSame('image/svg+xml', $driverInfo->getSupportedFormats()->find('svgz')->getMimeType());
+        $this->assertSame('svg', $driverInfo->getSupportedFormats()->find('svg')->getCanonicalFileExtension());
+        $this->assertSame('svgz', $driverInfo->getSupportedFormats()->find('svgz')->getCanonicalFileExtension());
+
+        $this->assertTrue($driverInfo->isPaletteSupported(new RGB()));
+        $this->assertFalse($driverInfo->isPaletteSupported(new CMYK()));
+
+        $this->assertNotEmpty($driverInfo->getDriverVersion());
+        $this->assertNotEmpty($driverInfo->getEngineVersion());
+        $this->assertSame(PHP_VERSION, $driverInfo->getDriverVersion(true));
+        $this->assertSame(LIBXML_DOTTED_VERSION, $driverInfo->getEngineVersion(true));
+
+        $this->assertFalse($driverInfo->hasFeature(Info::FEATURE_COLORPROFILES));
+        $this->assertFalse($driverInfo->hasFeature(Info::FEATURE_COLORSPACECONVERSION));
+        $this->assertTrue($driverInfo->hasFeature(Info::FEATURE_GRAYSCALEEFFECT));
+        $this->assertFalse($driverInfo->hasFeature(Info::FEATURE_COALESCELAYERS));
+        $this->assertTrue($driverInfo->hasFeature(Info::FEATURE_NEGATEIMAGE));
+        $this->assertTrue($driverInfo->hasFeature(Info::FEATURE_COLORIZEIMAGE));
+        $this->assertTrue($driverInfo->hasFeature(Info::FEATURE_SHARPENIMAGE));
+        $this->assertTrue($driverInfo->hasFeature(Info::FEATURE_CONVOLVEIMAGE));
+        $this->assertFalse($driverInfo->hasFeature(Info::FEATURE_TEXTFUNCTIONS));
+        $this->assertFalse($driverInfo->hasFeature(Info::FEATURE_MULTIPLELAYERS));
+        $this->assertFalse($driverInfo->hasFeature(Info::FEATURE_CUSTOMRESOLUTION));
+        $this->assertFalse($driverInfo->hasFeature(Info::FEATURE_EXPORTWITHCUSTOMRESOLUTION));
+        $this->assertFalse($driverInfo->hasFeature(Info::FEATURE_DRAWFILLEDCHORDSCORRECTLY));
+        $this->assertFalse($driverInfo->hasFeature(Info::FEATURE_DRAWUNFILLEDCIRCLESWITHTICHKESSCORRECTLY));
+        $this->assertFalse($driverInfo->hasFeature(Info::FEATURE_DRAWUNFILLEDELLIPSESWITHTICHKESSCORRECTLY));
+        $this->assertFalse($driverInfo->hasFeature(Info::FEATURE_GETCMYKCOLORSCORRECTLY));
+        $this->assertTrue($driverInfo->hasFeature(Info::FEATURE_TRANSPARENCY));
+        $this->assertFalse($driverInfo->hasFeature(Info::FEATURE_ROTATEIMAGEWITHCORRECTSIZE));
+        $this->assertFalse($driverInfo->hasFeature(Info::FEATURE_EXPORTWITHCUSTOMJPEGSAMPLINGFACTORS));
+        $this->assertFalse($driverInfo->hasFeature(Info::FEATURE_ADDLAYERSTOEMPTYIMAGE));
+        $this->assertTrue($driverInfo->hasFeature(Info::FEATURE_DETECTGRAYCOLORSPACE));
     }
 }
