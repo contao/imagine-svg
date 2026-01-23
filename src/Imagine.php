@@ -23,7 +23,7 @@ use Imagine\Image\Palette\Color\ColorInterface;
 
 class Imagine extends AbstractImagine
 {
-    public function create(BoxInterface $size, ?ColorInterface $color = null): Image
+    public function create(BoxInterface $size, ColorInterface|null $color = null): Image
     {
         if (null !== $color) {
             throw new InvalidArgumentException('Imagine SVG does not support colors');
@@ -53,7 +53,7 @@ class Imagine extends AbstractImagine
         $data = @file_get_contents($path);
 
         if (false === $data) {
-            throw new RuntimeException(sprintf('Failed to open file "%s"', $path));
+            throw new RuntimeException(\sprintf('Failed to open file "%s"', $path));
         }
 
         return $this->doLoad($data, new MetadataBag(['filepath' => $path]));
@@ -88,6 +88,7 @@ class Imagine extends AbstractImagine
      * Returns an Image instance from an SVG string.
      *
      * @phpstan-param MetadataBag<mixed> $metadata
+     *
      * @psalm-param MetadataBag $metadata
      */
     private function doLoad(string $data, MetadataBag $metadata): Image
@@ -129,7 +130,7 @@ class Imagine extends AbstractImagine
             'svg' !== $document->documentElement->tagName
             || 'http://www.w3.org/2000/svg' !== $document->documentElement->namespaceURI
         ) {
-            throw new RuntimeException(sprintf('An image could not be created from the given input, tag name "%s", namespace "%s"', $document->documentElement->tagName, $document->documentElement->namespaceURI));
+            throw new RuntimeException(\sprintf('An image could not be created from the given input, tag name "%s", namespace "%s"', $document->documentElement->tagName, $document->documentElement->namespaceURI));
         }
 
         return new Image($document, $metadata);

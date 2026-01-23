@@ -20,8 +20,4 @@
             <directory>./src</directory>
         </whitelist>
     </filter>
-
-    <extensions>
-        <extension class="Contao\ImagineSvg\Tests\PhpunitExtension\DeprecatedClasses"/>
-    </extensions>
 </phpunit>

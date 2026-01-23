@@ -3,8 +3,8 @@
 /vendor/
 
 # Composer bin
-/tools/*/composer.lock
-/tools/*/vendor
+/vendor-bin/*/composer.lock
+/vendor-bin/*/vendor
 
 # PhpUnit
 /phpunit.xml

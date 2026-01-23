@@ -44,6 +44,7 @@ class Image extends AbstractImage
 
     /**
      * @phpstan-param MetadataBag<mixed> $metadata
+     *
      * @psalm-param MetadataBag $metadata
      */
     public function __construct(\DOMDocument $document, MetadataBag $metadata)
@@ -90,7 +91,7 @@ class Image extends AbstractImage
             && SvgBox::TYPE_NONE !== $currentSize->getType()
             && !$currentSize->contains($size, $start)
         ) {
-            throw new OutOfBoundsException('Crop coordinates must start at minimum 0, 0 position from top left corner, crop height and width '.'must be positive integers and must not exceed the current image borders');
+            throw new OutOfBoundsException('Crop coordinates must start at minimum 0, 0 position from top left corner, crop height and width must be positive integers and must not exceed the current image borders');
         }
 
         if (
@@ -205,7 +206,7 @@ class Image extends AbstractImage
             $thumb->thumbnail(
                 SvgBox::createTypeAbsolute($size->getWidth(), $size->getHeight()),
                 $settings,
-                $filter
+                $filter,
             );
 
             return $thumb->resize($size, $filter);
@@ -217,7 +218,7 @@ class Image extends AbstractImage
         ) {
             $thumb->resize(
                 SvgBox::createTypeAbsolute($thumb->getSize()->getWidth(), $thumb->getSize()->getHeight()),
-                $filter
+                $filter,
             );
 
             return $thumb->thumbnail($size, $settings, $filter);
@@ -226,20 +227,21 @@ class Image extends AbstractImage
         if (SvgBox::TYPE_ASPECT_RATIO === $newSizeType) {
             return $thumb->resize(
                 SvgBox::createTypeAspectRatio($thumb->getSize()->getWidth(), $thumb->getSize()->getHeight()),
-                $filter
+                $filter,
             );
         }
 
         return $thumb->resize($size, $filter);
     }
 
-    public function rotate($angle, ?ColorInterface $background = null): self
+    public function rotate($angle, ColorInterface|null $background = null): self
     {
         throw new NotSupportedException('This method is not implemented');
     }
 
     /**
      * @phpstan-param array<string,string> $options
+     *
      * @psalm-param array $options
      */
     public function save($path = null, array $options = []): self
@@ -276,6 +278,7 @@ class Image extends AbstractImage
 
     /**
      * @phpstan-param array<string,string> $options
+     *
      * @psalm-param array $options
      */
     public function show($format, array $options = []): self
@@ -295,6 +298,7 @@ class Image extends AbstractImage
 
     /**
      * @phpstan-param array<string,string> $options
+     *
      * @psalm-param array $options
      */
     public function get($format, array $options = []): string
@@ -304,7 +308,7 @@ class Image extends AbstractImage
         $supported = ['svg', 'svgz'];
 
         if (!\in_array($format, $supported, true)) {
-            throw new InvalidArgumentException(sprintf('Saving image in "%s" format is not supported, please use one of the following extensions: "%s"', $format, implode('", "', $supported)));
+            throw new InvalidArgumentException(\sprintf('Saving image in "%s" format is not supported, please use one of the following extensions: "%s"', $format, implode('", "', $supported)));
         }
 
         $xml = $this->document->saveXML();
@@ -412,6 +416,7 @@ class Image extends AbstractImage
 
     /**
      * @phpstan-return LayersInterface<ImageInterface>
+     *
      * @psalm-return LayersInterface
      */
     public function layers(): LayersInterface
